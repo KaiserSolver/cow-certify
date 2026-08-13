@@ -1,0 +1,36 @@
+{
+ "schema_version": "0.3.0",
+ "subject": {
+  "network": "base",
+  "chain_id": 8453,
+  "tx_hash": "0x3c3fd97998bfafcce27fb7b96218124e819a0b6b6feb072a6abc6631aa87c9e9",
+  "status_ok": true
+ },
+ "overall": "UNCERTAIN",
+ "checks": [
+  {
+   "check": "C0.settlement-shape",
+   "verdict": "UNCERTAIN",
+   "detail": "this transaction is not a CoW Protocol settlement: its target 0x164619b11af2d0dc6241ad669cb27bf52537c31d is not the GPv2 settlement contract and the receipt contains no GPv2 settlement events. Nothing to certify \u2014 check the tx hash and --network."
+  }
+ ],
+ "not_verifiable": [],
+ "evidence": [
+  {
+   "kind": "rpc:eth_getTransactionByHash",
+   "ref": "https://base.rpc.blxrbdn.com [\"0x3c3fd97998bfafcce27fb7b96218124e819a0b6b6feb072a6abc6631aa87c9e9\"]",
+   "sha256": "ec991e876efddfc8f28f3e4160b9b235653ca2aab491f8086d47bedf0411989a",
+   "bytes": 741,
+   "fetched_at": "2026-08-13T19:42:33Z"
+  },
+  {
+   "kind": "rpc:eth_getTransactionReceipt",
+   "ref": "https://base.rpc.blxrbdn.com [\"0x3c3fd97998bfafcce27fb7b96218124e819a0b6b6feb072a6abc6631aa87c9e9\"]",
+   "sha256": "15e51f2de6a7a1cc3adc149b6e2fac620a734fb9ed18c1e9f921213ad58de067",
+   "bytes": 1234,
+   "fetched_at": "2026-08-13T19:42:33Z"
+  }
+ ],
+ "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",
+ "reproduce": "python3 -m cow_certify --network base 0x3c3fd97998bfafcce27fb7b96218124e819a0b6b6feb072a6abc6631aa87c9e9"
+}

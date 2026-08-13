@@ -1,0 +1,321 @@
+{
+ "schema_version": "0.3.0",
+ "subject": {
+  "network": "mainnet",
+  "chain_id": 1,
+  "tx_hash": "0x7e6cecc0438fd32f2cf3c5644e093e0a5ebb672d475e19581d2272b0048ed07b",
+  "auction_id": 13579523,
+  "status_ok": true,
+  "start_block": 25747493,
+  "deadline_block": 25747496
+ },
+ "overall": "PASS",
+ "checks": [
+  {
+   "check": "C0.settlement-shape",
+   "verdict": "PASS",
+   "detail": "direct settle() call to the canonical GPv2 contract"
+  },
+  {
+   "check": "C1.auction-binding",
+   "verdict": "PASS",
+   "detail": "calldata auction id 13579523 == stored competition record auctionId",
+   "auction_id": 13579523
+  },
+  {
+   "check": "C2.winner-legitimacy",
+   "verdict": "PASS",
+   "detail": "tx sender 0x95480d3f27658e73b2785d30beb0c847d78294c7 is the recorded winning solver of solution ranked 1"
+  },
+  {
+   "check": "C3.solution-fidelity",
+   "verdict": "PASS",
+   "detail": "all 2 settled order(s) match the winning solution's order set; amounts compared for 2/2; amounts exact",
+   "orders": 2
+  },
+  {
+   "check": "C4.limit-compliance",
+   "verdict": "PASS",
+   "detail": "all 2 trade(s) respect their signed limit price (signed limits from calldata)"
+  },
+  {
+   "check": "C5.surplus-delivered",
+   "verdict": "INFO",
+   "detail": "delivered user surplus \u2248 367019887055144 native atoms over 2 trade(s) (computed from the on-chain executed amounts against the signed limits \u2014 it cannot be inflated by the settlement's clearing prices). The reported competition score is 510010672516764. C5 reports the delivered surplus; it does not independently confirm the score, which folds in fee policy and the CIP-38 objective that public data does not expose (so score >= delivered surplus is expected).",
+   "delivered_surplus_native": "367019887055144",
+   "reported_score": "510010672516764"
+  },
+  {
+   "check": "C6.timeliness",
+   "verdict": "PASS",
+   "detail": "landed at block 25747494, deadline 25747496 (2 blocks to spare)",
+   "landed_block": 25747494,
+   "deadline_block": 25747496
+  },
+  {
+   "check": "C7.competition-context",
+   "verdict": "INFO",
+   "detail": "9 solution(s) from 9 distinct solver(s), 0 filtered out, 1 winner(s)",
+   "solutions": 9,
+   "distinct_solvers": 9,
+   "filtered_out": 0,
+   "winners": 1,
+   "score": "510010672516764",
+   "reference_score": "426638445601226",
+   "margin": "83372226915538"
+  },
+  {
+   "check": "C9.solver-authorization",
+   "verdict": "PASS",
+   "detail": "settle() caller 0x95480d3f27658e73b2785d30beb0c847d78294c7 is a registered solver in the GPv2 authenticator (at latest (historical state unavailable on this RPC; the solver set may have changed since))",
+   "caller": "0x95480d3f27658e73b2785d30beb0c847d78294c7",
+   "authorized": true
+  },
+  {
+   "check": "C10.order-ledger",
+   "verdict": "INFO",
+   "detail": "2 settled order(s): sell 84.438136 USDC \u2192 0.036263685 wstETH; sell 0.036376608 wstETH \u2192 45162947167584319 0xeeeeeeee..",
+   "orders": [
+    {
+     "uid": "0x5558ee37d2407c24ab4ea5834cd6862017bc1b3a2e290049c83903a371b4c1e8fe90e0451abb3b9ca931d76cf9a3f7d9759dc8246a7e00ae",
+     "owner": "0xfe90e0451abb3b9ca931d76cf9a3f7d9759dc824",
+     "sell_token": {
+      "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "symbol": "USDC",
+      "decimals": 6
+     },
+     "buy_token": {
+      "address": "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
+      "symbol": "wstETH",
+      "decimals": 18
+     },
+     "executed_sell": "84438136",
+     "executed_buy": "36263684638134000",
+     "executed_sell_human": "84.438136",
+     "executed_buy_human": "0.036263685",
+     "fee_atoms": "0",
+     "executed_price": "0.00042947045",
+     "kind": "sell",
+     "partially_fillable": false,
+     "signed_sell": "84438136",
+     "signed_buy": "35968240467718117",
+     "valid_to": 1786642606,
+     "valid_to_utc": "2026-08-13T17:36:46Z",
+     "app_data": "0x799b688fc6143d14f4f52eaba2dd8926f3b1be34ed53e3e23333ce8209b530c4",
+     "limit_price": "0.00042597151",
+     "fill_fraction": "1",
+     "surplus_atoms": "295444170415883",
+     "surplus_token": "wstETH"
+    },
+    {
+     "uid": "0xeadf40d88ffdd4903e02323e55ca27092dbecc95d80873939c0f4ab23932016f7099c7d7fca074062a0fc593a35f788605bcad6e6aa46dbd",
+     "owner": "0x7099c7d7fca074062a0fc593a35f788605bcad6e",
+     "sell_token": {
+      "address": "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
+      "symbol": "wstETH",
+      "decimals": 18
+     },
+     "buy_token": {
+      "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "symbol": null,
+      "decimals": null
+     },
+     "executed_sell": "36376608170791713",
+     "executed_buy": "45162947167584319",
+     "executed_sell_human": "0.036376608",
+     "executed_buy_human": null,
+     "fee_atoms": "0",
+     "executed_price": null,
+     "kind": "sell",
+     "partially_fillable": true,
+     "signed_sell": "2999999998458181241073",
+     "signed_buy": "3724614477440738426776",
+     "valid_to": 1789160893,
+     "valid_to_utc": "2026-09-11T21:08:13Z",
+     "app_data": "0x1e558dd696110d79677e96b205a9ef69a21919fdf0b3bc5e17504f9214d3978f",
+     "limit_price": null,
+     "fill_fraction": "1.21255e-05",
+     "surplus_atoms": "2",
+     "surplus_token": null
+    }
+   ]
+  },
+  {
+   "check": "C11.receiver-delivery",
+   "verdict": "PASS",
+   "detail": "every settled order's buy tokens reached the recorded receiver on-chain across 1 (token, receiver) group(s) (receivers from calldata); 1 native-ETH buy leg(s) set aside (delivered by internal transfer, not present in ERC-20 logs)"
+  },
+  {
+   "check": "C12.order-authenticity",
+   "verdict": "PASS",
+   "detail": "all 2 settled order(s) match a signed order in the public orderbook (tokens, signed amounts, kind, validTo, appData)"
+  },
+  {
+   "check": "C13.interactions",
+   "verdict": "INFO",
+   "detail": "5 interaction(s): pre 2 / intra 3 / post 0; 5 distinct target(s); 0 carrying native-ETH value; pre/post: 1 order-hook execution (HooksTrampoline), 1 driver infra (deadline check)",
+   "interactions": [
+    {
+     "stage": "pre",
+     "target": "0x60bf78233f48ec42ee3f101b9a05ec7878728006",
+     "value": "0",
+     "selector": "0x760f2a0b",
+     "calldata_bytes": 484,
+     "role": "order-hook execution (HooksTrampoline)"
+    },
+    {
+     "stage": "pre",
+     "target": "0x0e91b5b157e98c20b90332cc3b9cf4ae67b222ad",
+     "value": "0",
+     "selector": "0xa6990946",
+     "calldata_bytes": 36,
+     "role": "driver infra (deadline check)"
+    },
+    {
+     "stage": "intra",
+     "target": "0xbbbbbbb520d69a9775e85b458c58c648259fad5f",
+     "value": "0",
+     "selector": "0x4dcebcba",
+     "calldata_bytes": 612,
+     "role": "routing"
+    },
+    {
+     "stage": "intra",
+     "target": "0xb576491f1e6e5e62f1d8f26062ee822b40b0e0d4",
+     "value": "0",
+     "selector": "0x5b41b908",
+     "calldata_bytes": 132,
+     "role": "routing"
+    },
+    {
+     "stage": "intra",
+     "target": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+     "value": "0",
+     "selector": "0x2e1a7d4d",
+     "calldata_bytes": 36,
+     "role": "routing"
+    }
+   ]
+  },
+  {
+   "check": "C14.price-vs-mid",
+   "verdict": "INFO",
+   "detail": "execution vs the auction's reference mid: -1.7 bps, -5.8 bps \u2014 positive is better than the fair mid; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
+   "per_order": [
+    {
+     "uid": "0x5558ee37d2407c24ab4ea5834cd6862017bc1b3a2e290049c83903a371b4c1e8fe90e0451abb3b9ca931d76cf9a3f7d9759dc8246a7e00ae",
+     "bps": -1.73
+    },
+    {
+     "uid": "0xeadf40d88ffdd4903e02323e55ca27092dbecc95d80873939c0f4ab23932016f7099c7d7fca074062a0fc593a35f788605bcad6e6aa46dbd",
+     "bps": -5.85
+    }
+   ]
+  },
+  {
+   "check": "C15.settlement-buffer",
+   "verdict": "INFO",
+   "detail": "the settlement contract took in at least as much as it paid out for all 4 ERC-20 token(s) touched (no buffer draw detected). ERC-20 only \u2014 native-ETH / Vault-internal moves are not captured here.",
+   "net_deltas": {
+    "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": "348727",
+    "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0": "112923532657713",
+    "0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b": "50243646212",
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": "45133393761201573"
+   }
+  }
+ ],
+ "not_verifiable": [
+  "C11: 1 native-ETH buy leg(s) not verifiable from ERC-20 Transfer logs",
+  "C13 lists and role-tags the executed interactions. Confirming each trampoline-wrapped hook against the matched orders' declared appData hooks (positive hook verification), and the full services#2667 criterion-4 relation (executed pre/post \u2286 matched-order hooks), are not performed here \u2014 the latter needs the /solve instance from the S3 bucket, not the public API",
+  "best-execution / EBBO (whether a better price was available elsewhere) is OUT OF SCOPE: this tool verifies a settlement's validity, not its optimality",
+  "declines (won-but-never-submitted) are invisible in public data and cannot be certified by anyone outside the core team"
+ ],
+ "evidence": [
+  {
+   "kind": "rpc:eth_getTransactionByHash",
+   "ref": "https://ethereum-rpc.publicnode.com [\"0x7e6cecc0438fd32f2cf3c5644e093e0a5ebb672d475e19581d2272b0048ed07b\"]",
+   "sha256": "8472ec64294ba56659342ea35a3c57ddf84abdebb319fee6abd50213d51fd5ac",
+   "bytes": 14134,
+   "fetched_at": "2026-08-13T19:42:28Z"
+  },
+  {
+   "kind": "rpc:eth_getTransactionReceipt",
+   "ref": "https://ethereum-rpc.publicnode.com [\"0x7e6cecc0438fd32f2cf3c5644e093e0a5ebb672d475e19581d2272b0048ed07b\"]",
+   "sha256": "f2d1b6a0c9526afd914cbe8a76dd01f206d966c25b53cd18d80d1d1a0729c40b",
+   "bytes": 16216,
+   "fetched_at": "2026-08-13T19:42:28Z"
+  },
+  {
+   "kind": "competition:by_tx_hash",
+   "ref": "https://api.cow.fi/mainnet/api/v2/solver_competition/by_tx_hash/0x7e6cecc0438fd32f2cf3c5644e093e0a5ebb672d475e19581d2272b0048ed07b",
+   "sha256": "bb9bca5c374684567d2fe1d13f8079b7ca2ca5c7761952228c8d285c0a71d407",
+   "bytes": 969150,
+   "fetched_at": "2026-08-13T19:42:28Z"
+  },
+  {
+   "kind": "rpc:eth_call",
+   "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0x2c4c28ddbdac9c5e7055b4c863b72ea0149d8afe\", \"data\": \"0x02cc250d000000000000000000000000954",
+   "sha256": "8f317fda0fe2e9f75c8f73bb6d6b71250335ba6fddf5f261c04d9b1d62e6708a",
+   "bytes": 103,
+   "fetched_at": "2026-08-13T19:42:28Z"
+  },
+  {
+   "kind": "rpc:eth_call",
+   "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\", \"data\": \"0x313ce567\"}, \"latest\"]",
+   "sha256": "b9affdcdc9ebdd0148b7e901e8839657e1a9bb488878788e7234df75a6d8099e",
+   "bytes": 103,
+   "fetched_at": "2026-08-13T19:42:29Z"
+  },
+  {
+   "kind": "rpc:eth_call",
+   "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\", \"data\": \"0x95d89b41\"}, \"latest\"]",
+   "sha256": "9f08a6876fc69f4db84065558eb4d30d696a0a1846c247950484639905382c59",
+   "bytes": 231,
+   "fetched_at": "2026-08-13T19:42:29Z"
+  },
+  {
+   "kind": "rpc:eth_call",
+   "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0\", \"data\": \"0x313ce567\"}, \"latest\"]",
+   "sha256": "eb1491e7ee73b8c00c20f6c14cc08ba880f85b8ac95a685f3f6acf426f743d8b",
+   "bytes": 103,
+   "fetched_at": "2026-08-13T19:42:29Z"
+  },
+  {
+   "kind": "rpc:eth_call",
+   "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0\", \"data\": \"0x95d89b41\"}, \"latest\"]",
+   "sha256": "a6e357fab4955d7b15a388e3bcc68cc8bd70174d14741b8a1866afaa34dca4ed",
+   "bytes": 231,
+   "fetched_at": "2026-08-13T19:42:29Z"
+  },
+  {
+   "kind": "rpc:eth_call",
+   "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"data\": \"0x313ce567\"}, \"latest\"]",
+   "sha256": "656254440c28512a72ff80afa27e5cd8669c5df940e00ee605f06ef0eef567e2",
+   "bytes": 39,
+   "fetched_at": "2026-08-13T19:42:29Z"
+  },
+  {
+   "kind": "rpc:eth_call",
+   "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"data\": \"0x95d89b41\"}, \"latest\"]",
+   "sha256": "656254440c28512a72ff80afa27e5cd8669c5df940e00ee605f06ef0eef567e2",
+   "bytes": 39,
+   "fetched_at": "2026-08-13T19:42:29Z"
+  },
+  {
+   "kind": "orderbook:order",
+   "ref": "https://api.cow.fi/mainnet/api/v1/orders/0x5558ee37d2407c24ab4ea5834cd6862017bc1b3a2e290049c83903a371b4c1e8fe90e0451abb3b9ca931d76cf9a3f7d9759dc8246a7e00ae",
+   "sha256": "c6b74654f8fa53dceec5f8f48abf5a09c58b4bb7632af4ac4c7fba75e5a4536f",
+   "bytes": 5823,
+   "fetched_at": "2026-08-13T19:42:29Z"
+  },
+  {
+   "kind": "orderbook:order",
+   "ref": "https://api.cow.fi/mainnet/api/v1/orders/0xeadf40d88ffdd4903e02323e55ca27092dbecc95d80873939c0f4ab23932016f7099c7d7fca074062a0fc593a35f788605bcad6e6aa46dbd",
+   "sha256": "d297568593956b88bee2ff5286045ff7f5c99deda5daf9b06b5236d7ca2732a5",
+   "bytes": 1813,
+   "fetched_at": "2026-08-13T19:42:29Z"
+  }
+ ],
+ "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",
+ "reproduce": "python3 -m cow_certify --network mainnet 0x7e6cecc0438fd32f2cf3c5644e093e0a5ebb672d475e19581d2272b0048ed07b"
+}

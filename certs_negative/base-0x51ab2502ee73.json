@@ -1,0 +1,72 @@
+{
+ "schema_version": "0.3.0",
+ "subject": {
+  "network": "base",
+  "chain_id": 8453,
+  "tx_hash": "0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8",
+  "auction_id": 28642577,
+  "status_ok": false
+ },
+ "overall": "VIOLATION",
+ "checks": [
+  {
+   "check": "C0.settlement-shape",
+   "verdict": "PASS",
+   "detail": "direct settle() call to the canonical GPv2 contract"
+  },
+  {
+   "check": "C8.execution-status",
+   "verdict": "VIOLATION",
+   "detail": "transaction REVERTED on-chain (or failed) \u2014 it did not settle. This is not a completed settlement; revert-reason forensics is a later check",
+   "reverted": true
+  },
+  {
+   "check": "C1.auction-binding",
+   "verdict": "UNCERTAIN",
+   "detail": "calldata declares auction id 28642577, but the public competition endpoint has no record for this tx (404). Possible legitimate causes: staging/barn settlement, out-of-competition maintenance, or unstored record. Cannot verify further from public data.",
+   "auction_id": 28642577
+  }
+ ],
+ "not_verifiable": [
+  "no public competition record: C2-C7 not performable"
+ ],
+ "evidence": [
+  {
+   "kind": "rpc:eth_getTransactionByHash",
+   "ref": "https://base.rpc.blxrbdn.com [\"0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8\"]",
+   "sha256": "e9cc738eb1d664b710fce0653173febeca8b8660c00bfdb3d2b06c95276362b1",
+   "bytes": 5883,
+   "fetched_at": "2026-08-13T19:42:30Z"
+  },
+  {
+   "kind": "rpc:eth_getTransactionReceipt",
+   "ref": "https://base.rpc.blxrbdn.com [\"0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8\"]",
+   "sha256": "e747675e5f772818c50b7d4d1e61e1ddac32bf822f98088f9ddf4e64ce648cff",
+   "bytes": 1239,
+   "fetched_at": "2026-08-13T19:42:30Z"
+  },
+  {
+   "kind": "rpc:eth_getTransactionReceipt",
+   "ref": "https://base.rpc.blxrbdn.com [\"0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8\"]",
+   "sha256": "e747675e5f772818c50b7d4d1e61e1ddac32bf822f98088f9ddf4e64ce648cff",
+   "bytes": 1239,
+   "fetched_at": "2026-08-13T19:42:30Z"
+  },
+  {
+   "kind": "rpc:eth_getTransactionReceipt",
+   "ref": "https://mainnet.base.org [\"0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8\"]",
+   "sha256": "9772ecf7fcce7e1bf295a15f56b650248456cd9c2ce7cca131da5cc31dcb18ad",
+   "bytes": 1240,
+   "fetched_at": "2026-08-13T19:42:30Z"
+  },
+  {
+   "kind": "competition:by_tx_hash",
+   "ref": "https://api.cow.fi/base/api/v2/solver_competition/by_tx_hash/0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-08-13T19:42:30Z"
+  }
+ ],
+ "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",
+ "reproduce": "python3 -m cow_certify --network base 0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8"
+}

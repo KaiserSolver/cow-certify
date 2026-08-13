@@ -1,0 +1,52 @@
+name: Deploy web app to GitHub Pages
+
+# Publishes the client-side certifier (web/) to GitHub Pages so anyone can
+# verify a settlement in their browser at
+# https://<owner>.github.io/cow-certify/ — no backend, always on.
+# One-time setup after this lands: repo Settings → Pages → Source = "GitHub
+# Actions" (then this workflow deploys automatically).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+# Least privilege: only what the Pages deploy needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; let a newer push supersede an in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      # Upload only the app directory as the site root, so the app lives at the
+      # Pages root (…/cow-certify/) rather than …/cow-certify/web/. The static
+      # artifact is served as-is (no Jekyll), so the ES-module relative imports
+      # and inlined font work unchanged.
+      - name: Upload web/ as the Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

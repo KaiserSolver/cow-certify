@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+dist/
+*.egg-info/
+.DS_Store
+venv/
+.venv/
+build/
+.ruff_cache/
+# internal — MUST NOT publish (contains working notes, PoCs, identity refs)
+AUDIT_2026_08_13.md

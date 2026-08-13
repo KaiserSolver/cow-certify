@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cow-certify"
+version = "0.3.0"
+description = "Independent, public-data verification for CoW Protocol settlements."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "kaisersolver" }]
+keywords = ["cow-protocol", "ethereum", "settlement", "verification", "defi"]
+dependencies = ["eth-abi>=4.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/KaiserSolver/cow-certify"
+Issues = "https://github.com/KaiserSolver/cow-certify/issues"
+
+[project.scripts]
+cow-certify = "cow_certify.__main__:main"
+
+[tool.setuptools]
+packages = ["cow_certify"]

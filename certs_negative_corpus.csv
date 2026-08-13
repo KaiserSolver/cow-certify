@@ -1,0 +1,8 @@
+# cow-certify NEGATIVE-CONTROL corpus: real settlements that must NOT read as a
+# clean PASS. Proves the tool discriminates on real on-chain data.
+# reverted GPv2 settle() (RPC-verified status 0x0) -> VIOLATION (C8)
+base,0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8
+base,0x054880e6bd1b39d3dafff133651a6af4bf28aa6155a24d9a2475d449e62e2b76
+gnosis,0x6d188e506dd8a8cb4957acf61f934a9ab278ce7120b1599cdc01bacd432c42b7
+# a non-settlement tx (plain transfer) -> UNCERTAIN "not a CoW settlement" (C0)
+base,0x3c3fd97998bfafcce27fb7b96218124e819a0b6b6feb072a6abc6631aa87c9e9
