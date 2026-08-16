@@ -20,8 +20,8 @@ A check emits `VIOLATION` only when public data proves misbehavior — and where
 the data proves anything else, it says exactly what it cannot conclude instead
 of guessing. A missing competition record, a rate-limited RPC, an amount it
 cannot reconstruct: all `UNCERTAIN`, never an accusation. When something looks
-off but has legitimate explanations the public data can't rule out, it reads
-`ATTENTION` (review-recommended) — still never `VIOLATION`. For example, a
+off but has legitimate explanations the public data can't rule out, it stays
+`UNCERTAIN` — still never `VIOLATION`. For example, a
 *successful* `settle()` provably passed the on-chain solver check, so a negative
 authenticator read must be our own artifact, and the tool reports it as
 `UNCERTAIN` rather than accusing. That discipline is the reason a
@@ -78,11 +78,10 @@ mainnet, whose public RPCs rate-limit hard.
 ### Reading the result
 
 The output leads with the overall verdict, then a scannable line per check:
-green `✓` PASS, red `✗` VIOLATION, bold `!` ATTENTION (verified but a check
-needs a look), yellow `?` UNCERTAIN, dim `·` for context. Colors turn off
+green `✓` PASS, red `✗` VIOLATION, yellow `?` UNCERTAIN, dim `·` for context. Colors turn off
 automatically when piped or under `NO_COLOR` (or `--no-color`). The exit code
 carries the outcome so it drops into CI: **`0`** pass · **`1`** violation ·
-**`2`** attention/uncertain · **`3`** operational error (bad input, RPC/API
+**`2`** uncertain · **`3`** operational error (bad input, RPC/API
 unreachable) — so a real violation (`1`) is never confused with a typo'd hash
 (`3`). Add `-v` for the per-order ledger, `--json` for the certificate.
 
@@ -107,7 +106,7 @@ unreachable) — so a real violation (`1`) is never confused with a typo'd hash
 | C14 price vs mid | How did execution compare to the auction's reference mid? (a best-execution *signal*, not full EBBO) |
 | C15 protocol buffer | Did the settlement draw from CoW's accumulated-fee buffer (ERC-20 net delta)? |
 
-Verdicts are **PASS**, **VIOLATION**, **ATTENTION**, **UNCERTAIN**, or **INFO**.
+Verdicts are **PASS**, **VIOLATION**, **UNCERTAIN**, or **INFO**.
 C7, C10, C13, C14, and C15 are always INFO — context and signal rather than a
 pass/fail judgment. C5 is INFO too, and deliberately so (see below).
 
@@ -176,9 +175,10 @@ it to, over two corpora:
   settlements. Its baseline is reproducible with
   `python3 tools/make_decode_truth.py`.
 - **`web/test_certify.mjs`** checks the browser produces the **same verdict for
-  every check** as the Python certificate, over a deliberately adversarial
-  corpus (`web/testdata/parity_corpus.csv`: wrapper routes, five chains, other
-  solvers' settlements — the branches our own all-PASS self-audit misses).
+  every check** as the Python certificate — by default over the 80-settlement
+  self-audit corpus, and with `CERTS=../certs_parity/` over the deliberately
+  adversarial one (wrapper routes, five chains, other solvers' settlements —
+  the branches our own all-PASS self-audit misses).
 
 So "the browser gives the same answer as the CLI" is enforced, not hoped.
 

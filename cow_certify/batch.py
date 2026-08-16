@@ -53,7 +53,11 @@ def main():
     for i, (network, tx) in enumerate(rows):
         try:
             cert = certify_tx(network, tx, rpc_url=rpc_map.get(network))
-        except Exception as e:
+        except (Exception, SystemExit) as e:
+            # certify.py signals tx-not-found via SystemExit, which is NOT an
+            # Exception — without catching it here one unreachable tx (a
+            # transient RPC null is enough) kills the whole batch mid-run and
+            # breaks the README's re-run-our-self-audit ritual.
             errors += 1
             print(f"  !! {network} {tx[:14]}..: {str(e)[:90]}", flush=True)
             continue
