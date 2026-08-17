@@ -4,11 +4,11 @@
 export const NETWORKS = {
   mainnet: "mainnet", arbitrum: "arbitrum_one", base: "base", gnosis: "xdai",
   polygon: "polygon", avalanche: "avalanche", bnb: "bnb",
-  ink: "ink", plasma: "plasma", sepolia: "sepolia",
+  ink: "ink", linea: "linea", plasma: "plasma", sepolia: "sepolia",
 };
 export const CHAIN_IDS = {
   mainnet: 1, arbitrum: 42161, base: 8453, gnosis: 100,
-  polygon: 137, avalanche: 43114, bnb: 56, ink: 57073, plasma: 9745, sepolia: 11155111,
+  polygon: 137, avalanche: 43114, bnb: 56, ink: 57073, linea: 59144, plasma: 9745, sepolia: 11155111,
 };
 export const DEFAULT_RPC = {
   mainnet: ["https://ethereum-rpc.publicnode.com", "https://eth.drpc.org"], // both CORS-enabled (eth.llamarpc is not)
@@ -19,6 +19,7 @@ export const DEFAULT_RPC = {
   avalanche: ["https://avalanche-c-chain-rpc.publicnode.com", "https://api.avax.network/ext/bc/C/rpc"],
   bnb: ["https://bsc-rpc.publicnode.com", "https://bsc.drpc.org"], // both CORS-enabled (llamarpc is not)
   ink: ["https://rpc-gel.inkonchain.com", "https://ink.drpc.org"], // both CORS-enabled
+  linea: ["https://rpc.linea.build", "https://linea-rpc.publicnode.com", "https://1rpc.io/linea"],
   plasma: ["https://rpc.plasma.to", "https://plasma.drpc.org"],
   sepolia: ["https://ethereum-sepolia-rpc.publicnode.com"],
 };
@@ -27,6 +28,7 @@ export const EXPLORER = {
   base: "https://basescan.org/tx/", gnosis: "https://gnosisscan.io/tx/",
   polygon: "https://polygonscan.com/tx/", avalanche: "https://snowtrace.io/tx/",
   bnb: "https://bscscan.com/tx/", ink: "https://explorer.inkonchain.com/tx/",
+  linea: "https://lineascan.build/tx/",
   plasma: "https://plasmascan.to/tx/", sepolia: "https://sepolia.etherscan.io/tx/",
 };
 

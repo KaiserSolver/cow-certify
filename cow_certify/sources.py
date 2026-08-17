@@ -19,7 +19,9 @@ def _safe_url(url):
     ledger. Keys ride in many shapes: query (?apikey=), a deep path
     (…/v2/<key>), or a SINGLE path segment (QuickNode …/quiknode.pro/<token>/,
     Chainstack …/p2pify.com/<key>) — so keeping any path segment can leak.
-    The full URL's sha256 still pins the exact request for reproducibility."""
+    Ledger provenance note: entries record the sha256 of the RESPONSE bytes
+    plus this safe origin — the exact request is NOT pinned (a canonical
+    request digest is future work; the old comment here claimed otherwise)."""
     try:
         p = urlsplit(url)
         return f"{p.scheme}://{p.netloc}"
@@ -38,6 +40,7 @@ NETWORKS = {
     "avalanche": "avalanche",
     "bnb": "bnb",
     "ink": "ink",
+    "linea": "linea",
     "plasma": "plasma",
     "sepolia": "sepolia",
 }
@@ -53,6 +56,7 @@ CHAIN_IDS = {
     "avalanche": 43114,
     "bnb": 56,
     "ink": 57073,
+    "linea": 59144,
     "plasma": 9745,
     "sepolia": 11155111,
 }
@@ -83,6 +87,9 @@ DEFAULT_RPC = {
             "https://binance.llamarpc.com"],
     "ink": ["https://rpc-gel.inkonchain.com",
             "https://ink.drpc.org"],
+    "linea": ["https://rpc.linea.build",
+              "https://linea-rpc.publicnode.com",
+              "https://1rpc.io/linea"],
     "plasma": ["https://rpc.plasma.to",
                "https://plasma.drpc.org"],
     "sepolia": ["https://ethereum-sepolia-rpc.publicnode.com",

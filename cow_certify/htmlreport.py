@@ -8,6 +8,7 @@ one file you can open or send to anyone.
 import html
 import time
 
+from . import __version__ as TOOL_VERSION
 from .sources import CHAIN_IDS
 
 EXPLORER = {
@@ -37,7 +38,7 @@ FRIENDLY = {
     "C11": ("You received your tokens", "The tokens bought actually reached the recorded receiver on-chain."),
     "C12": ("Matches your signed order", "The settled order matches a real signed order in CoW's public orderbook."),
     "C13": ("External calls", "The contracts the settlement interacted with."),
-    "C14": ("Execution vs fair mid", "How your price compared to the auction's reference mid — a best-execution signal, not full EBBO."),
+    "C14": ("Execution vs auction reference price", "How your price compared to the auction's reference price — a signal, not an economic fairness judgment and not full EBBO."),
     "C15": ("Protocol buffer", "Whether the settlement drew from CoW's accumulated-fee buffer (ERC-20 net delta of the settlement contract). Context, not a judgment."),
 }
 
@@ -184,7 +185,7 @@ def _trade_section(orders, vsmid=None):
         bps = (vsmid or {}).get((o.get("uid") or "").lower())
         if bps is not None:
             gcls = " good" if bps >= 0 else ""
-            meta.append(f"<span>vs fair mid <b class='mono{gcls}'>"
+            meta.append(f"<span>vs reference price <b class='mono{gcls}'>"
                         f"{'+' if bps >= 0 else ''}{_esc(bps)} bps</b></span>")
         if o.get("fill_fraction") and o["fill_fraction"] not in ("1", "1.0"):
             meta.append(f"<span>filled <b>{_esc(o['fill_fraction'])}</b></span>")
@@ -329,7 +330,7 @@ def render_html(cert, standalone=True):
     </div>
 
     <footer>
-      <span>cow-certify {_esc(cert.get('schema_version',''))} · not affiliated with CoW Protocol · public data only</span>
+      <span>cow-certify {_esc(TOOL_VERSION)} (schema {_esc(cert.get('schema_version',''))}) · not affiliated with CoW Protocol · public data only</span>
       <span><a href="https://github.com/KaiserSolver/cow-certify" target="_blank" rel="noopener">source · MIT</a></span>
     </footer>
   </div>"""

@@ -11,6 +11,7 @@ This is one such independent implementation, from public data only.
 import os
 import sys
 
+from . import __version__  # tool version (display); schema_version = cert format
 from . import gpv2 as scorer
 from . import sources
 from .checks_authenticity import run_authenticity_check
@@ -38,10 +39,26 @@ def _v(check, verdict, detail, **extra):
 
 
 def certify_tx(network, tx_hash, rpc_url=None):
+    custom_rpc = rpc_url is not None
     rpc_url = rpc_url or sources.DEFAULT_RPC[network]
     ev = Evidence()
     checks = []
     limits = []
+
+    # A user-supplied RPC must actually BE the selected network: certifying a
+    # Base settlement against an Arbitrum node produces confident nonsense. A
+    # trust tool verifies rather than assumes — eth_chainId is one cheap call
+    # on the custom-RPC path only (built-in defaults are pre-verified).
+    if custom_rpc:
+        want = sources.CHAIN_IDS.get(network)
+        try:
+            got = int(sources.rpc(rpc_url, "eth_chainId", [], ev), 16)
+        except Exception:
+            got = None
+        if want is not None and got is not None and got != want:
+            raise SystemExit(
+                f"--rpc-url is chain id {got}, but --network {network} is "
+                f"chain id {want} — refusing to certify against the wrong chain")
 
     tx = sources.rpc(rpc_url, "eth_getTransactionByHash", [tx_hash], ev)
     if tx is None:
@@ -386,7 +403,7 @@ def render_text(cert, color=None):
     glyph, ovcode, _ = _VSTYLE.get(ov, ("", "", False))
 
     out = [
-        paint(f"cow-certify {cert['schema_version']}", "2")
+        paint(f"cow-certify {__version__} (schema {cert['schema_version']})", "2")
         + f"   {net}" + (f" (chain {cid})" if cid else ""),
         paint(sub.get("tx_hash", ""), "2"),
         "",

@@ -223,6 +223,9 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
       compared++;
       const dBuy = e.buy_amount - sBuy, dSell = e.sell_amount - sSell;
       if (dBuy < -ROUNDING_ATOMS || dSell > ROUNDING_ATOMS) worst = VIOLATION;
+      // user-deficit inside the rounding band: not exact -> UNCERTAIN, never
+      // PASS (and never VIOLATION — mirrors the Python engine, 2026-08-17)
+      else if ((dBuy < 0n || dSell > 0n) && worst === PASS) worst = UNCERTAIN;
     }
     if (extra.length || missing.length)
       checks.push(v("C3.solution-fidelity", VIOLATION, `settled-order set differs from the winning solution: ${extra.length} settled-but-not-scored, ${missing.length} scored-but-not-settled`));
@@ -269,11 +272,13 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
       kinds.set(events[i].uid, (trades[i].flags & FLAG_KIND_BUY) ? "buy" : "sell");
     const prices = (comp.auction && comp.auction.prices) || {};
     const native = {}; for (const [k, val] of Object.entries(prices)) native[k.toLowerCase()] = BigInt(val);
-    let totalNative = 0n, priced = 0, jitExcluded = 0;
+    let totalNative = 0n, priced = 0, jitExcluded = 0, unclassified = 0;
     for (const [uid, limSell, limBuy, e] of results) {
       if (jitUids.has(uid)) { jitExcluded++; continue; }  // maker leg, not user (F6)
       let kind = kinds.get(uid);
-      if (!kind) { const meta = await src.orderMeta(network, uid, ev); kind = (meta && meta.kind) || "sell"; }
+      if (!kind) { const meta = await src.orderMeta(network, uid, ev); kind = (meta && meta.kind) || null; }
+      // unknown kind: never guess — a buy valued as a sell is a WRONG surplus
+      if (kind !== "sell" && kind !== "buy") { unclassified++; continue; }
       const execSellNet = e.sell_amount - (e.fee_amount || 0n);
       const surplus = surplusFromExecution(kind, execSellNet, e.buy_amount, limSell, limBuy);
       const stok = kind === "sell" ? e.buy_token : e.sell_token;
@@ -282,6 +287,8 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
     if (priced === 0) {
       const reason = (jitExcluded && jitExcluded === results.length)
         ? "every settled leg was a JIT/liquidity order (no user order to value)"
+        : (unclassified && unclassified + jitExcluded === results.length)
+        ? "no settled trade could be classified sell/buy from public data; surplus not computed rather than guessed"
         : "no native prices in the competition record for the settled tokens; surplus not valuable in native terms";
       checks.push(v("C5.surplus-delivered", UNCERTAIN, reason)); return;
     }
@@ -388,6 +395,10 @@ function runReceiverCheck(direct, calldata, logs, checks, limits) {
   for (const lg of logs) {
     const topics = lg.topics || [];
     if (!topics.length || topics[0].toLowerCase() !== ERC20_TRANSFER || topics.length < 3) continue;
+    // only payouts SENT BY the settlement contract count — an unrelated
+    // same-tx transfer to the same (token, receiver) must not satisfy the
+    // expected amount (false-PASS fix, 2026-08-17; mirrors Python)
+    if (("0x" + topics[1].slice(-40)).toLowerCase() !== SETTLEMENT) continue;
     const key = (lg.address || "").toLowerCase() + "|" + ("0x" + topics[2].slice(-40)).toLowerCase();
     if (!expected.has(key)) continue;
     let val; try { val = BigInt(lg.data && lg.data !== "0x" ? lg.data : (topics[3] || "0x0")); } catch { continue; }
@@ -451,7 +462,7 @@ function runPriceVsMid(comp, logs, checks) {
   }
   const parts = rows.slice(0, 4).map(([, b]) => `${b >= 0 ? "+" : ""}${b.toFixed(1)} bps`);
   checks.push(v("C14.price-vs-mid", INFO,
-    `execution vs the auction's reference mid: ${parts.join(", ")}${rows.length > 4 ? ` (+${rows.length - 4} more)` : ""} — positive is better than fair mid; small negatives are normal (fees + spread). Informational, NOT full EBBO.`,
+    `execution vs the auction's reference mid: ${parts.join(", ")}${rows.length > 4 ? ` (+${rows.length - 4} more)` : ""} — positive is better than the auction reference price; small negatives are normal (fees + spread). Informational, NOT full EBBO.`,
     { per_order: rows.map(([u, b]) => ({ uid: u, bps: Math.round(b * 100) / 100 })) }));
 }
 

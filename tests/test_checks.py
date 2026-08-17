@@ -217,9 +217,12 @@ class TestReceiverDeliveryC11(unittest.TestCase):
         return {"address": self.GPV2, "data": data,
                 "topics": [scorer.TRADE_TOPIC, "0x" + self._pad(owner)]}
 
-    def _transfer_log(self, token, to, val):
+    def _transfer_log(self, token, to, val, sender=None):
+        # Real GPv2 payouts are sent BY the settlement contract; C11 counts
+        # only those (sender-filter, 2026-08-17 false-PASS fix).
+        frm = self._pad(sender or scorer.SETTLEMENT)
         return {"address": token.lower(), "data": f"0x{val:064x}",
-                "topics": [self.TRANSFER, "0x" + "0" * 64, "0x" + self._pad(to)]}
+                "topics": [self.TRANSFER, "0x" + frm, "0x" + self._pad(to)]}
 
     def _run(self, logs):
         checks, limits = [], []
@@ -231,6 +234,23 @@ class TestReceiverDeliveryC11(unittest.TestCase):
         tok = "0x" + "b" * 40
         logs = [self._trade_log(owner, "0x" + "c" * 40, tok, 500, 1000, 0, "aa" * 56),
                 self._transfer_log(tok, owner, 1000)]
+        v = self._run(logs)
+        self.assertEqual(v["verdict"], "PASS")
+
+    def test_unrelated_sender_transfer_does_not_satisfy_delivery(self):
+        # 2026-08-17 audit P0: a same-transaction transfer to the right
+        # (token, receiver) from an UNRELATED sender must not count as the
+        # settlement's payout — that was a false-PASS path. With only a
+        # third-party transfer covering the amount, delivery reads short
+        # (INFO), never PASS.
+        owner = "0x" + "a" * 40
+        tok = "0x" + "b" * 40
+        logs = [self._trade_log(owner, "0x" + "c" * 40, tok, 500, 1000, 0, "aa" * 56),
+                self._transfer_log(tok, owner, 1000, sender="0x" + "d" * 40)]
+        v = self._run(logs)
+        self.assertEqual(v["verdict"], "INFO")
+        # settlement-sent payout still passes alongside third-party noise
+        logs.append(self._transfer_log(tok, owner, 1000))
         v = self._run(logs)
         self.assertEqual(v["verdict"], "PASS")
 

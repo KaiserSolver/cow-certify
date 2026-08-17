@@ -71,7 +71,7 @@ python3 -m cow_certify.batch corpus.csv --out certs/
 ```
 
 Supported networks: mainnet, arbitrum, base, gnosis, polygon, avalanche, bnb,
-ink, plasma, sepolia. Default public RPCs are built in (with fallback rotation
+ink, linea, plasma, sepolia. Default public RPCs are built in (with fallback rotation
 and retry/backoff); pass `--rpc-url` for your own endpoint — recommended for
 mainnet, whose public RPCs rate-limit hard.
 

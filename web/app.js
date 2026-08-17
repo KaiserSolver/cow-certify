@@ -10,7 +10,7 @@ const q = $("q"), net = $("net"), go = $("go"), statusEl = $("status"), result =
 
 const HASH_RE = /^0x[0-9a-fA-F]{64}$/;
 const UID_RE = /^0x[0-9a-fA-F]{112}$/;
-const NET_ORDER = ["mainnet", "arbitrum", "base", "gnosis", "polygon", "avalanche", "bnb", "ink", "plasma", "sepolia"];
+const NET_ORDER = ["mainnet", "arbitrum", "base", "gnosis", "polygon", "avalanche", "bnb", "ink", "linea", "plasma", "sepolia"];
 
 $("ex").onclick = () => {
   q.value = "0x859d015d472ab27905ef704ec48b7c3e11b0e0cc5c86e09bfd885acb04ca1aee";

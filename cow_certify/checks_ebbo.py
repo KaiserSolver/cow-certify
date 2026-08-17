@@ -2,7 +2,8 @@
 
 Compares what the user actually got to the auction's own reference (oracle)
 prices: for each settled order, native value received vs native value given up,
-in basis points. Positive means the user did better than the fair mid; a small
+in basis points. Positive means the user did better than the auction's
+reference price; a small
 negative is normal, because the reference mid is not itself tradable and the
 figure includes fees + spread.
 
@@ -54,7 +55,7 @@ def run_price_vs_mid(comp, logs, checks):
     parts = [f"{b:+.1f} bps" for _, b in rows[:4]]
     detail = ("execution vs the auction's reference mid: " + ", ".join(parts)
               + (f" (+{len(rows) - 4} more)" if len(rows) > 4 else "")
-              + " — positive is better than the fair mid; a small negative is "
+              + " — positive is better than the auction reference price; a small negative is "
               "normal (fees + spread; the mid is not itself tradable). "
               "Informational: a reference-price comparison, NOT full EBBO.")
     checks.append(_v("C14.price-vs-mid", INFO, detail,

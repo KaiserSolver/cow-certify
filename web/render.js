@@ -2,6 +2,7 @@
 // Faithful port of the Python htmlreport design; CSS lives in index.html.
 import { EXPLORER, CHAIN_IDS } from "./sources.js";
 
+const TOOL_VERSION = "0.4.0"; // display; cert schema_version is the format version
 const FRIENDLY = {
   C0: ["Settlement type", "How the trade reached the chain — CoW's contract directly, or via a solver's own contract."],
   C1: ["Bound to its auction", "The on-chain settlement matches the auction it claims to have won."],
@@ -17,7 +18,7 @@ const FRIENDLY = {
   C11: ["You received your tokens", "The tokens bought actually reached the recorded receiver on-chain."],
   C12: ["Matches your signed order", "The settled order matches a real signed order in CoW's public orderbook."],
   C13: ["External calls", "The contracts the settlement interacted with."],
-  C14: ["Execution vs fair mid", "How your price compared to the auction's reference mid — a best-execution signal, not full EBBO."],
+  C14: ["Execution vs auction reference price", "How your price compared to the auction's reference price — a signal, not an economic fairness judgment and not full EBBO."],
   C15: ["Protocol buffer", "Whether the settlement drew from CoW's accumulated-fee buffer (ERC-20 net delta of the settlement contract). Context, not a judgment."],
 };
 const HERO = {
@@ -44,7 +45,7 @@ function tradeCards(orders, vsMid) {
     const meta = [];
     if (o.executed_price) meta.push(`<span>price <b class="mono">${esc(o.executed_price)}</b></span>`);
     const bps = vsMid[(o.uid || "").toLowerCase()];
-    if (bps !== undefined) meta.push(`<span>vs fair mid <b class="mono ${bps >= 0 ? "good" : ""}">${bps >= 0 ? "+" : ""}${esc(bps)} bps</b></span>`);
+    if (bps !== undefined) meta.push(`<span>vs reference price <b class="mono ${bps >= 0 ? "good" : ""}">${bps >= 0 ? "+" : ""}${esc(bps)} bps</b></span>`);
     meta.push(`<span>trader ${copyable(o.owner, short(o.owner))}</span>`);
     return `<div class="tcard"><div class="flow">
       <span class="side"><span class="amt mono">${esc(ss)}</span> ${tsym(o.sell_token)}<small>${kind === "sell" ? "you sold" : "sold"}</small></span>
@@ -106,7 +107,7 @@ export function renderCertificate(cert) {
       <div class="repro mono">${esc(cert.reproduce || "")}</div>
       <details><summary>Evidence — ${ev.length} fetch(es), each fingerprinted (sha256)</summary>${evrows}</details>
       ${limitsHtml}</div>
-    <footer><span>cow-certify ${esc(cert.schema_version || "")} · not affiliated with CoW Protocol · public data only</span>
+    <footer><span>cow-certify ${esc(TOOL_VERSION)} (schema ${esc(cert.schema_version || "")}) · not affiliated with CoW Protocol · public data only</span>
       <span><a href="https://github.com/KaiserSolver/cow-certify" target="_blank" rel="noopener">source · MIT</a></span></footer>
   </div>`;
 }

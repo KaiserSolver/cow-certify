@@ -18,8 +18,13 @@ VIOLATION = "VIOLATION"
 UNCERTAIN = "UNCERTAIN"
 INFO = "INFO"
 
-# Atom tolerance for scored-vs-executed comparisons: driver price re-encoding
-# rounds with ceil/floor per trade, worth at most a couple of atoms.
+# Atom band for scored-vs-executed comparisons. Real settlements match the
+# scored solution EXACTLY (0/94 corpus certificates ever showed a nonzero
+# delta, and the protocol's own settlement validation requires equality) —
+# so exact is the only PASS. A 1-2 atom user-deficit is theoretically
+# producible by driver ceil/floor re-encoding, but "theoretically benign" is
+# not "provably benign": it lands UNCERTAIN, never PASS (and never VIOLATION
+# — never accuse from ambiguity). Beyond the band is a VIOLATION.
 ROUNDING_ATOMS = 2
 
 def _v(check, verdict, detail, **extra):
@@ -137,9 +142,20 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
                 amount_notes.append(
                     f"{e['uid'][:18]}..: delivered {d_buy:+d} buy-atoms / "
                     f"{d_sell:+d} sell-atoms vs the scored solution")
+            elif d_buy < 0 or d_sell > 0:
+                # User-DEFICIT inside the band: within known driver-rounding
+                # reach but NOT exact — flagged for review, never called
+                # favorable (the old label said "user-favorable" for a
+                # deficit), and never PASS.
+                if worst == PASS:
+                    worst = UNCERTAIN
+                amount_notes.append(
+                    f"{e['uid'][:18]}..: {d_buy:+d} buy / {d_sell:+d} sell "
+                    f"atoms vs the scored solution — within the driver "
+                    f"rounding band but not exact; flagged for review")
             elif d_buy or d_sell:
                 amount_notes.append(
-                    f"{e['uid'][:18]}..: user-favorable/rounding delta "
+                    f"{e['uid'][:18]}..: user-favorable delta "
                     f"({d_buy:+d} buy, {d_sell:+d} sell atoms)")
         matched = [u for u in ev_uids if u in sol_orders]
         if extra or missing:
@@ -241,6 +257,7 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
         total_native = 0
         priced = 0
         jit_excluded = 0
+        unclassified = 0
         for uid, lim_sell, lim_buy, e in results:
             # JIT/liquidity legs are the maker's, not a user's — exclude them
             # from the delivered-USER-surplus sum (F6).
@@ -250,7 +267,14 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
             kind = kinds.get(uid)
             if kind is None:
                 meta = sources.order_meta(network, uid, ev)
-                kind = (meta or {}).get("kind") or "sell"
+                kind = (meta or {}).get("kind")
+            if kind not in ("sell", "buy"):
+                # Order kind unknowable from public data: a buy order valued
+                # as a sell produces a WRONG surplus, so this tool never
+                # guesses — the trade is left out and the coverage note says
+                # so (previously this silently assumed "sell").
+                unclassified += 1
+                continue
             exec_sell_net = e["sell_amount"] - e.get("fee_amount", 0)
             surplus = scorer.surplus_from_execution(
                 kind, exec_sell_net, e["buy_amount"], lim_sell, lim_buy)
@@ -262,6 +286,9 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
         if priced == 0:
             reason = ("every settled leg was a JIT/liquidity order (no user "
                       "order to value)" if jit_excluded and jit_excluded == len(results)
+                      else "no settled trade could be classified sell/buy from "
+                      "public data; surplus not computed rather than guessed"
+                      if unclassified and unclassified + jit_excluded == len(results)
                       else "no native prices in the competition record for the "
                       "settled tokens; surplus not valuable in native terms")
             checks.append(_v("C5.surplus-delivered", UNCERTAIN, reason))
@@ -280,6 +307,10 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
         # it is fixed by the on-chain Trade events and cannot be gamed.)
         jit_note = (f" {jit_excluded} JIT/liquidity leg(s) were excluded (maker "
                     f"surplus, not user)." if jit_excluded else "")
+        if unclassified:
+            jit_note += (f" {unclassified} trade(s) could not be classified "
+                         f"sell/buy from public data and were left out rather "
+                         f"than guessed.")
         detail = (f"delivered user surplus ≈ {total_native} native atoms over "
                   f"{coverage} (computed from the on-chain executed amounts "
                   f"against the signed limits — it cannot be inflated by the "

@@ -62,11 +62,20 @@ def run_receiver_check(direct, calldata, logs, checks, limits):
         key = (e["buy_token"].lower(), recv)
         expected[key] = expected.get(key, 0) + e["buy_amount"]
 
-    # Actual ERC-20 Transfers landing on those (token, receiver) pairs.
+    # Actual ERC-20 Transfers landing on those (token, receiver) pairs —
+    # counting ONLY transfers sent BY the settlement contract. GPv2 payouts
+    # provably originate from the settlement; without the sender filter an
+    # unrelated same-transaction transfer to the same (token, receiver) could
+    # satisfy the expected amount and produce a false PASS (2026-08-17 audit).
+    # The known benign non-GPv2 delivery paths (Balancer-Vault internal
+    # balances, native ETH) already route to INFO, not PASS.
     actual = {}
     for lg in logs:
         topics = lg.get("topics") or []
         if not topics or topics[0].lower() != ERC20_TRANSFER or len(topics) < 3:
+            continue
+        sender = ("0x" + topics[1][-40:]).lower()
+        if sender != scorer.SETTLEMENT:
             continue
         key = ((lg.get("address") or "").lower(),
                ("0x" + topics[2][-40:]).lower())
@@ -101,8 +110,8 @@ def run_receiver_check(direct, calldata, logs, checks, limits):
         checks.append(_v(
             "C11.receiver-delivery", PASS,
             f"every settled order's buy tokens reached the recorded receiver "
-            f"on-chain across {len(expected)} (token, receiver) group(s) "
-            f"({basis}){eth_note}"))
+            f"on-chain, sent by the settlement contract, across "
+            f"{len(expected)} (token, receiver) group(s) ({basis}){eth_note}"))
     else:
         parts = [f"{tok[:10]}..→{to[:10]}.. delivered {got}/{exp}"
                  for (tok, to), exp, got in short[:3]]
