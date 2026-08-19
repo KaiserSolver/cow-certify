@@ -1,5 +1,7 @@
 # cow-certify
 
+[![PyPI](https://img.shields.io/pypi/v/cow-certify)](https://pypi.org/project/cow-certify/)
+
 Independent verification for CoW Protocol settlements. Paste a settlement
 transaction (or your order id) and get a reproducible verdict on whether that
 settlement faithfully executed the auction it claims — with the evidence to
@@ -42,33 +44,41 @@ See [`web/README.md`](https://github.com/KaiserSolver/cow-certify/blob/main/web/
 ## Install (CLI)
 
 ```
-# from a clone — zero dependencies to configure, works today
+pip install cow-certify
+cow-certify --network base 0x<settlement_tx_hash>
+```
+
+Or from a clone, with no install at all:
+
+```
 git clone https://github.com/KaiserSolver/cow-certify
 cd cow-certify
 python3 -m cow_certify --network base 0x<settlement_tx_hash>
 ```
 
 The only third-party dependency is `eth-abi`; public RPCs and API endpoints for
-every chain are built in. A PyPI package (`pip install cow-certify`) is planned.
+every chain are built in.
 
 ## Quickstart
 
 ```
 # certify a settlement transaction
-python3 -m cow_certify --network base 0x<settlement_tx_hash>
+cow-certify --network base 0x<settlement_tx_hash>
 
 # traders: certify your own trade straight from its order id on CoW Explorer
-python3 -m cow_certify --network mainnet --order 0x<order_uid>
+cow-certify --network mainnet --order 0x<order_uid>
 
 # write a shareable HTML certificate (for anyone, not just the terminal)
-python3 -m cow_certify --network base 0x<tx> --html cert.html
+cow-certify --network base 0x<tx> --html cert.html
 
 # machine-readable certificate JSON (JSON only — pipeable to jq / CI)
-python3 -m cow_certify --network arbitrum 0x<tx> --json
+cow-certify --network arbitrum 0x<tx> --json
 
 # batch mode + aggregate summary
 python3 -m cow_certify.batch corpus.csv --out certs/
 ```
+
+(`python3 -m cow_certify` works identically from a source checkout.)
 
 Supported networks: mainnet, arbitrum, base, gnosis, polygon, avalanche, bnb,
 ink, linea, plasma, sepolia. Default public RPCs are built in (with fallback rotation
