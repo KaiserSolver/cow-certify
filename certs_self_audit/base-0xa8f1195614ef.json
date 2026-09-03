@@ -112,7 +112,7 @@
   {
    "check": "C11.receiver-delivery",
    "verdict": "PASS",
-   "detail": "every settled order's buy tokens reached the recorded receiver on-chain across 1 (token, receiver) group(s) (receivers from calldata)"
+   "detail": "every settled order's buy tokens reached the recorded receiver on-chain, sent by the settlement contract, across 1 (token, receiver) group(s) (receivers from calldata)"
   },
   {
    "check": "C12.order-authenticity",
@@ -145,7 +145,7 @@
   {
    "check": "C14.price-vs-mid",
    "verdict": "INFO",
-   "detail": "execution vs the auction's reference mid: -39.4 bps \u2014 positive is better than the fair mid; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
+   "detail": "execution vs the auction's reference mid: -39.4 bps \u2014 positive is better than the auction reference price; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
    "per_order": [
     {
      "uid": "0x988f67e6dd1600dd4aa6437b53f975f1388e7f1c26507152995b9ee97a1dc42690759aaeb2833a49635cb2911d3c7e33df4909646a73e0f0",
@@ -174,63 +174,63 @@
    "ref": "https://base.rpc.blxrbdn.com [\"0xa8f1195614ef7544c9c55b108da7863a3e8e45e21062d75c252d997a63f7620c\"]",
    "sha256": "5f1d3ff98ab4812627d0ed7de1bff6e4c7bc2a49fac9eea14cf11e514b0f78f1",
    "bytes": 6069,
-   "fetched_at": "2026-08-13T19:42:20Z"
+   "fetched_at": "2026-09-03T17:12:04Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://base.rpc.blxrbdn.com [\"0xa8f1195614ef7544c9c55b108da7863a3e8e45e21062d75c252d997a63f7620c\"]",
    "sha256": "4ef2dfe8400606495b9b59dfc7b2f4975f05957d233dbfa030dd15009ec53dbf",
    "bytes": 7763,
-   "fetched_at": "2026-08-13T19:42:20Z"
+   "fetched_at": "2026-09-03T17:12:04Z"
   },
   {
    "kind": "competition:by_tx_hash",
    "ref": "https://api.cow.fi/base/api/v2/solver_competition/by_tx_hash/0xa8f1195614ef7544c9c55b108da7863a3e8e45e21062d75c252d997a63f7620c",
    "sha256": "ca6ed0a20e6898a016ca7c61e1f853fc2a39c2d9663dc8dfcf782445d9133666",
    "bytes": 398339,
-   "fetched_at": "2026-08-13T19:42:20Z"
+   "fetched_at": "2026-09-03T17:12:04Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x2c4c28ddbdac9c5e7055b4c863b72ea0149d8afe\", \"data\": \"0x02cc250d0000000000000000000000004c7",
    "sha256": "db4796fef52c36f78989daa650510ae045136f8ce6ff5ea321cd80081e7ed2af",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:20Z"
+   "fetched_at": "2026-09-03T17:12:04Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "0665affd45e46e65eca43e938fe63e22a8ceece0894abfa49d43d468655f681e",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:20Z"
+   "fetched_at": "2026-09-03T17:12:05Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "1327ae5ea5e35139befdbbb03e44a308ef176092224ec000b05c3f8d5143b287",
    "bytes": 230,
-   "fetched_at": "2026-08-13T19:42:20Z"
+   "fetched_at": "2026-09-03T17:12:05Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x696f9436b67233384889472cd7cd58a6fb5df4f1\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "942eb00e02101dd8673395e77f951530862ae177255e90bbbb71a3c42dd6fba6",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:20Z"
+   "fetched_at": "2026-09-03T17:12:05Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x696f9436b67233384889472cd7cd58a6fb5df4f1\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "019123d245847651bc96fa9bd0ed332c56363cff8a681cc7d1ef500ea013b39d",
    "bytes": 230,
-   "fetched_at": "2026-08-13T19:42:20Z"
+   "fetched_at": "2026-09-03T17:12:05Z"
   },
   {
    "kind": "orderbook:order",
    "ref": "https://api.cow.fi/base/api/v1/orders/0x988f67e6dd1600dd4aa6437b53f975f1388e7f1c26507152995b9ee97a1dc42690759aaeb2833a49635cb2911d3c7e33df4909646a73e0f0",
    "sha256": "336f060490ba6804763367c4ec0afc923822e697a251e6f2a8bab5fec303f6fe",
    "bytes": 5027,
-   "fetched_at": "2026-08-13T19:42:20Z"
+   "fetched_at": "2026-09-03T17:12:05Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

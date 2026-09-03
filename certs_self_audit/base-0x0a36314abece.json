@@ -145,7 +145,7 @@
   {
    "check": "C14.price-vs-mid",
    "verdict": "INFO",
-   "detail": "execution vs the auction's reference mid: -37.0 bps \u2014 positive is better than the fair mid; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
+   "detail": "execution vs the auction's reference mid: -37.0 bps \u2014 positive is better than the auction reference price; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
    "per_order": [
     {
      "uid": "0x4c4f849b080a8ddad05f0451671b886d9469df7f54168f59d920c3880a3d98038fab71c0d4272698a3b2d1f3ed5fc3c1b9b3e5316a734cb7",
@@ -175,63 +175,63 @@
    "ref": "https://base.rpc.blxrbdn.com [\"0x0a36314abece40a026a693f0e7f0e8ba542be9708958aa32c3ea97809b51b698\"]",
    "sha256": "65eeb912441956535ba56c65f0b05d6c6fa5c405e65c6ff11b4d88d8fae39828",
    "bytes": 8267,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:12:07Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://base.rpc.blxrbdn.com [\"0x0a36314abece40a026a693f0e7f0e8ba542be9708958aa32c3ea97809b51b698\"]",
    "sha256": "a871c0ef3cb05dfc6dfd8a318a036d910625fbc367b66cd29d7d34da0ff94b58",
    "bytes": 12851,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:12:07Z"
   },
   {
    "kind": "competition:by_tx_hash",
    "ref": "https://api.cow.fi/base/api/v2/solver_competition/by_tx_hash/0x0a36314abece40a026a693f0e7f0e8ba542be9708958aa32c3ea97809b51b698",
    "sha256": "a76dfaa377c2791b3cf969e1fdb36487009a69595014c7fef9b7629e10bcfbc0",
    "bytes": 393570,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:12:08Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x2c4c28ddbdac9c5e7055b4c863b72ea0149d8afe\", \"data\": \"0x02cc250d0000000000000000000000004c7",
    "sha256": "db4796fef52c36f78989daa650510ae045136f8ce6ff5ea321cd80081e7ed2af",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:12:08Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0xfde4c96c8593536e31f229ea8f37b2ada2699bb2\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "0665affd45e46e65eca43e938fe63e22a8ceece0894abfa49d43d468655f681e",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:12:08Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0xfde4c96c8593536e31f229ea8f37b2ada2699bb2\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "c296a7c925cb6b699956d072d9be8ef4d8b4c6e8ca3a51d13a336594cee40412",
    "bytes": 230,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:12:08Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "693e8930e72658ce36bc3e1df09149339c713fea3a1175042642cd57d690de71",
    "bytes": 38,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:12:08Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "693e8930e72658ce36bc3e1df09149339c713fea3a1175042642cd57d690de71",
    "bytes": 38,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:12:08Z"
   },
   {
    "kind": "orderbook:order",
    "ref": "https://api.cow.fi/base/api/v1/orders/0x4c4f849b080a8ddad05f0451671b886d9469df7f54168f59d920c3880a3d98038fab71c0d4272698a3b2d1f3ed5fc3c1b9b3e5316a734cb7",
    "sha256": "970711fb46639ab0f39a6b2ec3e6f08275addc81df47b651bde0bfae18a0f501",
    "bytes": 2698,
-   "fetched_at": "2026-08-13T19:42:24Z"
+   "fetched_at": "2026-09-03T17:12:08Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

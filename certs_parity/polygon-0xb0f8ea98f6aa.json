@@ -153,7 +153,7 @@
   {
    "check": "C14.price-vs-mid",
    "verdict": "INFO",
-   "detail": "execution vs the auction's reference mid: -354.8 bps \u2014 positive is better than the fair mid; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
+   "detail": "execution vs the auction's reference mid: -354.8 bps \u2014 positive is better than the auction reference price; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
    "per_order": [
     {
      "uid": "0x6ce5438abe9cebe375b19a0e9c3144b7e3b6d9ff3d3722015523d4ad311f41ab2225d8c43c76987f0f5b611aa17759488d13736f6a78a76a",
@@ -183,63 +183,63 @@
    "ref": "https://polygon-bor-rpc.publicnode.com [\"0xb0f8ea98f6aa969b3ffea28a32f413a3fc4ff59244b4ffc07e65c2519f342b56\"]",
    "sha256": "84d00ea27cc8b7694223f1409e2f5f1c9a20d5d2434d61dc20478e1fff97986e",
    "bytes": 4990,
-   "fetched_at": "2026-08-13T19:42:25Z"
+   "fetched_at": "2026-09-03T17:13:52Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://polygon-bor-rpc.publicnode.com [\"0xb0f8ea98f6aa969b3ffea28a32f413a3fc4ff59244b4ffc07e65c2519f342b56\"]",
    "sha256": "28014e6e6351bab57069639ab5bb4b639b5e8091949fdc59aa8732e2b771cc27",
    "bytes": 11946,
-   "fetched_at": "2026-08-13T19:42:25Z"
+   "fetched_at": "2026-09-03T17:13:52Z"
   },
   {
    "kind": "competition:by_tx_hash",
    "ref": "https://api.cow.fi/polygon/api/v2/solver_competition/by_tx_hash/0xb0f8ea98f6aa969b3ffea28a32f413a3fc4ff59244b4ffc07e65c2519f342b56",
    "sha256": "c3e3a54edf2a1364b571c31aed87eddc1947fef5d59745c85d338d3d96e6aef6",
    "bytes": 96036,
-   "fetched_at": "2026-08-13T19:42:26Z"
+   "fetched_at": "2026-09-03T17:13:53Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://polygon.drpc.org [{\"to\": \"0x2c4c28ddbdac9c5e7055b4c863b72ea0149d8afe\", \"data\": \"0x02cc250d000000000000000000000000e25",
    "sha256": "7aa1bce2c8c36922fcde6455a25909c4f0a41e02346ade0168f6df57c9a26849",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:26Z"
+   "fetched_at": "2026-09-03T17:13:53Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://polygon-bor-rpc.publicnode.com [{\"to\": \"0x3c499c542cef5e3811e1192ce70d8cc03d5c3359\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "f470abc1e2ed21fbb5f74ae7897a7b902ed5e7b134d7f0cd5a5731ebff2690da",
    "bytes": 103,
-   "fetched_at": "2026-08-13T19:42:26Z"
+   "fetched_at": "2026-09-03T17:13:53Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://polygon-bor-rpc.publicnode.com [{\"to\": \"0x3c499c542cef5e3811e1192ce70d8cc03d5c3359\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "787e294e4262cf75f90ccdf0ed6f59c65b253f4a0ce939d7ff15a732b0f50007",
    "bytes": 231,
-   "fetched_at": "2026-08-13T19:42:26Z"
+   "fetched_at": "2026-09-03T17:13:53Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://polygon-bor-rpc.publicnode.com [{\"to\": \"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "656254440c28512a72ff80afa27e5cd8669c5df940e00ee605f06ef0eef567e2",
    "bytes": 39,
-   "fetched_at": "2026-08-13T19:42:26Z"
+   "fetched_at": "2026-09-03T17:13:53Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://polygon-bor-rpc.publicnode.com [{\"to\": \"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "656254440c28512a72ff80afa27e5cd8669c5df940e00ee605f06ef0eef567e2",
    "bytes": 39,
-   "fetched_at": "2026-08-13T19:42:26Z"
+   "fetched_at": "2026-09-03T17:13:53Z"
   },
   {
    "kind": "orderbook:order",
    "ref": "https://api.cow.fi/polygon/api/v1/orders/0x6ce5438abe9cebe375b19a0e9c3144b7e3b6d9ff3d3722015523d4ad311f41ab2225d8c43c76987f0f5b611aa17759488d13736f6a78a76a",
    "sha256": "859fd5d35bb0f39a9d66c001d4106ca18a174ffe63ea10606054b3b53f5eaae9",
    "bytes": 2811,
-   "fetched_at": "2026-08-13T19:42:26Z"
+   "fetched_at": "2026-09-03T17:13:53Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

@@ -277,7 +277,7 @@ def render_html(cert, standalone=True):
     if limits:
         limits_html = ("<div class='note'>What this certificate does not check:</div>"
                        "<ul class='limits'>"
-                       + "".join(f"<li>{_esc(l)}</li>" for l in limits)
+                       + "".join(f"<li>{_esc(lim)}</li>" for lim in limits)
                        + "</ul>")
 
     ev = cert.get("evidence") or []
@@ -295,7 +295,7 @@ def render_html(cert, standalone=True):
         <div class="tagline">independent settlement verification</div>
       </div>
       <div style="text-align:right">
-        <div class="chip">{_esc(net)}{f' · chain {cid}' if cid else ''}</div>
+        <div class="chip">{_esc(net)}{f' · chain {_esc(cid)}' if cid else ''}</div>
         <div class="tagline" style="margin-top:6px">generated {gen}</div>
       </div>
     </div>

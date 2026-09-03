@@ -57,16 +57,28 @@ def _aggregate_by_uid(events):
 
 
 def trade_events_with_fee(logs):
-    """scorer.trade_events + the feeAmount word it skips (data word 4)."""
+    """scorer.trade_events + the feeAmount word it skips (data word 4). The
+    fee pass applies the SAME filter as trade_events (canonical contract, Trade
+    topic, well-formed data) so the two lists can never misalign; if they still
+    differ in length the fee is left at 0 rather than attached to the wrong
+    event."""
     events = scorer.trade_events(logs)
     fees = []
-    for lg in logs:
+    for lg in logs or []:
         topics = lg.get("topics") or []
         if not topics or topics[0].lower() != scorer.TRADE_TOPIC:
             continue
-        if lg.get("address", "").lower() != scorer.SETTLEMENT:
+        if (lg.get("address") or "").lower() != scorer.SETTLEMENT:
             continue
-        fees.append(int(lg["data"][2:][256:320], 16))
+        d = (lg.get("data") or "")[2:]
+        if len(d) < 560:
+            continue
+        try:
+            fees.append(int(d[256:320], 16))
+        except ValueError:
+            fees.append(0)
+    if len(fees) != len(events):
+        fees = [0] * len(events)
     for e, f in zip(events, fees):
         e["fee_amount"] = f
     return events
@@ -122,6 +134,13 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
                          f"risk a false finding"))
     else:
         extra = [u for u in ev_uids if u not in sol_orders]
+        # An unlisted settled uid that IS one of the auction's user orders is a
+        # real discrepancy. One that is NOT (and the record carries the user-
+        # order list) is far more likely a liquidity/JIT leg the record did not
+        # list — investigate, never accuse. Without the list we cannot tell.
+        extra_user = [u for u in extra
+                      if auction_uids is not None and u in auction_uids]
+        extra_unlisted = [u for u in extra if u not in extra_user]
         missing = [u for u in sol_orders if u not in ev_uids]
         amount_notes, worst = [], PASS
         compared = 0
@@ -158,13 +177,23 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
                     f"{e['uid'][:18]}..: user-favorable delta "
                     f"({d_buy:+d} buy, {d_sell:+d} sell atoms)")
         matched = [u for u in ev_uids if u in sol_orders]
-        if extra or missing:
+        if extra_user or missing:
             checks.append(_v(
                 "C3.solution-fidelity", VIOLATION,
                 f"settled-order set differs from the winning solution: "
-                f"{len(extra)} settled-but-not-scored, "
-                f"{len(missing)} scored-but-not-settled",
-                extra_uids=extra, missing_uids=missing))
+                f"{len(extra_user)} auction user order(s) settled but not in "
+                f"the scored solution, {len(missing)} scored-but-not-settled",
+                extra_uids=extra_user, missing_uids=missing,
+                unlisted_uids=extra_unlisted))
+        elif extra_unlisted:
+            checks.append(_v(
+                "C3.solution-fidelity", UNCERTAIN,
+                f"{len(extra_unlisted)} settled order(s) are in neither the "
+                f"winning solution's order list nor the auction's user order "
+                f"set — most likely solver-brought liquidity (JIT / CoW-AMM) "
+                f"that the public record did not list; flagged for review, "
+                f"not as a finding. The {len(matched)} user order(s) matched.",
+                unlisted_uids=extra_unlisted, orders=len(settled)))
         elif compared < len(matched):
             # The set matched but some amounts were not comparable — say so
             # rather than assert "amounts exact" over an empty comparison.
@@ -206,9 +235,12 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
         basis = "signed limits from the public orderbook"
         for e in events:
             meta = sources.order_meta(network, e["uid"], ev)
-            if meta and meta.get("sellAmount") and meta.get("buyAmount"):
-                results.append((e["uid"], int(meta["sellAmount"]),
-                                int(meta["buyAmount"]), e))
+            try:
+                lim_sell, lim_buy = int(meta["sellAmount"]), int(meta["buyAmount"])
+            except (TypeError, KeyError, ValueError):
+                continue
+            if lim_sell > 0 and lim_buy > 0:   # a zero limit is not a limit
+                results.append((e["uid"], lim_sell, lim_buy, e))
     if not results:
         checks.append(_v("C4.limit-compliance", UNCERTAIN,
                          "signed limits unavailable (calldata hidden and "
@@ -245,15 +277,20 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
     if not this_sol:
         return
     try:
-        if trades is not None:
-            kinds = {}
+        kinds = {}
+        # Only pair calldata trades with events when the counts agree (the
+        # same condition C4 uses) — a misaligned zip would value a buy as a sell.
+        if trades is not None and len(trades) == len(events):
             for t, e in zip(trades, events):
                 kinds[e["uid"]] = ("buy" if int(t[8]) & scorer.FLAG_KIND_BUY
                                    else "sell")
-        else:
-            kinds = {}  # wrapper route: kind resolved from orderbook meta below
         prices = (comp.get("auction") or {}).get("prices") or {}
-        native = {k.lower(): int(v) for k, v in prices.items()}
+        native = {}
+        for k, val in prices.items():
+            try:
+                native[str(k).lower()] = int(val)
+            except (TypeError, ValueError):
+                continue   # a malformed price is skipped, never fatal
         total_native = 0
         priced = 0
         jit_excluded = 0
@@ -291,7 +328,9 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
                       if unclassified and unclassified + jit_excluded == len(results)
                       else "no native prices in the competition record for the "
                       "settled tokens; surplus not valuable in native terms")
-            checks.append(_v("C5.surplus-delivered", UNCERTAIN, reason))
+            # Context only: C5 never moves the overall verdict.
+            checks.append(_v("C5.surplus-delivered", INFO,
+                             reason + " (context check; not a finding)"))
             return
         score = int(this_sol.get("score"))
         coverage = (f"{priced}/{len(results)} priced trade(s)"
@@ -324,5 +363,6 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
                          delivered_surplus_native=str(total_native),
                          reported_score=str(score)))
     except Exception as e:
-        checks.append(_v("C5.surplus-delivered", UNCERTAIN,
-                         f"surplus computation failed: {e}"))
+        checks.append(_v("C5.surplus-delivered", INFO,
+                         f"surplus not computed: {sources.redact(e)[:120]} "
+                         f"(context check; not a finding)"))

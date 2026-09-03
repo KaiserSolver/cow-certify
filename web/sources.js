@@ -10,15 +10,18 @@ export const CHAIN_IDS = {
   mainnet: 1, arbitrum: 42161, base: 8453, gnosis: 100,
   polygon: 137, avalanche: 43114, bnb: 56, ink: 57073, linea: 59144, plasma: 9745, sepolia: 11155111,
 };
+// CORS-enabled public endpoints only (a browser cannot use the rest). Order
+// matches the Python engine where the same hosts are used, so both engines
+// source a certificate from the same node when possible.
 export const DEFAULT_RPC = {
-  mainnet: ["https://ethereum-rpc.publicnode.com", "https://eth.drpc.org"], // both CORS-enabled (eth.llamarpc is not)
+  mainnet: ["https://ethereum-rpc.publicnode.com", "https://eth.drpc.org"],
   arbitrum: ["https://arb1.arbitrum.io/rpc", "https://arbitrum-one-rpc.publicnode.com"],
-  base: ["https://base-rpc.publicnode.com", "https://base.rpc.blxrbdn.com", "https://mainnet.base.org"],
+  base: ["https://base.rpc.blxrbdn.com", "https://base-rpc.publicnode.com", "https://mainnet.base.org"],
   gnosis: ["https://rpc.gnosischain.com", "https://gnosis-rpc.publicnode.com"],
   polygon: ["https://polygon-bor-rpc.publicnode.com", "https://polygon.drpc.org"],
   avalanche: ["https://avalanche-c-chain-rpc.publicnode.com", "https://api.avax.network/ext/bc/C/rpc"],
-  bnb: ["https://bsc-rpc.publicnode.com", "https://bsc.drpc.org"], // both CORS-enabled (llamarpc is not)
-  ink: ["https://rpc-gel.inkonchain.com", "https://ink.drpc.org"], // both CORS-enabled
+  bnb: ["https://bsc-rpc.publicnode.com", "https://bsc-dataseed.bnbchain.org", "https://bsc.drpc.org"], // all three CORS-enabled (verified 2026-09-03)
+  ink: ["https://rpc-gel.inkonchain.com", "https://ink.drpc.org"],
   linea: ["https://rpc.linea.build", "https://linea-rpc.publicnode.com", "https://1rpc.io/linea"],
   plasma: ["https://rpc.plasma.to", "https://plasma.drpc.org"],
   sepolia: ["https://ethereum-sepolia-rpc.publicnode.com"],
@@ -33,13 +36,19 @@ export const EXPLORER = {
 };
 
 const UA = { "user-agent": "cow-certify" }; // browsers ignore; helps some RPCs in Node
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// scheme://host only in the evidence ledger — never a path or query, where a
-// provider API key can ride (mirrors Python sources._safe_url). The default
-// endpoints are keyless, but a fork adding a keyed RPC must not leak it.
-function safeUrl(u) {
-  try { const p = new URL(u); return `${p.protocol}//${p.host}`; } catch { return "(url redacted)"; }
+// scheme://host[:port] only — never a path, query or userinfo, where a provider
+// API key can ride (mirrors Python sources._safe_url). The default endpoints
+// are keyless, but a fork adding a keyed RPC must not leak it.
+export function safeUrl(u) {
+  try { const p = new URL(u); return `${p.protocol}//${p.hostname}${p.port ? ":" + p.port : ""}`; }
+  catch { return "(url redacted)"; }
 }
+// Replace every URL inside free text with its safe origin. Every string that
+// can land in a certificate (check details, error messages) goes through this.
+const URL_RE = /https?:\/\/[^\s'"<>)\]]+/g;
+export const redact = (text) => String(text).replace(URL_RE, (m) => safeUrl(m));
 
 async function sha256hex(text) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
@@ -65,42 +74,61 @@ async function fetchT(url, opts = {}, timeoutMs = 25000) {
   finally { clearTimeout(t); }
 }
 
-export async function rpc(urls, method, params, ev, rounds = 3) {
+// JSON-RPC with fallback rotation across endpoints plus bounded retry rounds,
+// so a single custom URL (no rotation possible) still survives one transient
+// 429/timeout. A node-side JSON-RPC *error* object is deterministic (bad
+// params, archive state refused): it rotates to the next endpoint but never
+// triggers another round. URLs are redacted in every error message — an error
+// string can end up in a shareable certificate. Mirrors Python sources.rpc.
+export async function rpc(urls, method, params, ev, rounds = null) {
   if (typeof urls === "string") urls = [urls];
+  if (rounds === null) rounds = urls.length === 1 ? 3 : 2;
   const body = JSON.stringify({ jsonrpc: "2.0", id: 1, method, params });
   let last;
   for (let round = 0; round < rounds; round++) {
+    let transient = false;
     for (const url of urls) {
+      let text;
       try {
         const res = await fetchT(url, { method: "POST", headers: { ...UA, "content-type": "application/json" }, body });
-        const text = await res.text();
-        if (!res.ok) { last = new Error(`${url}: HTTP ${res.status}`); continue; }
-        const out = JSON.parse(text);
-        if (out.error) { last = new Error(`${url}: ${JSON.stringify(out.error)}`); continue; }
-        if (ev) await ev.record("rpc:" + method, `${safeUrl(url)} ${JSON.stringify(params).slice(0, 100)}`, text);
-        return out.result;
-      } catch (e) { last = e; }
+        text = await res.text();
+        if (!res.ok) { last = new Error(`${safeUrl(url)}: HTTP ${res.status}`); transient = true; continue; }
+      } catch (e) { last = e; transient = true; continue; }
+      let out;
+      try { out = JSON.parse(text); } catch { last = new Error(`${safeUrl(url)}: non-JSON response`); transient = true; continue; }
+      if (!out || typeof out !== "object") { last = new Error(`${safeUrl(url)}: non-object JSON-RPC response`); transient = true; continue; }
+      if (out.error) { last = new Error(`${safeUrl(url)}: ${JSON.stringify(out.error)}`); continue; }
+      if (ev) await ev.record("rpc:" + method, `${safeUrl(url)} ${JSON.stringify(params).slice(0, 100)}`, text);
+      return out.result === undefined ? null : out.result;
     }
-    if (round < rounds - 1) await new Promise((r) => setTimeout(r, 400 * (round + 1)));
+    if (!transient || round === rounds - 1) break;
+    await sleep(400 * (round + 1));
   }
-  throw new Error(`all RPC endpoints failed for ${method}: ${last}`);
+  throw new Error(`all RPC endpoints failed for ${method}: ${redact(last)}`);
 }
 
 // GET + JSON with a 404 shortcut and bounded retry/backoff on transient
-// failures (429/5xx/timeout). api.cow.fi is a single host with no fallback, so
-// a lone 429 must not abort an otherwise-complete certificate.
+// failures (429/5xx/timeout, and a 200 whose body is not JSON — a rate-limit
+// interstitial served as 200). Any other HTTP status is final and propagates
+// at once. api.cow.fi is a single keyless host, so its full URL is cited in the
+// ledger (so a reader can re-fetch exactly what was seen).
 async function getJson(url, ev, kind, retries = 3) {
   let last;
   for (let attempt = 0; attempt < retries; attempt++) {
-    try {
-      const res = await fetchT(url, { headers: UA });
-      if (res.status === 404) { if (ev) await ev.record(kind, safeUrl(url), "404"); return null; }
-      const text = await res.text();
-      if (res.ok) { if (ev) await ev.record(kind, safeUrl(url), text); return JSON.parse(text); }
-      last = new Error(`${kind}: HTTP ${res.status}`);
-      if (![429, 500, 502, 503, 504].includes(res.status)) throw last;
-    } catch (e) { last = e; }
-    await new Promise((r) => setTimeout(r, 500 * (2 ** attempt)));
+    let res, text;
+    try { res = await fetchT(url, { headers: UA }); text = await res.text(); }
+    catch (e) { last = e; if (attempt < retries - 1) await sleep(500 * 2 ** attempt); continue; }
+    if (res.status === 404) { if (ev) await ev.record(kind, url, "404"); return null; }
+    if (res.ok) {
+      let data;
+      try { data = JSON.parse(text); }
+      catch { last = new Error(`${kind}: non-JSON response`); if (attempt < retries - 1) await sleep(500 * 2 ** attempt); continue; }
+      if (ev) await ev.record(kind, url, text);
+      return data;
+    }
+    last = new Error(`${kind}: HTTP ${res.status}`);
+    if (![429, 500, 502, 503, 504].includes(res.status)) throw last;
+    if (attempt < retries - 1) await sleep(500 * 2 ** attempt);
   }
   throw last || new Error(`${kind}: failed`);
 }
@@ -125,6 +153,15 @@ function hexToUtf8(h) {
   for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(h.substr(i * 2, 2), 16);
   return new TextDecoder().decode(bytes).replace(/\0/g, "").trim();
 }
+// Python's str.isprintable(): no control/format/surrogate/private/unassigned
+// code points and no separators other than the ASCII space. A token symbol
+// carrying a right-to-left override can render as another token's name — the
+// address prefix is shown instead (mirrors Python tokens._decode_symbol).
+const UNPRINTABLE = /[\p{C}\p{Zl}\p{Zp}]/u;
+function printable(s) {
+  if (!s || UNPRINTABLE.test(s)) return false;
+  return !/\p{Zs}/u.test(s.replace(/ /g, ""));
+}
 function decodeSymbol(res) {
   if (!res || res === "0x") return null;
   const h = res.slice(2);
@@ -133,11 +170,11 @@ function decodeSymbol(res) {
       const len = Number(BigInt("0x" + h.slice(64, 128)));
       if (len > 0 && len <= 64) {
         const s = hexToUtf8(h.slice(128, 128 + len * 2));
-        if (s) return s;
+        if (printable(s)) return s;
       }
     }
     const s = hexToUtf8(h.slice(0, 64));
-    return s || null;
+    return printable(s) ? s : null;
   } catch { return null; }
 }
 export async function tokenMeta(rpcUrls, token, ev, cache) {

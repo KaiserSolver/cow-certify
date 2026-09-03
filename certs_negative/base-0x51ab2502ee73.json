@@ -36,35 +36,35 @@
    "ref": "https://base.rpc.blxrbdn.com [\"0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8\"]",
    "sha256": "e9cc738eb1d664b710fce0653173febeca8b8660c00bfdb3d2b06c95276362b1",
    "bytes": 5883,
-   "fetched_at": "2026-08-13T19:42:30Z"
+   "fetched_at": "2026-09-03T17:13:58Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://base.rpc.blxrbdn.com [\"0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8\"]",
    "sha256": "e747675e5f772818c50b7d4d1e61e1ddac32bf822f98088f9ddf4e64ce648cff",
    "bytes": 1239,
-   "fetched_at": "2026-08-13T19:42:30Z"
+   "fetched_at": "2026-09-03T17:13:58Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://base.rpc.blxrbdn.com [\"0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8\"]",
    "sha256": "e747675e5f772818c50b7d4d1e61e1ddac32bf822f98088f9ddf4e64ce648cff",
    "bytes": 1239,
-   "fetched_at": "2026-08-13T19:42:30Z"
+   "fetched_at": "2026-09-03T17:13:58Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://mainnet.base.org [\"0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8\"]",
    "sha256": "9772ecf7fcce7e1bf295a15f56b650248456cd9c2ce7cca131da5cc31dcb18ad",
    "bytes": 1240,
-   "fetched_at": "2026-08-13T19:42:30Z"
+   "fetched_at": "2026-09-03T17:13:58Z"
   },
   {
    "kind": "competition:by_tx_hash",
    "ref": "https://api.cow.fi/base/api/v2/solver_competition/by_tx_hash/0x51ab2502ee734936d3215b955701a2645c5e49bb8a6f74f5d8f6cce3e2e0a4a8",
    "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
    "bytes": 3,
-   "fetched_at": "2026-08-13T19:42:30Z"
+   "fetched_at": "2026-09-03T17:13:58Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

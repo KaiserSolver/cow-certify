@@ -21,14 +21,14 @@
    "ref": "https://base.rpc.blxrbdn.com [\"0x3c3fd97998bfafcce27fb7b96218124e819a0b6b6feb072a6abc6631aa87c9e9\"]",
    "sha256": "ec991e876efddfc8f28f3e4160b9b235653ca2aab491f8086d47bedf0411989a",
    "bytes": 741,
-   "fetched_at": "2026-08-13T19:42:33Z"
+   "fetched_at": "2026-09-03T17:14:01Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://base.rpc.blxrbdn.com [\"0x3c3fd97998bfafcce27fb7b96218124e819a0b6b6feb072a6abc6631aa87c9e9\"]",
    "sha256": "15e51f2de6a7a1cc3adc149b6e2fac620a734fb9ed18c1e9f921213ad58de067",
    "bytes": 1234,
-   "fetched_at": "2026-08-13T19:42:33Z"
+   "fetched_at": "2026-09-03T17:14:01Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

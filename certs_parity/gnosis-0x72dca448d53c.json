@@ -143,7 +143,7 @@
   {
    "check": "C11.receiver-delivery",
    "verdict": "PASS",
-   "detail": "every settled order's buy tokens reached the recorded receiver on-chain across 2 (token, receiver) group(s) (receivers from calldata)"
+   "detail": "every settled order's buy tokens reached the recorded receiver on-chain, sent by the settlement contract, across 2 (token, receiver) group(s) (receivers from calldata)"
   },
   {
    "check": "C12.order-authenticity",
@@ -192,7 +192,7 @@
   {
    "check": "C14.price-vs-mid",
    "verdict": "INFO",
-   "detail": "execution vs the auction's reference mid: -0.3 bps, -0.3 bps \u2014 positive is better than the fair mid; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
+   "detail": "execution vs the auction's reference mid: -0.3 bps, -0.3 bps \u2014 positive is better than the auction reference price; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
    "per_order": [
     {
      "uid": "0xe0dacb9ca71bca12939dacebbb54d4bfa6fbaeafff721c0212466bf75d1c8d7eecf0362858a94a7f0b571e884a66fbbf806329d26a78a73f",
@@ -226,70 +226,70 @@
    "ref": "https://rpc.gnosischain.com [\"0x72dca448d53c7c6a5ea9e84ace035fd271f0836de5bf52660aeab347037be5ca\"]",
    "sha256": "16a54fa8effc589f4223cf153f4571c11d85b70846a753490b16a5d9e946aeb4",
    "bytes": 8466,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:13:48Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://rpc.gnosischain.com [\"0x72dca448d53c7c6a5ea9e84ace035fd271f0836de5bf52660aeab347037be5ca\"]",
    "sha256": "d1d6ca4b015eb4030bd02d24aa52dd81d26f543644f32290367a5795eca61a3f",
    "bytes": 21885,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:13:49Z"
   },
   {
    "kind": "competition:by_tx_hash",
    "ref": "https://api.cow.fi/xdai/api/v2/solver_competition/by_tx_hash/0x72dca448d53c7c6a5ea9e84ace035fd271f0836de5bf52660aeab347037be5ca",
    "sha256": "050114d175a9d95de81f6b43473338dcc36c72b386ce6ed29f9ddfe8c01dd97a",
    "bytes": 30076,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:13:49Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://rpc.gnosischain.com [{\"to\": \"0x2c4c28ddbdac9c5e7055b4c863b72ea0149d8afe\", \"data\": \"0x02cc250d0000000000000000000000006bf",
    "sha256": "7aa1bce2c8c36922fcde6455a25909c4f0a41e02346ade0168f6df57c9a26849",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:13:49Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://rpc.gnosischain.com [{\"to\": \"0xedbc7449a9b594ca4e053d9737ec5dc4cbccbfb2\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "d697207a9137973f2dd578ed6c157f1f6c07e644146c5e6a101e73fbeebd14ea",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:13:49Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://rpc.gnosischain.com [{\"to\": \"0xedbc7449a9b594ca4e053d9737ec5dc4cbccbfb2\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "b739a1c77726a9ce2ede601b370e33888543851daa544de61647c173d54e56a0",
    "bytes": 230,
-   "fetched_at": "2026-08-13T19:42:23Z"
+   "fetched_at": "2026-09-03T17:13:49Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://rpc.gnosischain.com [{\"to\": \"0xcb444e90d8198415266c6a2724b7900fb12fc56e\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "d697207a9137973f2dd578ed6c157f1f6c07e644146c5e6a101e73fbeebd14ea",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:24Z"
+   "fetched_at": "2026-09-03T17:13:49Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://rpc.gnosischain.com [{\"to\": \"0xcb444e90d8198415266c6a2724b7900fb12fc56e\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "4dd1e72ee231eaad85178513f33bc2dc2cc0a8214fb63769f5de1bcfbd6d9fe4",
    "bytes": 230,
-   "fetched_at": "2026-08-13T19:42:24Z"
+   "fetched_at": "2026-09-03T17:13:50Z"
   },
   {
    "kind": "orderbook:order",
    "ref": "https://api.cow.fi/xdai/api/v1/orders/0xe0dacb9ca71bca12939dacebbb54d4bfa6fbaeafff721c0212466bf75d1c8d7eecf0362858a94a7f0b571e884a66fbbf806329d26a78a73f",
    "sha256": "fcd1cc5a675bb2dccaf72922c7a7ad81fc66391d2ee6a825f87602101556cd97",
    "bytes": 5227,
-   "fetched_at": "2026-08-13T19:42:24Z"
+   "fetched_at": "2026-09-03T17:13:50Z"
   },
   {
    "kind": "orderbook:order",
    "ref": "https://api.cow.fi/xdai/api/v1/orders/0x1d44972a4ccee6274942678e82be9121daaf1b2f514b04dd540641833853b61e51a0dfe19fa4a97a6f5723c5f0b2a92ebd2cf8296a78a73f",
    "sha256": "7a67a18dccacc9129a50f24f88ff9fdacd94f798e6205f989862a40f49f2f092",
    "bytes": 3175,
-   "fetched_at": "2026-08-13T19:42:24Z"
+   "fetched_at": "2026-09-03T17:13:50Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

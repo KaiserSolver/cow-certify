@@ -40,7 +40,10 @@ to the Python reference by two drift-guards. The default corpus is the
 
 ```
 node web/test_decode.mjs     # decoder decodes byte-identically to Python  (80/80)
-node web/test_certify.mjs    # every overall + per-check verdict matches   (80/80)
+node web/test_certify.mjs    # every overall + per-check verdict matches   (80/80, live)
+node web/test_hermetic.mjs   # adversarial scenarios, no network: null receipt, split
+                             # reads, truncated / non-canonical calldata, keyed RPC error,
+                             # ... — a valid settlement is never accused        (21 cases)
 ```
 
 A second, deliberately diverse corpus (`web/testdata/parity_corpus.csv`) covers

@@ -1,12 +1,12 @@
 name: CI
 
-# The tests and drift guards existed before this workflow — but nothing
-# ENFORCED them on merge, so the README's "two guards force it" promise was
-# stronger than the automation (2026-08-17 audit). This makes every push and
-# PR run: Python unit tests, the Python/JS decoder parity vectors, and a
-# compile check of both engines. The LIVE parity guard (test_certify.mjs
-# against fresh RPCs) is deliberately excluded from the merge gate — external
-# endpoints are nondeterministic; run it on demand or nightly.
+# Every push and PR runs: Python unit tests (including the hermetic suite that
+# reproduces the never-accuse regressions offline), the Python/JS decoder
+# parity vectors, the browser engine's hermetic suite, lint, and a build +
+# install smoke test on the declared Python floor and a current version. The
+# LIVE parity guard (test_certify.mjs against fresh RPCs) is deliberately
+# excluded from the merge gate — external endpoints are nondeterministic; run
+# it on demand or nightly.
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.12"]
+        python-version: ["3.9", "3.12"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -32,10 +32,21 @@ jobs:
         with:
           node-version: "20"
       - name: Install
-        run: python -m pip install eth-abi pytest
+        run: python -m pip install eth-abi pytest ruff build
       - name: Python engine compiles
         run: python -m compileall cow_certify
-      - name: Python unit tests
+      - name: Lint
+        run: python -m ruff check cow_certify tests tools
+      - name: Python unit + hermetic tests
         run: python -m pytest tests/ -q
       - name: Decoder parity vectors (Python vs JS, frozen corpus)
-        run: node web/test_decode.mjs
+        run: |
+          node web/test_decode.mjs
+          TRUTH=./testdata/parity_decode_truth.json node web/test_decode.mjs
+      - name: Browser engine hermetic tests (no network)
+        run: node web/test_hermetic.mjs
+      - name: Build, install, smoke
+        run: |
+          python -m build
+          python -m pip install dist/*.whl
+          cd /tmp && cow-certify --help > /dev/null && python -c "import cow_certify; print(cow_certify.__version__)"

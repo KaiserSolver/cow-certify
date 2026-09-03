@@ -5,12 +5,16 @@ name: Deploy web app to GitHub Pages
 # https://<owner>.github.io/cow-certify/ — no backend, always on.
 # One-time setup after this lands: repo Settings → Pages → Source = "GitHub
 # Actions" (then this workflow deploys automatically).
+#
+# The deploy is gated on the browser engine's offline tests: a JS-only verdict
+# regression must not auto-publish.
 
 on:
   push:
     branches: [main]
     paths:
       - "web/**"
+      - "tests/fixtures/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -26,7 +30,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Browser engine offline guards
+        run: |
+          node web/test_decode.mjs
+          TRUTH=./testdata/parity_decode_truth.json node web/test_decode.mjs
+          node web/test_hermetic.mjs
+
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     environment:
       name: github-pages

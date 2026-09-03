@@ -101,7 +101,7 @@
   {
    "check": "C11.receiver-delivery",
    "verdict": "PASS",
-   "detail": "every settled order's buy tokens reached the recorded receiver on-chain across 1 (token, receiver) group(s) (receiver taken as order owner (wrapper route; calldata receiver not decodable))"
+   "detail": "every settled order's buy tokens reached the recorded receiver on-chain, sent by the settlement contract, across 1 (token, receiver) group(s) (receiver taken as order owner (wrapper route; calldata receiver not decodable))"
   },
   {
    "check": "C12.order-authenticity",
@@ -116,7 +116,7 @@
   {
    "check": "C14.price-vs-mid",
    "verdict": "INFO",
-   "detail": "execution vs the auction's reference mid: -5.1 bps \u2014 positive is better than the fair mid; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
+   "detail": "execution vs the auction's reference mid: -5.1 bps \u2014 positive is better than the auction reference price; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
    "per_order": [
     {
      "uid": "0x7bcf013c01ce7d6e23fac0654c92cda108148cf1600d6ea31ee8f75c227d65777d5bd5a42f7b5e212def53e3c8a4820925307ef96a78a8ab",
@@ -145,63 +145,63 @@
    "ref": "https://base.rpc.blxrbdn.com [\"0x71bd73d9c8dceb885f735aa74933fd5246a2995ef59125c5c07238bb9b238527\"]",
    "sha256": "5fe62070166e7b3d0a7d0d8bec1ecf5ed13597220095a17f9dfcdc41773f9b9c",
    "bytes": 4780,
-   "fetched_at": "2026-08-13T19:42:17Z"
+   "fetched_at": "2026-09-03T17:13:42Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://base.rpc.blxrbdn.com [\"0x71bd73d9c8dceb885f735aa74933fd5246a2995ef59125c5c07238bb9b238527\"]",
    "sha256": "8ea58c4b3395928076324a1f1394a8ac41d90cda870901aea295861c38189f08",
    "bytes": 6470,
-   "fetched_at": "2026-08-13T19:42:17Z"
+   "fetched_at": "2026-09-03T17:13:42Z"
   },
   {
    "kind": "competition:by_tx_hash",
    "ref": "https://api.cow.fi/base/api/v2/solver_competition/by_tx_hash/0x71bd73d9c8dceb885f735aa74933fd5246a2995ef59125c5c07238bb9b238527",
    "sha256": "73dcd0533627f80ff19e3e33dcd076b85e221fcbad28509dc07f7ef6b0e18341",
    "bytes": 383572,
-   "fetched_at": "2026-08-13T19:42:17Z"
+   "fetched_at": "2026-09-03T17:13:42Z"
   },
   {
    "kind": "orderbook:order",
    "ref": "https://api.cow.fi/base/api/v1/orders/0x7bcf013c01ce7d6e23fac0654c92cda108148cf1600d6ea31ee8f75c227d65777d5bd5a42f7b5e212def53e3c8a4820925307ef96a78a8ab",
    "sha256": "c2c8a8f8c9135a3caae2de83f58bf1345d026b4a8ed4cbc44f619a37cfca7d03",
    "bytes": 7291,
-   "fetched_at": "2026-08-13T19:42:17Z"
+   "fetched_at": "2026-09-03T17:13:42Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x2c4c28ddbdac9c5e7055b4c863b72ea0149d8afe\", \"data\": \"0x02cc250d0000000000000000000000008f5",
    "sha256": "db4796fef52c36f78989daa650510ae045136f8ce6ff5ea321cd80081e7ed2af",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:17Z"
+   "fetched_at": "2026-09-03T17:13:43Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "0665affd45e46e65eca43e938fe63e22a8ceece0894abfa49d43d468655f681e",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:17Z"
+   "fetched_at": "2026-09-03T17:13:43Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "1327ae5ea5e35139befdbbb03e44a308ef176092224ec000b05c3f8d5143b287",
    "bytes": 230,
-   "fetched_at": "2026-08-13T19:42:18Z"
+   "fetched_at": "2026-09-03T17:13:43Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "942eb00e02101dd8673395e77f951530862ae177255e90bbbb71a3c42dd6fba6",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:18Z"
+   "fetched_at": "2026-09-03T17:13:43Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "25d4f90af458a8048cfe010426e8d2dd07250fc4d434874c5dcec61f04768cec",
    "bytes": 230,
-   "fetched_at": "2026-08-13T19:42:18Z"
+   "fetched_at": "2026-09-03T17:13:43Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

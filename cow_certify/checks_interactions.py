@@ -20,6 +20,7 @@ full executed-⊆-proposed relation, are roadmap items; the latter needs the
 /solve instance from the S3 bucket, not the public API.
 """
 from . import gpv2 as scorer
+from . import sources
 
 INFO = "INFO"
 UNCERTAIN = "UNCERTAIN"
@@ -52,8 +53,10 @@ def run_interactions_check(direct, calldata, checks, limits):
     try:
         inter = scorer.decode_settlement(calldata)["interactions"]
     except Exception as e:
-        checks.append(_v("C13.interactions", UNCERTAIN,
-                         f"could not decode interactions: {str(e)[:80]}"))
+        # Context only: a listing that could not be produced is not a finding.
+        checks.append(_v("C13.interactions", INFO,
+                         f"could not decode interactions: "
+                         f"{sources.redact(e)[:100]} (context check)"))
         return
 
     flat = []

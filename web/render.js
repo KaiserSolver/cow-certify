@@ -95,7 +95,7 @@ export function renderCertificate(cert) {
 
   return `<div class="wrap" style="--tone:var(--${tone})">
     <div class="masthead"><div><div class="brand">cow<span>·</span>certify</div><div class="tagline">independent settlement verification</div></div>
-      <div style="text-align:right"><div class="chip">${esc(net)}${cid ? ` · chain ${cid}` : ""}</div></div></div>
+      <div style="text-align:right"><div class="chip">${esc(net)}${cid ? ` · chain ${esc(String(cid))}` : ""}</div></div></div>
     <div class="txline">${copyable(tx)} ${txLink}</div>
     <div class="verdict" style="--tone:var(--${tone})"><div class="seal">${glyph}</div>
       <div style="flex:1"><h1>${esc(title)}</h1><p>${esc(sentence)}</p><div class="tally">${pills}</div></div></div>

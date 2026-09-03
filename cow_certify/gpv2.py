@@ -42,9 +42,14 @@ def _ceildiv(a: int, b: int) -> int:
 
 def decode_settlement(calldata_hex: str):
     """Decode a settle() calldata string into tokens[], clearing_prices[],
-    trades[] (raw tuples), interactions, and the appended auction_id (last 8
-    bytes of the suffix, per autopilot's rule, or None if the prefix does not
-    re-encode canonically). Raises ValueError if not a settle() call."""
+    trades[] (raw tuples), interactions, and the appended auction_id. The
+    autopilot appends EXACTLY 8 bytes to an otherwise canonical ABI blob, so an
+    auction id is read only when the prefix re-encodes canonically AND the tail
+    is exactly 8 bytes; any other tail (none, or a non-standard length that a
+    custom driver could have appended) yields None — never a guessed id that a
+    binding check could then accuse on. `suffix_len` and `canonical` are
+    returned so the caller can say which case it was. Raises ValueError if not
+    a settle() call."""
     if not calldata_hex.startswith("0x"):
         calldata_hex = "0x" + calldata_hex
     if calldata_hex[:10].lower() != SETTLE_SELECTOR:
@@ -53,9 +58,10 @@ def decode_settlement(calldata_hex: str):
     tokens, prices, trades, interactions = decode(_SETTLE_TYPES, raw)
     canon = encode(_SETTLE_TYPES, (tokens, prices, trades, interactions))
     suffix = raw[len(canon):]
+    canonical = raw[:len(canon)] == canon
     auction_id = None
-    if raw[:len(canon)] == canon and len(suffix) >= AUCTION_ID_SUFFIX_LEN:
-        auction_id = int.from_bytes(suffix[-AUCTION_ID_SUFFIX_LEN:], "big")
+    if canonical and len(suffix) == AUCTION_ID_SUFFIX_LEN:
+        auction_id = int.from_bytes(suffix, "big")
     return {
         "tokens": [t.lower() for t in tokens],
         "clearing_prices": list(prices),
@@ -63,6 +69,7 @@ def decode_settlement(calldata_hex: str):
         "interactions": interactions,
         "auction_id": auction_id,
         "suffix_len": len(suffix),
+        "canonical": canonical,
     }
 
 

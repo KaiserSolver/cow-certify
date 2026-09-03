@@ -38,7 +38,12 @@ def run_price_vs_mid(comp, logs, checks):
     if not events:
         return
     prices = (comp.get("auction") or {}).get("prices") or {}
-    native = {k.lower(): int(v) for k, v in prices.items()}
+    native = {}
+    for k, val in prices.items():
+        try:
+            native[str(k).lower()] = int(val)
+        except (TypeError, ValueError):
+            continue   # a malformed reference price is skipped, never fatal
     rows = []
     for e in events:
         st, bt = e["sell_token"], e["buy_token"]
@@ -48,9 +53,11 @@ def run_price_vs_mid(comp, logs, checks):
         if r is not None:
             rows.append((e["uid"], r[0]))
     if not rows:
-        checks.append(_v("C14.price-vs-mid", UNCERTAIN,
-                         "the auction record has no reference price for the "
-                         "traded tokens; execution-vs-mid not computable"))
+        # Routine on long-tail pairs; context only, never moves the verdict.
+        checks.append(_v("C14.price-vs-mid", INFO,
+                         "the auction record has no usable reference price for "
+                         "the traded tokens; execution-vs-mid not computable "
+                         "(context check; not a finding)"))
         return
     parts = [f"{b:+.1f} bps" for _, b in rows[:4]]
     detail = ("execution vs the auction's reference mid: " + ", ".join(parts)

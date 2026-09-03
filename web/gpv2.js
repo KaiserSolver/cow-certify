@@ -5,6 +5,14 @@
 //
 //   settle(address[] tokens, uint256[] clearingPrices,
 //          Trade[] trades, Interaction[][3] interactions)
+//
+// The reader is STRICT: every word is bounds-checked (a short read throws
+// instead of decoding as zero — a zero-filled read once fabricated a signed
+// limit of 0 and certified a limit-breaking trade as PASS), and padding bytes
+// are validated the way eth_abi's strict decoder validates them. Whether the
+// blob is laid out canonically is tracked while decoding, so the appended
+// auction id is read only from a canonical blob with EXACTLY an 8-byte tail —
+// mirroring the Python decoder's re-encode-and-compare rule.
 
 export const SETTLEMENT = "0x9008d19f58aabd9ed0d60971565aa8510560ab41";
 export const SETTLE_SELECTOR = "0x13d79a0b";
@@ -24,20 +32,50 @@ export function ceilDiv(a, b) {
   return (a + b - 1n) / b;
 }
 
-// --- minimal ABI reader over the calldata after the 4-byte selector ---
+const pad32 = (n) => Math.ceil(n / 32) * 32;
+const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
+
+// --- minimal, strict ABI reader over the calldata after the 4-byte selector ---
 function reader(calldataHex) {
   const hex = calldataHex.startsWith("0x") ? calldataHex.slice(2) : calldataHex;
   const data = hex.slice(8); // drop selector
-  const word = (byteOff) => data.slice(byteOff * 2, byteOff * 2 + 64);
+  const word = (byteOff) => {
+    const a = byteOff * 2;
+    if (byteOff < 0 || a + 64 > data.length)
+      throw new Error(`calldata truncated: word at byte ${byteOff} lies beyond the ${data.length / 2} bytes present`);
+    return data.slice(a, a + 64);
+  };
+  const int = (byteOff) => {
+    const v = BigInt("0x" + word(byteOff));
+    if (v > MAX_SAFE) throw new Error("offset or length exceeds calldata");
+    return Number(v);
+  };
   return {
     hex,
-    uint: (byteOff) => BigInt("0x" + (word(byteOff) || "0")),
-    int: (byteOff) => Number(BigInt("0x" + (word(byteOff) || "0"))),
-    addr: (byteOff) => ("0x" + word(byteOff).slice(24)).toLowerCase(),
+    dataBytes: data.length / 2,
+    uint: (byteOff) => BigInt("0x" + word(byteOff)),
+    int,
+    u32: (byteOff) => {
+      const w = word(byteOff);
+      if (!/^0{56}/.test(w)) throw new Error("malformed uint32 word (non-zero padding)");
+      return Number(BigInt("0x" + w));
+    },
+    addr: (byteOff) => {
+      const w = word(byteOff);
+      if (!/^0{24}/.test(w)) throw new Error("malformed address word (non-zero padding)");
+      return ("0x" + w.slice(24)).toLowerCase();
+    },
     word32: (byteOff) => "0x" + word(byteOff),
+    // dynamic `bytes` at byteOff: [length][data padded to 32]; returns the hex
+    // of the data and validates that the padding is present and zero.
     bytesAt: (byteOff) => {
-      const len = Number(BigInt("0x" + word(byteOff)));
-      return data.slice((byteOff + 32) * 2, (byteOff + 32) * 2 + len * 2);
+      const len = int(byteOff);
+      const a = (byteOff + 32) * 2;
+      const paddedLen = pad32(len) * 2;
+      if (a + paddedLen > data.length) throw new Error("calldata truncated: bytes lie beyond the data present");
+      const padding = data.slice(a + len * 2, a + paddedLen);
+      if (!/^0*$/.test(padding)) throw new Error("malformed bytes (non-zero padding)");
+      return data.slice(a, a + len * 2);
     },
   };
 }
@@ -48,6 +86,12 @@ export function decodeSettlement(calldataHex) {
     throw new Error("not a GPv2 settle() call");
   }
   const r = reader(calldataHex);
+  // `canonical` records whether every dynamic offset equals the one a canonical
+  // encoder would have written. A non-canonical blob still decodes (the EVM
+  // reads it the same way) but carries no readable autopilot suffix.
+  let canonical = true;
+  const expect = (actual, want) => { if (actual !== want) canonical = false; };
+
   const offTokens = r.int(0), offPrices = r.int(32),
         offTrades = r.int(64), offInter = r.int(96);
 
@@ -55,71 +99,99 @@ export function decodeSettlement(calldataHex) {
   // looping to it would freeze the tab (no worker to kill). Bound every length
   // by the words the calldata actually contains. (Python's eth_abi raises on
   // the same input in ~1ms.)
-  const maxWords = r.hex.length / 64;
+  const maxWords = r.dataBytes / 32;
   const len = (off) => {
     const n = r.int(off);
     if (n < 0 || n > maxWords) throw new Error("array length exceeds calldata");
     return n;
   };
+
+  let cursor = 128; // canonical position right after the 4 head words
+  expect(offTokens, cursor);
   const nTokens = len(offTokens);
   const tokens = [];
   for (let i = 0; i < nTokens; i++)
     tokens.push(r.addr(offTokens + 32 + i * 32));
+  cursor += 32 + 32 * nTokens;
+
+  expect(offPrices, cursor);
   const nPrices = len(offPrices);
   const clearingPrices = [];
   for (let i = 0; i < nPrices; i++)
     clearingPrices.push(r.uint(offPrices + 32 + i * 32));
+  cursor += 32 + 32 * nPrices;
 
-  // Trade[]: dynamic array of dynamic tuples. Element offsets are relative to
-  // the position after the length word. We only need the 10 static words.
+  // Trade[]: dynamic array of dynamic tuples (the 11th field, `bytes
+  // signature`, makes the tuple dynamic). Element offsets are relative to the
+  // position after the length word.
+  expect(offTrades, cursor);
   const trades = [];
   const tbase = offTrades + 32;
   const nTrades = len(offTrades);
+  let rel = 32 * nTrades; // canonical relative offset of the first tuple
   for (let i = 0; i < nTrades; i++) {
-    const s = tbase + r.int(tbase + i * 32);
+    const relOff = r.int(tbase + i * 32);
+    expect(relOff, rel);
+    const s = tbase + relOff;
     trades.push({
       sellTokenIndex: r.int(s),
       buyTokenIndex: r.int(s + 32),
       receiver: r.addr(s + 64),
       sellAmount: r.uint(s + 96),
       buyAmount: r.uint(s + 128),
-      validTo: r.int(s + 160),
+      validTo: r.u32(s + 160),
       appData: r.word32(s + 192),
       feeAmount: r.uint(s + 224),
       flags: r.uint(s + 256),
       executedAmount: r.uint(s + 288),
     });
+    const sigOff = r.int(s + 320); // offset of `signature` relative to the tuple
+    expect(sigOff, 352);
+    const sig = r.bytesAt(s + sigOff);
+    rel += 352 + 32 + pad32(sig.length / 2);
   }
+  cursor = tbase + rel;
 
   // Interaction[][3]: fixed-3 array of dynamic arrays of dynamic tuples.
+  expect(offInter, cursor);
   const interactions = [];
+  let irel = 96; // three stage offsets first
   for (let stage = 0; stage < 3; stage++) {
-    const sp = offInter + r.int(offInter + stage * 32); // stage array pos
-    const sbase = sp + 32;
-    const list = [];
+    const so = r.int(offInter + stage * 32);
+    expect(so, irel);
+    const sp = offInter + so;
     const nInter = len(sp);
+    const sbase = sp + 32;
+    let jrel = 32 * nInter;
+    const list = [];
     for (let j = 0; j < nInter; j++) {
-      const it = sbase + r.int(sbase + j * 32); // interaction tuple pos
-      const cd = r.bytesAt(it + r.int(it + 64)); // callData: offset rel. to tuple
+      const jo = r.int(sbase + j * 32);
+      expect(jo, jrel);
+      const it = sbase + jo;
+      const cdOff = r.int(it + 64);
+      expect(cdOff, 96);
+      const cd = r.bytesAt(it + cdOff);
       list.push({
         target: r.addr(it),
         value: r.uint(it + 32),
         selector: cd.length >= 8 ? "0x" + cd.slice(0, 8) : "0x",
       });
+      jrel += 96 + 32 + pad32(cd.length / 2);
     }
     interactions.push(list);
+    irel += 32 + jrel;
   }
+  cursor = offInter + irel;
 
-  // Auction id: the autopilot appends exactly 8 bytes to an otherwise ABI-
-  // canonical (32-byte-aligned) blob. So the suffix is present iff the data
-  // after the selector is NOT a whole number of 32-byte words — matching the
-  // Python decoder's canonical-re-encode check, without needing an encoder.
-  // A settle() with no appended suffix yields null (not a garbage id).
-  const dataBytes = (r.hex.length - 8) / 2; // after the 4-byte selector
-  const auctionId = dataBytes % 32 === AUCTION_ID_SUFFIX_BYTES
+  // Auction id: the autopilot appends EXACTLY 8 bytes to a canonical blob. Any
+  // other tail — none, or a non-standard length a custom driver could have
+  // appended — is not an autopilot suffix and yields null, never a guessed id.
+  let suffixLen = r.dataBytes - cursor;
+  if (suffixLen < 0) { canonical = false; suffixLen = 0; }
+  const auctionId = (canonical && suffixLen === AUCTION_ID_SUFFIX_BYTES)
     ? BigInt("0x" + r.hex.slice(-2 * AUCTION_ID_SUFFIX_BYTES)) : null;
 
-  return { tokens, clearingPrices, trades, interactions, auctionId };
+  return { tokens, clearingPrices, trades, interactions, auctionId, suffixLen, canonical };
 }
 
 export function tradeEvents(logs) {

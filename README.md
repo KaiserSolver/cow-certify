@@ -118,7 +118,9 @@ unreachable) — so a real violation (`1`) is never confused with a typo'd hash
 
 Verdicts are **PASS**, **VIOLATION**, **UNCERTAIN**, or **INFO**.
 C7, C10, C13, C14, and C15 are always INFO — context and signal rather than a
-pass/fail judgment. C5 is INFO too, and deliberately so (see below).
+pass/fail judgment, and they never move the overall verdict (a context check
+that cannot be computed says so as INFO, it does not make a valid settlement
+UNCERTAIN). C5 is INFO too, and deliberately so (see below).
 
 Checks C1–C3 implement verification criteria the CoW core team described for
 their own internal watchdog in
@@ -154,8 +156,12 @@ orders' hooks — is on the roadmap.)
 You do not have to trust any of this — re-run it:
 
 ```
-# 1. the test suite (offline, no network)
-python3 -m unittest discover -s tests
+# 1. the test suites (offline, no network) — unit tests plus the hermetic
+#    suite, which replays a recorded real settlement through a stubbed network
+#    and mutates one thing at a time (null receipt, split reads, truncated
+#    calldata, keyed RPC error, ...) asserting a valid settlement is never accused
+python3 -m pytest tests/ -q          # or: python3 -m unittest discover -s tests
+node web/test_hermetic.mjs           # the same scenarios against the browser engine
 
 # 2. regenerate our 80-settlement self-audit and diff against what we shipped
 python3 -m cow_certify.batch self_audit_corpus.csv --out /tmp/reaudit
@@ -165,6 +171,11 @@ diff <(ls certs_self_audit) <(ls /tmp/reaudit)
 node web/test_decode.mjs        # decoder parity, offline
 node web/test_certify.mjs       # verdict parity, live
 ```
+
+The shipped corpora are all-PASS by construction (real, clean settlements), so
+they can only prove the engines agree — not that either one refuses to accuse
+when the data is bad. That is what the hermetic suites are for: they are the
+regression tests for every never-accuse fix in the changelog.
 
 And inspect any certificate's evidence trail — every fetch it relied on, pinned
 by hash:
@@ -182,8 +193,12 @@ it to, over two corpora:
 
 - **`web/test_decode.mjs`** checks the hand-rolled browser ABI decoder decodes
   `settle()` calldata **byte-identically** to the Python decoder, over 80 real
-  settlements. Its baseline is reproducible with
-  `python3 tools/make_decode_truth.py`.
+  settlements. Its baseline is reproducible (needs RPC access) with
+  `python3 tools/make_decode_truth.py self_audit_corpus.csv web/testdata/decode_truth.json`.
+- **`web/test_hermetic.mjs`** and **`tests/test_hermetic.py`** run the same
+  adversarial scenarios through both engines with no network at all, from a
+  recorded settlement in `tests/fixtures/`. These are the guards that the
+  all-PASS corpora structurally cannot provide.
 - **`web/test_certify.mjs`** checks the browser produces the **same verdict for
   every check** as the Python certificate — by default over the 80-settlement
   self-audit corpus, and with `CERTS=../certs_parity/` over the deliberately
@@ -211,13 +226,15 @@ discriminate rather than only rubber-stamp.
 
 ## Status
 
-v0.3. Runs on ten CoW chains — Ethereum, Gnosis, Arbitrum, Base, Polygon,
-Avalanche, BNB, Ink, Plasma, Sepolia — self-audited on 80 of our own
-settlements. Scope is settlement *verification only*; best-execution / EBBO is
-intentionally out of scope. Roadmap: services#2667 criterion 4 (settled
-interactions ⊆ matched-order hooks, from public `fullAppData`), a JIT/liquidity-
-order classification, and revert-reason forensics. Issues and corrections are
+v0.4.1. Runs on eleven CoW chains — Ethereum, Gnosis, Arbitrum, Base, Polygon,
+Avalanche, BNB, Ink, Linea, Plasma, Sepolia — self-audited on 80 of our own
+settlements, with a hermetic adversarial suite on both engines. Scope is
+settlement *verification only*; best-execution / EBBO is intentionally out of
+scope. Roadmap: services#2667 criterion 4 (settled interactions ⊆ matched-order
+hooks, from public `fullAppData`), a finality model (so a late landing can be
+more than UNCERTAIN), and revert-reason forensics. Issues and corrections are
 welcome — especially anywhere our accounting diverges from how the protocol
-actually scores things.
+actually scores things. See `CHANGELOG.md` for what each release changed in the
+verdicts.
 
 MIT license.

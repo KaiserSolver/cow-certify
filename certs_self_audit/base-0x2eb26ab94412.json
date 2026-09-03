@@ -145,7 +145,7 @@
   {
    "check": "C14.price-vs-mid",
    "verdict": "INFO",
-   "detail": "execution vs the auction's reference mid: -5.5 bps \u2014 positive is better than the fair mid; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
+   "detail": "execution vs the auction's reference mid: -5.5 bps \u2014 positive is better than the auction reference price; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
    "per_order": [
     {
      "uid": "0x33d88066196bf77a8667c7477f96b48ee8da3bf96afa7a56468ce44009d0a97f5e19ef6226eaf7f84eac2c6e59e70b15849ea72a6a730a03",
@@ -175,63 +175,63 @@
    "ref": "https://base.rpc.blxrbdn.com [\"0x2eb26ab94412b0130355edf251a6c1ad7af69458e0be38b8df6fee44aaaa63d3\"]",
    "sha256": "04d32d5cbee06e4424af06868eaf1a628a02e7dda70b16fa2cb9e9aff3aca985",
    "bytes": 4468,
-   "fetched_at": "2026-08-13T19:42:27Z"
+   "fetched_at": "2026-09-03T17:12:12Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://base.rpc.blxrbdn.com [\"0x2eb26ab94412b0130355edf251a6c1ad7af69458e0be38b8df6fee44aaaa63d3\"]",
    "sha256": "66a4c0ad5974e738d4f23d3e417d6394ea910f144bfe71d9db79a55bff72732a",
    "bytes": 7448,
-   "fetched_at": "2026-08-13T19:42:27Z"
+   "fetched_at": "2026-09-03T17:12:12Z"
   },
   {
    "kind": "competition:by_tx_hash",
    "ref": "https://api.cow.fi/base/api/v2/solver_competition/by_tx_hash/0x2eb26ab94412b0130355edf251a6c1ad7af69458e0be38b8df6fee44aaaa63d3",
    "sha256": "3ad2be09b9e71ad3835cf1fad955ea0ebe86c8fdcc6b78d44af4c2b475d6902f",
    "bytes": 388730,
-   "fetched_at": "2026-08-13T19:42:27Z"
+   "fetched_at": "2026-09-03T17:12:13Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x2c4c28ddbdac9c5e7055b4c863b72ea0149d8afe\", \"data\": \"0x02cc250d0000000000000000000000004c7",
    "sha256": "db4796fef52c36f78989daa650510ae045136f8ce6ff5ea321cd80081e7ed2af",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:27Z"
+   "fetched_at": "2026-09-03T17:12:13Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "0665affd45e46e65eca43e938fe63e22a8ceece0894abfa49d43d468655f681e",
    "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:28Z"
+   "fetched_at": "2026-09-03T17:12:13Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "1327ae5ea5e35139befdbbb03e44a308ef176092224ec000b05c3f8d5143b287",
    "bytes": 230,
-   "fetched_at": "2026-08-13T19:42:28Z"
+   "fetched_at": "2026-09-03T17:12:13Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "693e8930e72658ce36bc3e1df09149339c713fea3a1175042642cd57d690de71",
    "bytes": 38,
-   "fetched_at": "2026-08-13T19:42:28Z"
+   "fetched_at": "2026-09-03T17:12:13Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://base.rpc.blxrbdn.com [{\"to\": \"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "693e8930e72658ce36bc3e1df09149339c713fea3a1175042642cd57d690de71",
    "bytes": 38,
-   "fetched_at": "2026-08-13T19:42:28Z"
+   "fetched_at": "2026-09-03T17:12:13Z"
   },
   {
    "kind": "orderbook:order",
    "ref": "https://api.cow.fi/base/api/v1/orders/0x33d88066196bf77a8667c7477f96b48ee8da3bf96afa7a56468ce44009d0a97f5e19ef6226eaf7f84eac2c6e59e70b15849ea72a6a730a03",
    "sha256": "bde455a982da5ac9d788b1f8851764bc72a31a4498032c466f1b0825e910e8f8",
    "bytes": 4983,
-   "fetched_at": "2026-08-13T19:42:28Z"
+   "fetched_at": "2026-09-03T17:12:13Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

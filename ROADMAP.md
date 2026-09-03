@@ -49,8 +49,7 @@ by promise dates.
   "technical details".
 - **Batch as analytics**: `audit-solver <name> --last 7d` /
   `audit-wallet 0x… --last 90d` with structured per-check fields (no more
-  scraping detail strings — the stale C5 "gap ppm" parser in batch.py gets
-  removed with this).
+  scraping detail strings).
 - **Execution-quality layer** (separate from integrity, never mixed):
   quote vs signed limit vs fill vs auction reference; explicit
   VALID-but-poor-execution / INVALID-but-good-price independence.
@@ -60,8 +59,8 @@ by promise dates.
 ## Engineering
 - Signed network registry (chain id, contracts, API segment, explorer,
   verified-deployment provenance) validated against CoW metadata in CI.
-- Packaging: PyPI (`pipx install cow-certify`), dependency ceiling for
-  eth-abi, locked dev environment, signed tags.
+- Packaging: dependency ceiling for eth-abi, locked dev environment, signed
+  tags (PyPI: shipped since 0.4.0).
 - Long-term: single verification core (Rust → WASM + Python bindings) to
   eliminate the dual-implementation risk the parity guards currently manage.
 - METHODOLOGY.md / GOVERNANCE.md: identical rules for every solver, public

@@ -143,7 +143,7 @@
   {
    "check": "C11.receiver-delivery",
    "verdict": "PASS",
-   "detail": "every settled order's buy tokens reached the recorded receiver on-chain across 1 (token, receiver) group(s) (receivers from calldata); 1 native-ETH buy leg(s) set aside (delivered by internal transfer, not present in ERC-20 logs)"
+   "detail": "every settled order's buy tokens reached the recorded receiver on-chain, sent by the settlement contract, across 1 (token, receiver) group(s) (receivers from calldata); 1 native-ETH buy leg(s) set aside (delivered by internal transfer, not present in ERC-20 logs)"
   },
   {
    "check": "C12.order-authenticity",
@@ -200,7 +200,7 @@
   {
    "check": "C14.price-vs-mid",
    "verdict": "INFO",
-   "detail": "execution vs the auction's reference mid: -1.7 bps, -5.8 bps \u2014 positive is better than the fair mid; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
+   "detail": "execution vs the auction's reference mid: -1.7 bps, -5.8 bps \u2014 positive is better than the auction reference price; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
    "per_order": [
     {
      "uid": "0x5558ee37d2407c24ab4ea5834cd6862017bc1b3a2e290049c83903a371b4c1e8fe90e0451abb3b9ca931d76cf9a3f7d9759dc8246a7e00ae",
@@ -234,86 +234,93 @@
   {
    "kind": "rpc:eth_getTransactionByHash",
    "ref": "https://ethereum-rpc.publicnode.com [\"0x7e6cecc0438fd32f2cf3c5644e093e0a5ebb672d475e19581d2272b0048ed07b\"]",
-   "sha256": "8472ec64294ba56659342ea35a3c57ddf84abdebb319fee6abd50213d51fd5ac",
-   "bytes": 14134,
-   "fetched_at": "2026-08-13T19:42:28Z"
+   "sha256": "50ff25bfde834619fa5730c1d770fbc383dc46fbd20f3d8b121b557b5e0ebd3a",
+   "bytes": 14133,
+   "fetched_at": "2026-09-03T17:13:56Z"
+  },
+  {
+   "kind": "rpc:eth_getTransactionReceipt",
+   "ref": "https://ethereum-rpc.publicnode.com [\"0x7e6cecc0438fd32f2cf3c5644e093e0a5ebb672d475e19581d2272b0048ed07b\"]",
+   "sha256": "1b9f3e593e73354720f2329c7bc53c56abf4ef1c4ce38ecc7d6aa26c211b9685",
+   "bytes": 38,
+   "fetched_at": "2026-09-03T17:13:56Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://ethereum-rpc.publicnode.com [\"0x7e6cecc0438fd32f2cf3c5644e093e0a5ebb672d475e19581d2272b0048ed07b\"]",
    "sha256": "f2d1b6a0c9526afd914cbe8a76dd01f206d966c25b53cd18d80d1d1a0729c40b",
    "bytes": 16216,
-   "fetched_at": "2026-08-13T19:42:28Z"
+   "fetched_at": "2026-09-03T17:13:56Z"
   },
   {
    "kind": "competition:by_tx_hash",
    "ref": "https://api.cow.fi/mainnet/api/v2/solver_competition/by_tx_hash/0x7e6cecc0438fd32f2cf3c5644e093e0a5ebb672d475e19581d2272b0048ed07b",
    "sha256": "bb9bca5c374684567d2fe1d13f8079b7ca2ca5c7761952228c8d285c0a71d407",
    "bytes": 969150,
-   "fetched_at": "2026-08-13T19:42:28Z"
+   "fetched_at": "2026-09-03T17:13:56Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0x2c4c28ddbdac9c5e7055b4c863b72ea0149d8afe\", \"data\": \"0x02cc250d000000000000000000000000954",
    "sha256": "8f317fda0fe2e9f75c8f73bb6d6b71250335ba6fddf5f261c04d9b1d62e6708a",
    "bytes": 103,
-   "fetched_at": "2026-08-13T19:42:28Z"
+   "fetched_at": "2026-09-03T17:13:57Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "b9affdcdc9ebdd0148b7e901e8839657e1a9bb488878788e7234df75a6d8099e",
    "bytes": 103,
-   "fetched_at": "2026-08-13T19:42:29Z"
+   "fetched_at": "2026-09-03T17:13:57Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "9f08a6876fc69f4db84065558eb4d30d696a0a1846c247950484639905382c59",
    "bytes": 231,
-   "fetched_at": "2026-08-13T19:42:29Z"
+   "fetched_at": "2026-09-03T17:13:57Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0\", \"data\": \"0x313ce567\"}, \"latest\"]",
-   "sha256": "eb1491e7ee73b8c00c20f6c14cc08ba880f85b8ac95a685f3f6acf426f743d8b",
+   "sha256": "5703d4b6224aca5e99ca0f83a1c6498a6c24a5c77a675c16d0d47af8ac3feee8",
    "bytes": 103,
-   "fetched_at": "2026-08-13T19:42:29Z"
+   "fetched_at": "2026-09-03T17:13:57Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "a6e357fab4955d7b15a388e3bcc68cc8bd70174d14741b8a1866afaa34dca4ed",
    "bytes": 231,
-   "fetched_at": "2026-08-13T19:42:29Z"
+   "fetched_at": "2026-09-03T17:13:57Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"data\": \"0x313ce567\"}, \"latest\"]",
    "sha256": "656254440c28512a72ff80afa27e5cd8669c5df940e00ee605f06ef0eef567e2",
    "bytes": 39,
-   "fetched_at": "2026-08-13T19:42:29Z"
+   "fetched_at": "2026-09-03T17:13:57Z"
   },
   {
    "kind": "rpc:eth_call",
    "ref": "https://ethereum-rpc.publicnode.com [{\"to\": \"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"data\": \"0x95d89b41\"}, \"latest\"]",
    "sha256": "656254440c28512a72ff80afa27e5cd8669c5df940e00ee605f06ef0eef567e2",
    "bytes": 39,
-   "fetched_at": "2026-08-13T19:42:29Z"
+   "fetched_at": "2026-09-03T17:13:57Z"
   },
   {
    "kind": "orderbook:order",
    "ref": "https://api.cow.fi/mainnet/api/v1/orders/0x5558ee37d2407c24ab4ea5834cd6862017bc1b3a2e290049c83903a371b4c1e8fe90e0451abb3b9ca931d76cf9a3f7d9759dc8246a7e00ae",
    "sha256": "c6b74654f8fa53dceec5f8f48abf5a09c58b4bb7632af4ac4c7fba75e5a4536f",
    "bytes": 5823,
-   "fetched_at": "2026-08-13T19:42:29Z"
+   "fetched_at": "2026-09-03T17:13:57Z"
   },
   {
    "kind": "orderbook:order",
    "ref": "https://api.cow.fi/mainnet/api/v1/orders/0xeadf40d88ffdd4903e02323e55ca27092dbecc95d80873939c0f4ab23932016f7099c7d7fca074062a0fc593a35f788605bcad6e6aa46dbd",
-   "sha256": "d297568593956b88bee2ff5286045ff7f5c99deda5daf9b06b5236d7ca2732a5",
-   "bytes": 1813,
-   "fetched_at": "2026-08-13T19:42:29Z"
+   "sha256": "ad89a3ecb2c801766e13a24c648a600e25ac9d26444f7847e4664c33750e98e2",
+   "bytes": 5342,
+   "fetched_at": "2026-09-03T17:13:57Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

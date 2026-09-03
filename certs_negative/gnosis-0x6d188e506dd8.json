@@ -36,35 +36,35 @@
    "ref": "https://rpc.gnosischain.com [\"0x6d188e506dd8a8cb4957acf61f934a9ab278ce7120b1599cdc01bacd432c42b7\"]",
    "sha256": "a69223043f5845b42a5844dd2d9619677fe659354c55a82042c1b869d8c9ab4f",
    "bytes": 5649,
-   "fetched_at": "2026-08-13T19:42:32Z"
+   "fetched_at": "2026-09-03T17:14:00Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://rpc.gnosischain.com [\"0x6d188e506dd8a8cb4957acf61f934a9ab278ce7120b1599cdc01bacd432c42b7\"]",
    "sha256": "9ffca53e0d54955497a3adaf50c0791583c7c6825b3fb5fa800e8d72e1ba3ee2",
    "bytes": 1044,
-   "fetched_at": "2026-08-13T19:42:32Z"
+   "fetched_at": "2026-09-03T17:14:00Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://rpc.gnosischain.com [\"0x6d188e506dd8a8cb4957acf61f934a9ab278ce7120b1599cdc01bacd432c42b7\"]",
    "sha256": "9ffca53e0d54955497a3adaf50c0791583c7c6825b3fb5fa800e8d72e1ba3ee2",
    "bytes": 1044,
-   "fetched_at": "2026-08-13T19:42:32Z"
+   "fetched_at": "2026-09-03T17:14:00Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://gnosis-rpc.publicnode.com [\"0x6d188e506dd8a8cb4957acf61f934a9ab278ce7120b1599cdc01bacd432c42b7\"]",
    "sha256": "a2184dcba21b3b0b07244e538d33d0045dbdfd1abccd13f3c64f2058c32d9da2",
    "bytes": 1024,
-   "fetched_at": "2026-08-13T19:42:32Z"
+   "fetched_at": "2026-09-03T17:14:00Z"
   },
   {
    "kind": "competition:by_tx_hash",
    "ref": "https://api.cow.fi/xdai/api/v2/solver_competition/by_tx_hash/0x6d188e506dd8a8cb4957acf61f934a9ab278ce7120b1599cdc01bacd432c42b7",
    "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
    "bytes": 3,
-   "fetched_at": "2026-08-13T19:42:32Z"
+   "fetched_at": "2026-09-03T17:14:00Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

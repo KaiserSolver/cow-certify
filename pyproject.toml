@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cow-certify"
-version = "0.4.0"
+version = "0.4.1"
 description = "Independent, public-data verification for CoW Protocol settlements."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -22,3 +22,17 @@ cow-certify = "cow_certify.__main__:main"
 
 [tool.setuptools]
 packages = ["cow_certify"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+# BLE001 (blind except) is a deliberate design rule here: metadata and
+# context checks are never allowed to fail a certificate (see tokens.py).
+select = ["E", "F", "I", "B", "SIM"]
+ignore = ["E501", "BLE001", "SIM105", "SIM108", "B007", "B905"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E402"]
+"tools/*" = ["E402"]

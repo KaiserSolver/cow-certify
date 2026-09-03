@@ -3,9 +3,10 @@ certificates to a directory, print an aggregate summary.
 
   python3 -m cow_certify.batch corpus.csv --out certs/ [--sleep 0.3]
 
-The summary is the seed of the aggregate view (competition-health reporting):
-verdict counts, per-check failure/uncertain tallies, and the C5 gap
-distribution in ppm.
+Exit code: 0 = every row certified and none is a VIOLATION; 1 = at least one
+VIOLATION certificate; 3 = at least one row could not be certified (bad
+network, unreachable tx, RPC/API failure) and no VIOLATION. A batch that
+silently exited 0 with fetch errors would defeat the self-audit ritual.
 """
 import argparse
 import json
@@ -13,6 +14,7 @@ import os
 import sys
 import time
 
+from . import sources
 from .certify import certify_tx
 
 
@@ -34,23 +36,27 @@ def main():
 
     os.makedirs(args.out, exist_ok=True)
     rows = []
-    for line in open(args.corpus):
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        parts = [p.strip() for p in line.split(",")]
-        if len(parts) < 2 or not parts[0] or not parts[1]:
-            print(f"  skipping malformed line: {line[:50]}", flush=True)
-            continue
-        network, tx = parts[0], parts[1]
-        rows.append((network, tx))
+    with open(args.corpus, encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            parts = [p.strip() for p in line.split(",")]
+            if len(parts) < 2 or not parts[0] or not parts[1]:
+                print(f"  skipping malformed line: {line[:50]}", flush=True)
+                continue
+            rows.append((parts[0], parts[1]))
     print(f"certifying {len(rows)} settlements -> {args.out}/", flush=True)
 
     overall = {}
     check_fail = {}
-    c5_ppm = []
     errors = 0
     for i, (network, tx) in enumerate(rows):
+        if network not in sources.NETWORKS:
+            errors += 1
+            print(f"  !! {network} {tx[:14]}..: unknown network (known: "
+                  f"{', '.join(sources.NETWORKS)})", flush=True)
+            continue
         try:
             cert = certify_tx(network, tx, rpc_url=rpc_map.get(network))
         except (Exception, SystemExit) as e:
@@ -59,38 +65,32 @@ def main():
             # transient RPC null is enough) kills the whole batch mid-run and
             # breaks the README's re-run-our-self-audit ritual.
             errors += 1
-            print(f"  !! {network} {tx[:14]}..: {str(e)[:90]}", flush=True)
+            msg = str(e.code) if isinstance(e, SystemExit) else str(e)
+            print(f"  !! {network} {tx[:14]}..: {sources.redact(msg)[:90]}", flush=True)
             continue
         path = os.path.join(args.out, f"{network}-{tx[:14]}.json")
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             json.dump(cert, f, indent=1)
         overall[cert["overall"]] = overall.get(cert["overall"], 0) + 1
         for c in cert["checks"]:
             if c["verdict"] in ("VIOLATION", "UNCERTAIN"):
                 key = f"{c['check']}:{c['verdict']}"
                 check_fail[key] = check_fail.get(key, 0) + 1
-            if c["check"].startswith("C5") and "gap" in c.get("detail", ""):
-                try:
-                    ppm = float(c["detail"].split("gap")[1].split("ppm")[0].strip(" (+"))
-                    c5_ppm.append(ppm)
-                except (IndexError, ValueError):
-                    pass
         if (i + 1) % 10 == 0:
             print(f"  ..{i + 1}/{len(rows)} {overall}", flush=True)
         time.sleep(args.sleep)
 
     print("\n== SUMMARY ==", flush=True)
-    print(f"certified: {sum(overall.values())} | fetch errors: {errors}")
+    print(f"certified: {sum(overall.values())} | errors: {errors}")
     print(f"overall verdicts: {overall}")
     if check_fail:
         print("non-PASS checks:")
         for k, v in sorted(check_fail.items(), key=lambda kv: -kv[1]):
             print(f"  {k}: {v}")
-    if c5_ppm:
-        c5_ppm.sort()
-        n = len(c5_ppm)
-        print(f"C5 gap ppm: n={n} min={c5_ppm[0]:+.2f} "
-              f"median={c5_ppm[n // 2]:+.2f} max={c5_ppm[-1]:+.2f}")
+    if overall.get("VIOLATION"):
+        return 1
+    if errors:
+        return 3
     return 0
 
 

@@ -11,9 +11,11 @@ This is one such independent implementation, from public data only.
 import os
 import sys
 
-from . import __version__  # tool version (display); schema_version = cert format
+from . import (
+    __version__,  # tool version (display); schema_version = cert format
+    sources,
+)
 from . import gpv2 as scorer
-from . import sources
 from .checks_authenticity import run_authenticity_check
 from .checks_buffer import run_buffer_check
 from .checks_decode import run_decode_checks
@@ -22,7 +24,7 @@ from .checks_flow import run_receiver_check
 from .checks_interactions import run_interactions_check
 from .checks_ledger import run_order_ledger
 from .checks_onchain import run_solver_auth_check
-from .sources import (AUCTION_ID_SUFFIX_BYTES, GPV2, SETTLE_SELECTOR, Evidence)
+from .sources import GPV2, SETTLE_SELECTOR, Evidence
 
 SCHEMA_VERSION = "0.3.0"
 
@@ -38,10 +40,29 @@ def _v(check, verdict, detail, **extra):
     return out
 
 
-def certify_tx(network, tx_hash, rpc_url=None):
+def _receipt_status(receipt):
+    """1 = succeeded, 0 = reverted, None = no receipt / no status field. Only an
+    explicit on-chain status may ever feed an accusation."""
+    if not isinstance(receipt, dict):
+        return None
+    st = receipt.get("status")
+    if st is None:
+        return None
+    try:
+        return 1 if int(st, 16) == 1 else 0
+    except (TypeError, ValueError):
+        try:
+            return 1 if int(st) == 1 else 0
+        except (TypeError, ValueError):
+            return None
+
+
+def certify_tx(network, tx_hash, rpc_url=None, ev=None):
     custom_rpc = rpc_url is not None
     rpc_url = rpc_url or sources.DEFAULT_RPC[network]
-    ev = Evidence()
+    # A caller may pass its own ledger so fetches it made to CHOOSE the subject
+    # (the --order path's trades lookup) are part of the certificate's evidence.
+    ev = ev if ev is not None else Evidence()
     checks = []
     limits = []
 
@@ -65,26 +86,38 @@ def certify_tx(network, tx_hash, rpc_url=None):
         raise SystemExit(f"transaction {tx_hash} not found on {network} — "
                          f"is --network correct? (a tx exists on one chain only)")
     receipt = sources.rpc(rpc_url, "eth_getTransactionReceipt", [tx_hash], ev)
-    status_ok = receipt and int(receipt.get("status", "0x0"), 16) == 1
-    # An apparent revert leads to a C8 VIOLATION — an accusation — so confirm it
-    # before trusting it. Public RPCs intermittently return a receipt with
-    # status 0x0 for a genuinely successful tx (a bad read, not an error, so the
-    # endpoint rotation never catches it). A truly reverted tx shows 0x0 on
-    # EVERY node, so a single 0x1 from any other endpoint means the first read
-    # was bad. Only pay this extra round-trip on the rare apparent-revert path.
-    if receipt is not None and not status_ok:
+    status = _receipt_status(receipt)  # 1 ok / 0 reverted / None unknown
+    # Anything other than an explicit 0x1 is confirmed across EVERY endpoint we
+    # know for this network — the user's --rpc-url AND the built-in defaults —
+    # before it may shape a verdict. Two failure modes motivate this: public
+    # RPCs intermittently return status 0x0 for a genuinely successful tx (a bad
+    # read, not an error, so rotation never sees it), and a lagging or pruning
+    # node returns a NULL receipt for a perfectly mined tx (or the tx is simply
+    # still pending). A real revert is 0x0 on every node; a single 0x1 anywhere
+    # proves the first read wrong. A single custom endpoint must never be the
+    # only witness to an accusation. Only paid on the rare non-0x1 path.
+    if status != 1:
         urls = rpc_url if isinstance(rpc_url, list) else [rpc_url]
-        for alt in urls:
+        witnesses = list(dict.fromkeys(list(urls) + list(sources.DEFAULT_RPC.get(network, []))))
+        for alt in witnesses:
             try:
-                r2 = sources.rpc([alt], "eth_getTransactionReceipt", [tx_hash], ev)
+                r2 = sources.rpc([alt], "eth_getTransactionReceipt", [tx_hash], ev, rounds=1)
             except Exception:
                 continue
-            if r2 and int(r2.get("status", "0x0"), 16) == 1:
-                receipt, status_ok = r2, True
+            s2 = _receipt_status(r2)
+            if s2 == 1:
+                receipt, status = r2, 1
                 break
-    landed_block = int(receipt["blockNumber"], 16) if receipt else None
+            if s2 == 0 and status is None:
+                receipt, status = r2, 0   # an explicit receipt beats no receipt
+    status_ok = status == 1
+    receipt_missing = status is None
+    try:
+        landed_block = int(receipt["blockNumber"], 16) if receipt and receipt.get("blockNumber") else None
+    except (TypeError, ValueError):
+        landed_block = None
     sender = (tx.get("from") or "").lower()
-    calldata = tx.get("input") or ""
+    calldata = (tx.get("input") or "").lower()
 
     # C0 — settlement shape: direct settle() call, or a solver-owned wrapper.
     # Wrappers still execute GPv2 internally (Trade events fire from the
@@ -92,6 +125,7 @@ def certify_tx(network, tx_hash, rpc_url=None):
     # way, so wrapper routing narrows the check set instead of ending it.
     to_addr = (tx.get("to") or "").lower()
     direct = to_addr == GPV2 and calldata.startswith(SETTLE_SELECTOR)
+    gpv2_other_fn = to_addr == GPV2 and not direct  # e.g. swap(): GPv2, not settle()
     # Does the receipt carry GPv2 activity from the canonical contract? A real
     # settlement emits a Trade event per user order AND a Settlement(solver)
     # event once — an interactions-only settlement (CoW-AMM/JIT rebalance,
@@ -105,14 +139,29 @@ def certify_tx(network, tx_hash, rpc_url=None):
                                           scorer.SETTLEMENT_EVENT_TOPIC)):
             has_gpv2_activity = True
             break
-    suffix_aid = None
+    suffix_aid, suffix_len = None, None
     if direct:
         checks.append(_v("C0.settlement-shape", PASS,
                          "direct settle() call to the canonical GPv2 contract"))
         try:
-            suffix_aid = scorer.decode_settlement(calldata)["auction_id"]
+            dec = scorer.decode_settlement(calldata)
+            suffix_aid, suffix_len = dec["auction_id"], dec["suffix_len"]
         except Exception:
             suffix_aid = None
+    elif receipt_missing:
+        # Without a receipt there are no logs to classify a non-settle() call
+        # by. Say exactly that — not "this is not a settlement".
+        checks.append(_v(
+            "C0.settlement-shape", UNCERTAIN,
+            f"tx target {to_addr or '(contract creation)'} is not a direct "
+            f"settle() call and no receipt is available yet to look for GPv2 "
+            f"settlement events; cannot classify this transaction until it is "
+            f"mined and indexed"))
+        checks.append(_v("C8.execution-status", UNCERTAIN,
+                         "no transaction receipt is available from any endpoint "
+                         "queried: the transaction may still be pending, or the "
+                         "nodes have not indexed it yet", receipt_missing=True))
+        return _finish(network, tx_hash, checks, limits, ev, status_ok=None)
     elif not has_gpv2_activity:
         # Not a settle() call AND no GPv2 settlement activity (Trade or
         # Settlement event): this is not a CoW Protocol settlement at all
@@ -129,6 +178,15 @@ def certify_tx(network, tx_hash, rpc_url=None):
                              "the transaction also reverted on-chain"))
         return _finish(network, tx_hash, checks, limits, ev,
                        status_ok=status_ok)
+    elif gpv2_other_fn:
+        checks.append(_v(
+            "C0.settlement-shape", INFO,
+            f"call to the canonical GPv2 contract through a non-settle() "
+            f"function (selector {calldata[:10]}); the receipt carries GPv2 "
+            f"settlement events. Certifying via the competition record and "
+            f"canonical-contract events; the settle() calldata is not at the "
+            f"top level so the auction-id cross-check is not accessible."))
+        limits.append("non-settle() GPv2 entry point: calldata-suffix auction binding not independently checkable")
     else:
         checks.append(_v(
             "C0.settlement-shape", INFO,
@@ -144,7 +202,16 @@ def certify_tx(network, tx_hash, rpc_url=None):
     # return) so a reverted settlement can never certify without it: the
     # competition API 404s precisely because the settlement reverted, which is
     # the exact path that used to skip C8 entirely.
-    if not status_ok:
+    if receipt_missing:
+        # No receipt from ANY endpoint: pending, or not yet indexed. That is
+        # not a revert and may not be reported as one.
+        checks.append(_v("C8.execution-status", UNCERTAIN,
+                         "no transaction receipt is available from any endpoint "
+                         "queried: the transaction may still be pending, or the "
+                         "nodes have not indexed it yet. Nothing about its "
+                         "execution can be asserted — re-run once it is mined",
+                         receipt_missing=True))
+    elif not status_ok:
         checks.append(_v("C8.execution-status", VIOLATION,
                          "transaction REVERTED on-chain (or failed) — it did "
                          "not settle. This is not a completed settlement; "
@@ -198,10 +265,34 @@ def certify_tx(network, tx_hash, rpc_url=None):
                          f"against (partial or aged record); calldata suffix is "
                          f"{suffix_aid}", auction_id=suffix_aid))
     elif suffix_aid is None:
-        checks.append(_v("C1.auction-binding", INFO,
-                         f"competition record binds this tx to auction "
-                         f"{api_aid} (API-side binding only; wrapper route "
-                         f"hides the calldata suffix)", api_auction_id=api_aid))
+        if direct and suffix_len == 0:
+            checks.append(_v("C1.auction-binding", INFO,
+                             f"competition record binds this tx to auction "
+                             f"{api_aid}; the settle() calldata carries no "
+                             f"appended auction id (API-side binding only)",
+                             api_auction_id=api_aid))
+        elif direct and suffix_len is not None:
+            # The autopilot appends exactly 8 bytes. A different tail is not an
+            # autopilot suffix (a custom driver may append anything) — it is not
+            # readable as an auction id and is NOT compared, so it cannot accuse.
+            checks.append(_v("C1.auction-binding", UNCERTAIN,
+                             f"competition record binds this tx to auction "
+                             f"{api_aid}, but the settle() calldata ends in a "
+                             f"non-standard {suffix_len}-byte tail (the autopilot "
+                             f"appends exactly 8); the tail is not readable as an "
+                             f"auction id and was not compared",
+                             api_auction_id=api_aid, suffix_len=suffix_len))
+        elif direct:
+            checks.append(_v("C1.auction-binding", UNCERTAIN,
+                             f"competition record binds this tx to auction "
+                             f"{api_aid}, but the settle() calldata did not decode, "
+                             f"so the calldata-side auction id is unavailable",
+                             api_auction_id=api_aid))
+        else:
+            checks.append(_v("C1.auction-binding", INFO,
+                             f"competition record binds this tx to auction "
+                             f"{api_aid} (API-side binding only; wrapper route "
+                             f"hides the calldata suffix)", api_auction_id=api_aid))
         suffix_aid = api_aid
     elif api_aid == int(suffix_aid):
         checks.append(_v("C1.auction-binding", PASS,
@@ -287,8 +378,10 @@ def certify_tx(network, tx_hash, rpc_url=None):
                              landed_block=landed_block, deadline_block=deadline,
                              late_by_blocks=late_by))
     else:
-        checks.append(_v("C6.timeliness", UNCERTAIN,
-                         "no auctionDeadlineBlock in the competition record"))
+        why = ("no transaction receipt available, so the landing block is "
+               "unknown" if landed_block is None
+               else "no auctionDeadlineBlock in the competition record")
+        checks.append(_v("C6.timeliness", UNCERTAIN, why))
 
     # C7 — competition context (informational): how contested was this win.
     distinct = {(s.get("solverAddress") or "").lower()
@@ -320,7 +413,8 @@ def certify_tx(network, tx_hash, rpc_url=None):
     # C9 — on-chain solver authorization: confirm the settle() caller is a
     # registered solver in the GPv2 authenticator, independent of the API.
     run_solver_auth_check(rpc_url, direct, to_addr, sender, landed_block,
-                          ev, checks, limits, status_ok=status_ok)
+                          ev, checks, limits,
+                          status_ok=(None if receipt_missing else status_ok))
 
     # C10 — detailed per-order ledger (INFO): the full factual record C3/C4/C5
     # verify against, laid out per order.
@@ -429,8 +523,8 @@ def render_text(cert, color=None):
     if cert.get("not_verifiable"):
         out.append("")
         out.append(paint("  not verifiable from public data:", "2"))
-        for l in cert["not_verifiable"]:
-            out.append(paint(f"    – {l}", "2"))
+        for line in cert["not_verifiable"]:
+            out.append(paint(f"    – {line}", "2"))
 
     out.append("")
     out.append(paint(f"  evidence: {len(cert['evidence'])} fetch(es)  ·  "

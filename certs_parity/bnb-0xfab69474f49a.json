@@ -112,7 +112,7 @@
   {
    "check": "C11.receiver-delivery",
    "verdict": "PASS",
-   "detail": "every settled order's buy tokens reached the recorded receiver on-chain across 1 (token, receiver) group(s) (receivers from calldata)"
+   "detail": "every settled order's buy tokens reached the recorded receiver on-chain, sent by the settlement contract, across 1 (token, receiver) group(s) (receivers from calldata)"
   },
   {
    "check": "C12.order-authenticity",
@@ -145,7 +145,7 @@
   {
    "check": "C14.price-vs-mid",
    "verdict": "INFO",
-   "detail": "execution vs the auction's reference mid: -83.9 bps \u2014 positive is better than the fair mid; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
+   "detail": "execution vs the auction's reference mid: -83.9 bps \u2014 positive is better than the auction reference price; a small negative is normal (fees + spread; the mid is not itself tradable). Informational: a reference-price comparison, NOT full EBBO.",
    "per_order": [
     {
      "uid": "0x2a1c1e63090c157325c71a53565747ed8c9da537892208fe2de57e34f299cfff1f414b07b08433eca62c537b0de4be2c7ee55be76a78aa11",
@@ -171,66 +171,66 @@
  "evidence": [
   {
    "kind": "rpc:eth_getTransactionByHash",
-   "ref": "https://bsc-dataseed.bnbchain.org [\"0xfab69474f49acab2993110378642c42666dccbdd41024a2e3ed2e82b9cde54ea\"]",
-   "sha256": "291127c0d3df52f2ba26820fdf258a576dd205881153e8e8f26cbd683ddfe8a9",
-   "bytes": 5149,
-   "fetched_at": "2026-08-13T19:42:24Z"
+   "ref": "https://bsc-rpc.publicnode.com [\"0xfab69474f49acab2993110378642c42666dccbdd41024a2e3ed2e82b9cde54ea\"]",
+   "sha256": "de2ad9555ce8df1b4b851c732e70d1e372ed4be5899b85593af5bab35d09e1be",
+   "bytes": 5179,
+   "fetched_at": "2026-09-03T17:13:50Z"
   },
   {
    "kind": "rpc:eth_getTransactionReceipt",
    "ref": "https://bsc-dataseed.bnbchain.org [\"0xfab69474f49acab2993110378642c42666dccbdd41024a2e3ed2e82b9cde54ea\"]",
    "sha256": "23957e00595ccb82fd6a82d3b59ae50bc677f3f01dab5ee4dd2dc0b4e85ac49b",
    "bytes": 11708,
-   "fetched_at": "2026-08-13T19:42:24Z"
+   "fetched_at": "2026-09-03T17:13:50Z"
   },
   {
    "kind": "competition:by_tx_hash",
    "ref": "https://api.cow.fi/bnb/api/v2/solver_competition/by_tx_hash/0xfab69474f49acab2993110378642c42666dccbdd41024a2e3ed2e82b9cde54ea",
    "sha256": "d164a21ab66ed25f1375d9057333a43c8a053d53529beb7af5a16d484d434e5d",
    "bytes": 320458,
-   "fetched_at": "2026-08-13T19:42:25Z"
+   "fetched_at": "2026-09-03T17:13:51Z"
   },
   {
    "kind": "rpc:eth_call",
-   "ref": "https://bsc-dataseed.bnbchain.org [{\"to\": \"0x2c4c28ddbdac9c5e7055b4c863b72ea0149d8afe\", \"data\": \"0x02cc250d000000000000000000000000532",
-   "sha256": "db4796fef52c36f78989daa650510ae045136f8ce6ff5ea321cd80081e7ed2af",
-   "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:25Z"
+   "ref": "https://bsc-rpc.publicnode.com [{\"to\": \"0x2c4c28ddbdac9c5e7055b4c863b72ea0149d8afe\", \"data\": \"0x02cc250d000000000000000000000000532",
+   "sha256": "8f317fda0fe2e9f75c8f73bb6d6b71250335ba6fddf5f261c04d9b1d62e6708a",
+   "bytes": 103,
+   "fetched_at": "2026-09-03T17:13:51Z"
   },
   {
    "kind": "rpc:eth_call",
-   "ref": "https://bsc-dataseed.bnbchain.org [{\"to\": \"0x55d398326f99059ff775485246999027b3197955\", \"data\": \"0x313ce567\"}, \"latest\"]",
-   "sha256": "942eb00e02101dd8673395e77f951530862ae177255e90bbbb71a3c42dd6fba6",
-   "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:25Z"
+   "ref": "https://bsc-rpc.publicnode.com [{\"to\": \"0x55d398326f99059ff775485246999027b3197955\", \"data\": \"0x313ce567\"}, \"latest\"]",
+   "sha256": "eb1491e7ee73b8c00c20f6c14cc08ba880f85b8ac95a685f3f6acf426f743d8b",
+   "bytes": 103,
+   "fetched_at": "2026-09-03T17:13:51Z"
   },
   {
    "kind": "rpc:eth_call",
-   "ref": "https://bsc-dataseed.bnbchain.org [{\"to\": \"0x55d398326f99059ff775485246999027b3197955\", \"data\": \"0x95d89b41\"}, \"latest\"]",
-   "sha256": "c296a7c925cb6b699956d072d9be8ef4d8b4c6e8ca3a51d13a336594cee40412",
-   "bytes": 230,
-   "fetched_at": "2026-08-13T19:42:25Z"
+   "ref": "https://bsc-rpc.publicnode.com [{\"to\": \"0x55d398326f99059ff775485246999027b3197955\", \"data\": \"0x95d89b41\"}, \"latest\"]",
+   "sha256": "e592d2b3efe44e1d5529f27147f66ca3c3134174deaf732ce3a1fa42c00f7f2b",
+   "bytes": 231,
+   "fetched_at": "2026-09-03T17:13:52Z"
   },
   {
    "kind": "rpc:eth_call",
-   "ref": "https://bsc-dataseed.bnbchain.org [{\"to\": \"0xeccbb861c0dda7efd964010085488b69317e4444\", \"data\": \"0x313ce567\"}, \"latest\"]",
-   "sha256": "942eb00e02101dd8673395e77f951530862ae177255e90bbbb71a3c42dd6fba6",
-   "bytes": 102,
-   "fetched_at": "2026-08-13T19:42:25Z"
+   "ref": "https://bsc-rpc.publicnode.com [{\"to\": \"0xeccbb861c0dda7efd964010085488b69317e4444\", \"data\": \"0x313ce567\"}, \"latest\"]",
+   "sha256": "eb1491e7ee73b8c00c20f6c14cc08ba880f85b8ac95a685f3f6acf426f743d8b",
+   "bytes": 103,
+   "fetched_at": "2026-09-03T17:13:52Z"
   },
   {
    "kind": "rpc:eth_call",
-   "ref": "https://bsc-dataseed.bnbchain.org [{\"to\": \"0xeccbb861c0dda7efd964010085488b69317e4444\", \"data\": \"0x95d89b41\"}, \"latest\"]",
-   "sha256": "e68ef97ee3e579162e155a1a966e492eb1ca29d4ca0175417ecd76c8192fecdc",
-   "bytes": 230,
-   "fetched_at": "2026-08-13T19:42:25Z"
+   "ref": "https://bsc-rpc.publicnode.com [{\"to\": \"0xeccbb861c0dda7efd964010085488b69317e4444\", \"data\": \"0x95d89b41\"}, \"latest\"]",
+   "sha256": "821055cf0412ccad106cd6a86d1ef9156e4810d37a86d8e9f256a9f235debd75",
+   "bytes": 231,
+   "fetched_at": "2026-09-03T17:13:52Z"
   },
   {
    "kind": "orderbook:order",
    "ref": "https://api.cow.fi/bnb/api/v1/orders/0x2a1c1e63090c157325c71a53565747ed8c9da537892208fe2de57e34f299cfff1f414b07b08433eca62c537b0de4be2c7ee55be76a78aa11",
    "sha256": "aaf38cb15e4a679d6316e46fe7e62968446dc2d1e09f7417d75cc471d0c55458",
    "bytes": 4885,
-   "fetched_at": "2026-08-13T19:42:25Z"
+   "fetched_at": "2026-09-03T17:13:52Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; it verifies from public data only.",

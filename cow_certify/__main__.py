@@ -22,12 +22,39 @@ _VERDICT_EXIT = {"PASS": 0, "VIOLATION": 1, "UNCERTAIN": 2}
 
 
 def _fail(msg):
-    print(f"cow-certify: {msg}", file=sys.stderr)
+    print(f"cow-certify: {sources.redact(msg)}", file=sys.stderr)
     sys.exit(_EXIT_OPERATIONAL)
 
 
+def _status(msg):
+    """Progress/status lines go to stderr so `--json` stdout stays pipeable."""
+    print(msg, file=sys.stderr)
+
+
+class _Parser(argparse.ArgumentParser):
+    """argparse exits 2 on bad input — the code this tool reserves for the
+    UNCERTAIN verdict. Bad input is an OPERATIONAL failure (3)."""
+
+    def error(self, message):
+        self.print_usage(sys.stderr)
+        print(f"{self.prog}: error: {message}", file=sys.stderr)
+        sys.exit(_EXIT_OPERATIONAL)
+
+
+def _utf8_safe_streams():
+    # The human render uses ✓ ✗ → glyphs. Under a C/POSIX locale (Docker,
+    # cron, minimal CI) stdout is ASCII and printing them raises; degrade the
+    # glyphs instead of crashing after the certificate was already computed.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
 def main():
-    ap = argparse.ArgumentParser(
+    _utf8_safe_streams()
+    ap = _Parser(
         prog="cow-certify",
         description="Independent, public-data verification for a CoW Protocol "
                     "settlement. Paste a settlement tx (or your order id) and "
@@ -39,7 +66,9 @@ def main():
                "  cow-certify --network mainnet --order 0x<order_uid>\n"
                "  cow-certify --network arbitrum 0x<tx> --json --out cert.json\n"
                "\nexit codes: 0 PASS · 1 VIOLATION · 2 UNCERTAIN · "
-               "3 operational error (bad input, RPC/API unreachable)\n")
+               "3 operational error (bad input, RPC/API unreachable)\n"
+               "--json prints ONLY the certificate JSON on stdout; status lines "
+               "go to stderr.\n")
     ap.add_argument("tx_hash", nargs="?", help="settlement transaction hash")
     ap.add_argument("--order", help="order UID (resolves to its settlement tx)")
     ap.add_argument("--network", required=True, choices=list(sources.NETWORKS),
@@ -48,19 +77,21 @@ def main():
     ap.add_argument("-v", "--verbose", action="store_true",
                     help="also print the full per-order ledger")
     ap.add_argument("--json", dest="as_json", action="store_true",
-                    help="print the full certificate JSON")
+                    help="print the full certificate JSON (and nothing else) on stdout")
     ap.add_argument("--out", help="write certificate JSON to this path")
     ap.add_argument("--html", metavar="FILE",
                     help="write a shareable HTML certificate to this path")
     ap.add_argument("--no-color", action="store_true", help="disable colored output")
     args = ap.parse_args()
 
+    # One evidence ledger for the whole run, so a fetch made to CHOOSE the
+    # subject (the --order path's trades lookup) is cited in the certificate.
+    ev = sources.Evidence()
     tx = args.tx_hash
     if args.order and not tx:
         if not _UID_RE.match(args.order.strip()):
             ap.error("--order must be a 0x-prefixed 112-hex-character order uid "
                      "(the id shown on CoW Explorer)")
-        ev = sources.Evidence()
         try:
             trades = sources.trades_by_order(args.network, args.order.strip(), ev)
         except Exception as e:
@@ -77,7 +108,7 @@ def main():
         tx = uniq[-1]
         extra = (f" (of {len(uniq)} settlements for this order; pass a specific "
                  f"tx hash to certify another)" if len(uniq) > 1 else "")
-        print(f"order {args.order[:20]}… settled in {tx}{extra}\n")
+        _status(f"order {args.order[:20]}… settled in {tx}{extra}\n")
 
     if not tx:
         ap.error("provide a settlement tx hash, or --order <uid>")
@@ -87,14 +118,14 @@ def main():
                  f"(expected 0x followed by 64 hex characters)")
 
     try:
-        cert = certify_tx(args.network, tx, rpc_url=args.rpc_url)
+        cert = certify_tx(args.network, tx, rpc_url=args.rpc_url, ev=ev)
     except SystemExit as e:
         # certify_tx signals unrecoverable input problems (e.g. tx not found)
         # via SystemExit(str); surface as an operational failure (exit 3), not
         # exit 1 (which would read as a VIOLATION verdict).
         _fail(str(e.code) if e.code is not None else "could not certify")
     except Exception as e:
-        msg = str(e)
+        msg = sources.redact(e)
         if "all RPC endpoints failed" in msg:
             _fail(f"couldn't reach a working RPC for {args.network}. "
                   f"Retry, or pass --rpc-url <your endpoint>.")
@@ -102,7 +133,7 @@ def main():
 
     if args.as_json:
         # JSON only — so the output is pipeable (a CI job / `jq` must not get
-        # the human render prepended).
+        # the human render or any status line prepended or appended).
         print(json.dumps(cert, indent=2))
     else:
         print(render_text(cert, color=(False if args.no_color else None)))
@@ -110,15 +141,15 @@ def main():
             _print_ledger(cert)
     try:
         if args.out:
-            with open(args.out, "w") as f:
+            with open(args.out, "w", encoding="utf-8") as f:
                 json.dump(cert, f, indent=2)
-            print(f"\ncertificate written: {args.out}")
+            _status(f"\ncertificate written: {args.out}")
         if args.html:
             from .htmlreport import render_html
-            with open(args.html, "w") as f:
+            with open(args.html, "w", encoding="utf-8") as f:
                 f.write(render_html(cert))
-            print(f"\nHTML certificate written: {args.html}")
-    except OSError as e:
+            _status(f"\nHTML certificate written: {args.html}")
+    except (OSError, UnicodeError) as e:
         _fail(f"could not write output file: {e}")
 
     sys.exit(_VERDICT_EXIT.get(cert["overall"], 0))

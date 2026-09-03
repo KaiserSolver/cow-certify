@@ -38,32 +38,62 @@ function finish(network, txHash, checks, limits, ev, extra = {}) {
   };
 }
 
+// 1 = succeeded, 0 = reverted, null = no receipt / no status field. Only an
+// explicit on-chain status may ever feed an accusation.
+function receiptStatus(receipt) {
+  if (!receipt || typeof receipt !== "object") return null;
+  const st = receipt.status;
+  if (st === null || st === undefined) return null;
+  try { return BigInt(st) === 1n ? 1 : 0; } catch { return null; }
+}
+
 export async function certify(network, txHash, opts = {}) {
+  const custom = !!opts.rpcUrl;
   const rpc = opts.rpcUrl || src.DEFAULT_RPC[network];
-  const ev = new src.Evidence();
+  const ev = opts.evidence || new src.Evidence();
   const checks = [], limits = [];
+
+  // A custom RPC must actually BE the selected network: certifying a Base
+  // settlement against an Arbitrum node produces confident nonsense.
+  if (custom) {
+    const want = src.CHAIN_IDS[network];
+    let got = null;
+    try { got = Number(BigInt(await src.rpc(rpc, "eth_chainId", [], ev))); } catch { got = null; }
+    if (want && got !== null && got !== want)
+      throw new Error(`rpcUrl is chain id ${got}, but network ${network} is chain id ${want} — refusing to certify against the wrong chain`);
+  }
 
   const tx = await src.rpc(rpc, "eth_getTransactionByHash", [txHash], ev);
   if (!tx) throw new Error(`transaction ${txHash} not found on ${network} — is the network correct?`);
   let receipt = await src.rpc(rpc, "eth_getTransactionReceipt", [txHash], ev);
-  let statusOk = receipt && parseInt(receipt.status, 16) === 1;
-  // Confirm an apparent revert before accusing (C8): public RPCs intermittently
-  // return status 0x0 for a genuinely successful tx. A real revert is 0x0 on
-  // every node, so any single 0x1 from another endpoint means the first read
-  // was bad. Only pay the extra round-trip on the rare apparent-revert path.
-  if (receipt && !statusOk) {
+  let status = receiptStatus(receipt);
+  // Anything other than an explicit 0x1 is confirmed across EVERY endpoint we
+  // know for this network — the custom rpcUrl AND the built-in defaults — before
+  // it may shape a verdict. Public RPCs intermittently return status 0x0 for a
+  // genuinely successful tx, and a lagging/pruning node returns a NULL receipt
+  // for a perfectly mined tx (or the tx is still pending). A real revert is 0x0
+  // on every node; a single 0x1 anywhere proves the first read wrong. A single
+  // custom endpoint must never be the only witness to an accusation.
+  if (status !== 1) {
     const urls = Array.isArray(rpc) ? rpc : [rpc];
-    for (const alt of urls) {
-      let r2; try { r2 = await src.rpc([alt], "eth_getTransactionReceipt", [txHash], ev); } catch { continue; }
-      if (r2 && parseInt(r2.status, 16) === 1) { receipt = r2; statusOk = true; break; }
+    const witnesses = [...new Set([...urls, ...(src.DEFAULT_RPC[network] || [])])];
+    for (const alt of witnesses) {
+      let r2; try { r2 = await src.rpc([alt], "eth_getTransactionReceipt", [txHash], ev, 1); } catch { continue; }
+      const s2 = receiptStatus(r2);
+      if (s2 === 1) { receipt = r2; status = 1; break; }
+      if (s2 === 0 && status === null) { receipt = r2; status = 0; } // an explicit receipt beats none
     }
   }
-  const landedBlock = receipt ? parseInt(receipt.blockNumber, 16) : null;
+  const statusOk = status === 1;
+  const receiptMissing = status === null;
+  let landedBlock = null;
+  try { landedBlock = receipt && receipt.blockNumber ? Number(BigInt(receipt.blockNumber)) : null; } catch { landedBlock = null; }
   const sender = (tx.from || "").toLowerCase();
   const toAddr = (tx.to || "").toLowerCase();
   const calldata = (tx.input || "").toLowerCase();
   const logs = (receipt && receipt.logs) || [];
   const direct = toAddr === GPV2 && calldata.startsWith(SETTLE_SELECTOR);
+  const gpv2OtherFn = toAddr === GPV2 && !direct; // e.g. swap(): GPv2, not settle()
 
   // Does the receipt carry GPv2 activity (a Trade event, or the once-per-
   // settle Settlement(solver) event that fires even on an interactions-only
@@ -74,23 +104,33 @@ export async function certify(network, txHash, opts = {}) {
     [TRADE_TOPIC, SETTLEMENT_EVENT_TOPIC].includes((lg.topics || [])[0]?.toLowerCase()));
 
   // C0
-  let suffixAid = null;
+  let suffixAid = null, suffixLen = null;
   if (direct) {
     checks.push(v("C0.settlement-shape", PASS, "direct settle() call to the canonical GPv2 contract"));
-    try { const a = decodeSettlement(calldata).auctionId; suffixAid = a === null ? null : a; } catch { suffixAid = null; }
+    try { const d = decodeSettlement(calldata); suffixAid = d.auctionId; suffixLen = d.suffixLen; } catch { suffixAid = null; }
+  } else if (receiptMissing) {
+    // Without a receipt there are no logs to classify a non-settle() call by.
+    checks.push(v("C0.settlement-shape", UNCERTAIN, `tx target ${toAddr || "(contract creation)"} is not a direct settle() call and no receipt is available yet to look for GPv2 settlement events; cannot classify this transaction until it is mined and indexed`));
+    checks.push(v("C8.execution-status", UNCERTAIN, "no transaction receipt is available from any endpoint queried: the transaction may still be pending, or the nodes have not indexed it yet", { receipt_missing: true }));
+    return finish(network, txHash, checks, limits, ev);
   } else if (!hasGpv2Activity) {
     // Not a settle() call and no GPv2 settlement activity: not a CoW settlement.
     checks.push(v("C0.settlement-shape", UNCERTAIN, `this transaction is not a CoW Protocol settlement: its target ${toAddr || "(contract creation)"} is not the GPv2 settlement contract and the receipt contains no GPv2 settlement events. Nothing to certify — check the tx hash and network.`));
     if (!statusOk) checks.push(v("C8.execution-status", INFO, "the transaction also reverted on-chain"));
     return finish(network, txHash, checks, limits, ev);
+  } else if (gpv2OtherFn) {
+    checks.push(v("C0.settlement-shape", INFO, `call to the canonical GPv2 contract through a non-settle() function (selector ${calldata.slice(0, 10)}); the receipt carries GPv2 settlement events. Certifying via the competition record and canonical-contract events`));
+    limits.push("non-settle() GPv2 entry point: calldata-suffix auction binding not independently checkable");
   } else {
     checks.push(v("C0.settlement-shape", INFO, `wrapper route (target ${toAddr}); the receipt carries GPv2 settlement events. Certifying via the competition record and canonical-contract events`));
     limits.push("wrapper route: calldata-suffix auction binding not independently checkable");
   }
 
   // C8 — emitted here (before any early return) so a reverted settlement can
-  // never skip it: the competition API 404s precisely because it reverted.
-  if (!statusOk) checks.push(v("C8.execution-status", VIOLATION, "transaction REVERTED on-chain (or failed) — it did not settle. This is not a completed settlement", { reverted: true }));
+  // never skip it: the competition API 404s precisely because it reverted. A
+  // missing receipt is NOT a revert and is never reported as one.
+  if (receiptMissing) checks.push(v("C8.execution-status", UNCERTAIN, "no transaction receipt is available from any endpoint queried: the transaction may still be pending, or the nodes have not indexed it yet. Nothing about its execution can be asserted — re-run once it is mined", { receipt_missing: true }));
+  else if (!statusOk) checks.push(v("C8.execution-status", VIOLATION, "transaction REVERTED on-chain (or failed) — it did not settle. This is not a completed settlement", { reverted: true }));
 
   // C1
   const comp = await src.competitionByTx(network, txHash, ev);
@@ -117,7 +157,17 @@ export async function certify(network, txHash, opts = {}) {
   } else if (apiAid === null) {
     checks.push(v("C1.auction-binding", UNCERTAIN, `competition record carries no auctionId to bind against (partial or aged record); calldata suffix is ${suffixAid}`, { auction_id: suffixAid === null ? null : Number(suffixAid) }));
   } else if (suffixAid === null) {
-    checks.push(v("C1.auction-binding", INFO, `competition record binds this tx to auction ${apiAid} (API-side only; wrapper route)`, { api_auction_id: Number(apiAid) }));
+    if (direct && suffixLen === 0)
+      checks.push(v("C1.auction-binding", INFO, `competition record binds this tx to auction ${apiAid}; the settle() calldata carries no appended auction id (API-side binding only)`, { api_auction_id: Number(apiAid) }));
+    else if (direct && suffixLen !== null)
+      // The autopilot appends exactly 8 bytes. A different tail is not an
+      // autopilot suffix (a custom driver may append anything) — not readable
+      // as an auction id and NOT compared, so it cannot accuse.
+      checks.push(v("C1.auction-binding", UNCERTAIN, `competition record binds this tx to auction ${apiAid}, but the settle() calldata ends in a non-standard ${suffixLen}-byte tail (the autopilot appends exactly 8); the tail is not readable as an auction id and was not compared`, { api_auction_id: Number(apiAid), suffix_len: suffixLen }));
+    else if (direct)
+      checks.push(v("C1.auction-binding", UNCERTAIN, `competition record binds this tx to auction ${apiAid}, but the settle() calldata did not decode, so the calldata-side auction id is unavailable`, { api_auction_id: Number(apiAid) }));
+    else
+      checks.push(v("C1.auction-binding", INFO, `competition record binds this tx to auction ${apiAid} (API-side only; wrapper route)`, { api_auction_id: Number(apiAid) }));
     suffixAid = apiAid;
   } else if (apiAid === BigInt(suffixAid)) {
     checks.push(v("C1.auction-binding", PASS, `calldata auction id ${suffixAid} == stored competition record auctionId`, { auction_id: Number(suffixAid) }));
@@ -157,7 +207,9 @@ export async function certify(network, txHash, opts = {}) {
     if (lateBy <= 0) checks.push(v("C6.timeliness", PASS, `landed at block ${landedBlock}, deadline ${deadline} (${-lateBy} to spare)`));
     else checks.push(v("C6.timeliness", UNCERTAIN, `landed ${lateBy} block(s) after the recorded deadline (${landedBlock} > ${deadline}); the deadline is not on-chain-enforced and benign causes exist (reorg, slow inclusion), so this is flagged for review, not a violation`));
   } else {
-    checks.push(v("C6.timeliness", UNCERTAIN, "no auctionDeadlineBlock in the competition record"));
+    checks.push(v("C6.timeliness", UNCERTAIN, landedBlock === null
+      ? "no transaction receipt available, so the landing block is unknown"
+      : "no auctionDeadlineBlock in the competition record"));
   }
 
   // C7
@@ -168,7 +220,7 @@ export async function certify(network, txHash, opts = {}) {
     { solutions: solutions.length, distinct_solvers: distinct.size, filtered_out: filtered, winners: winners.length }));
 
   // C9
-  await runSolverAuth(rpc, direct, toAddr, sender, landedBlock, ev, checks, statusOk);
+  await runSolverAuth(rpc, direct, toAddr, sender, landedBlock, ev, checks, receiptMissing ? null : statusOk);
 
   // C10 / C11 / C12 / C13
   if (statusOk) {
@@ -214,6 +266,12 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
     checks.push(v("C3.solution-fidelity", UNCERTAIN, `winning solution lists ${scoredIds.length} order(s) but none carries a uid-shaped id (schema drift?); settled-set comparison not performed rather than risk a false finding`));
   } else {
     const extra = evUids.filter((u) => !solOrders.has(u));
+    // An unlisted settled uid that IS one of the auction's user orders is a real
+    // discrepancy. One that is NOT (and the record carries the user-order list)
+    // is far more likely a liquidity/JIT leg the record did not list —
+    // investigate, never accuse. Without the list we cannot tell.
+    const extraUser = extra.filter((u) => auctionUids !== null && auctionUids.has(u));
+    const extraUnlisted = extra.filter((u) => !extraUser.includes(u));
     const missing = [...solOrders.keys()].filter((u) => !evUids.includes(u));
     const matched = evUids.filter((u) => solOrders.has(u));
     let worst = PASS, compared = 0;
@@ -227,8 +285,10 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
       // PASS (and never VIOLATION — mirrors the Python engine, 2026-08-17)
       else if ((dBuy < 0n || dSell > 0n) && worst === PASS) worst = UNCERTAIN;
     }
-    if (extra.length || missing.length)
-      checks.push(v("C3.solution-fidelity", VIOLATION, `settled-order set differs from the winning solution: ${extra.length} settled-but-not-scored, ${missing.length} scored-but-not-settled`));
+    if (extraUser.length || missing.length)
+      checks.push(v("C3.solution-fidelity", VIOLATION, `settled-order set differs from the winning solution: ${extraUser.length} auction user order(s) settled but not in the scored solution, ${missing.length} scored-but-not-settled`, { extra_uids: extraUser, missing_uids: missing, unlisted_uids: extraUnlisted }));
+    else if (extraUnlisted.length)
+      checks.push(v("C3.solution-fidelity", UNCERTAIN, `${extraUnlisted.length} settled order(s) are in neither the winning solution's order list nor the auction's user order set — most likely solver-brought liquidity (JIT / CoW-AMM) that the public record did not list; flagged for review, not as a finding. The ${matched.length} user order(s) matched.`, { unlisted_uids: extraUnlisted, orders: settled.length }));
     else if (compared < matched.length)
       checks.push(v("C3.solution-fidelity", UNCERTAIN, `all ${settled.length} settled order(s) are in the winning solution, but amounts were comparable for only ${compared}/${matched.length}`));
     else {
@@ -246,7 +306,9 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
   } else {
     for (const e of events) {
       const meta = await src.orderMeta(network, e.uid, ev);
-      if (meta && meta.sellAmount && meta.buyAmount) results.push([e.uid, BigInt(meta.sellAmount), BigInt(meta.buyAmount), e]);
+      let limSell, limBuy;
+      try { limSell = BigInt(meta.sellAmount); limBuy = BigInt(meta.buyAmount); } catch { continue; }
+      if (limSell > 0n && limBuy > 0n) results.push([e.uid, limSell, limBuy, e]); // a zero limit is not a limit
     }
   }
   if (!results.length) checks.push(v("C4.limit-compliance", UNCERTAIN, "signed limits unavailable"));
@@ -268,10 +330,13 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
   if (!thisSol) return;
   try {
     const kinds = new Map();
-    if (trades) for (let i = 0; i < Math.min(trades.length, events.length); i++)
+    // Only pair calldata trades with events when the counts agree (the same
+    // condition C4 uses) — a misaligned zip would value a buy as a sell.
+    if (trades && trades.length === events.length) for (let i = 0; i < trades.length; i++)
       kinds.set(events[i].uid, (trades[i].flags & FLAG_KIND_BUY) ? "buy" : "sell");
     const prices = (comp.auction && comp.auction.prices) || {};
-    const native = {}; for (const [k, val] of Object.entries(prices)) native[k.toLowerCase()] = BigInt(val);
+    const native = {};
+    for (const [k, val] of Object.entries(prices)) { try { native[k.toLowerCase()] = BigInt(val); } catch { /* malformed price: skipped, never fatal */ } }
     let totalNative = 0n, priced = 0, jitExcluded = 0, unclassified = 0;
     for (const [uid, limSell, limBuy, e] of results) {
       if (jitUids.has(uid)) { jitExcluded++; continue; }  // maker leg, not user (F6)
@@ -290,7 +355,7 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
         : (unclassified && unclassified + jitExcluded === results.length)
         ? "no settled trade could be classified sell/buy from public data; surplus not computed rather than guessed"
         : "no native prices in the competition record for the settled tokens; surplus not valuable in native terms";
-      checks.push(v("C5.surplus-delivered", UNCERTAIN, reason)); return;
+      checks.push(v("C5.surplus-delivered", INFO, reason + " (context check; not a finding)")); return; // context only: never moves the verdict
     }
     const score = BigInt(thisSol.score);
     const coverage = priced !== results.length ? `${priced}/${results.length} priced trade(s)` : `${priced} trade(s)`;
@@ -299,7 +364,7 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
       `delivered user surplus ≈ ${totalNative} native atoms over ${coverage} (computed from the on-chain executed amounts against the signed limits — it cannot be inflated by the settlement's clearing prices).${jitNote} The reported competition score is ${score}. C5 reports the delivered surplus; it does not independently confirm the score, which folds in fee policy and the CIP-38 objective that public data does not expose (so score >= delivered surplus is expected).`,
       { delivered_surplus_native: totalNative.toString(), reported_score: score.toString() }));
   } catch (e) {
-    checks.push(v("C5.surplus-delivered", UNCERTAIN, `surplus computation failed: ${e}`));
+    checks.push(v("C5.surplus-delivered", INFO, `surplus not computed: ${src.redact(e).slice(0, 120)} (context check; not a finding)`));
   }
 }
 
@@ -318,18 +383,25 @@ function aggregateByUid(events) {
 async function isSolver(rpc, addr, blockTag, ev) {
   const data = "0x02cc250d" + addr.slice(2).toLowerCase().padStart(64, "0");
   const res = await src.rpc(rpc, "eth_call", [{ to: AUTHENTICATOR, data }, blockTag], ev);
+  // A node answering `null` (or garbage) is a failed query, not a reading.
+  if (typeof res !== "string" || !res.startsWith("0x") || res.length < 3) throw new Error("no result from the authenticator query");
   return BigInt(res) === 1n;
 }
+// statusOk: true = succeeded, false = reverted, null = unknown (no receipt).
+// Only a reading PINNED to the settlement block describes the state the
+// contract enforced; the `latest` fallback may corroborate (PASS) but never
+// accuse (VIOLATION). Mirrors Python checks_onchain.
 async function runSolverAuth(rpc, direct, toAddr, sender, landedBlock, ev, checks, statusOk = true) {
   const caller = direct ? sender : toAddr;
   if (!caller) { checks.push(v("C9.solver-authorization", UNCERTAIN, "no caller address")); return; }
-  let ok = null;
-  if (landedBlock !== null) { try { ok = await isSolver(rpc, caller, "0x" + landedBlock.toString(16), ev); } catch { ok = null; } }
-  if (ok === null) { try { ok = await isSolver(rpc, caller, "latest", ev); } catch (e) { checks.push(v("C9.solver-authorization", UNCERTAIN, `authenticator query failed: ${e}`)); return; } }
+  let ok = null, pinned = false;
+  if (landedBlock !== null) { try { ok = await isSolver(rpc, caller, "0x" + landedBlock.toString(16), ev); pinned = true; } catch { ok = null; pinned = false; } }
+  if (ok === null) { try { ok = await isSolver(rpc, caller, "latest", ev); } catch (e) { checks.push(v("C9.solver-authorization", UNCERTAIN, `authenticator query failed: ${src.redact(e).slice(0, 120)}`)); return; } }
   if (direct) {
-    if (ok) checks.push(v("C9.solver-authorization", PASS, `settle() caller ${caller} is a registered solver`));
+    if (ok) checks.push(v("C9.solver-authorization", PASS, `settle() caller ${caller} is a registered solver${pinned ? "" : " (read at latest; historical state unavailable on this RPC)"}`));
     else if (statusOk) checks.push(v("C9.solver-authorization", UNCERTAIN, `settle() caller ${caller} does not read as a registered solver, yet the tx succeeded (which requires authorization on-chain) — treating as a reconstruction artifact (non-archive RPC or since-changed solver set), not a finding`));
-    else checks.push(v("C9.solver-authorization", VIOLATION, `settle() caller ${caller} is NOT a registered solver`));
+    else if (statusOk === false && pinned) checks.push(v("C9.solver-authorization", VIOLATION, `settle() caller ${caller} is NOT a registered solver at the settlement block`));
+    else checks.push(v("C9.solver-authorization", UNCERTAIN, `settle() caller ${caller} does not read as a registered solver, but ${statusOk === null ? "the execution status is unknown (no receipt)" : "the reading is from latest state, not the settlement block"}; a registration that changed since cannot be told apart from an unauthorized call — flagged for review, not as a finding`));
   } else {
     checks.push(v("C9.solver-authorization", ok ? PASS : UNCERTAIN, ok ? `wrapper ${caller} is a registered solver` : `wrapper ${caller} not itself registered; authorized caller may be deeper`));
   }
@@ -446,7 +518,7 @@ function runPriceVsMid(comp, logs, checks) {
   if (!events.length) return;
   const prices = (comp.auction && comp.auction.prices) || {};
   const native = {};
-  for (const [k, val] of Object.entries(prices)) native[k.toLowerCase()] = BigInt(val);
+  for (const [k, val] of Object.entries(prices)) { try { native[k.toLowerCase()] = BigInt(val); } catch { /* malformed reference price: skipped, never fatal */ } }
   const rows = [];
   for (const e of events) {
     const st = e.sell_token, bt = e.buy_token;
@@ -457,7 +529,8 @@ function runPriceVsMid(comp, logs, checks) {
     rows.push([e.uid, Number(nout - nin) * 10000 / Number(nin)]);
   }
   if (!rows.length) {
-    checks.push(v("C14.price-vs-mid", UNCERTAIN, "no reference price for the traded tokens"));
+    // Routine on long-tail pairs; context only, never moves the verdict.
+    checks.push(v("C14.price-vs-mid", INFO, "the auction record has no usable reference price for the traded tokens; execution-vs-mid not computable (context check; not a finding)"));
     return;
   }
   const parts = rows.slice(0, 4).map(([, b]) => `${b >= 0 ? "+" : ""}${b.toFixed(1)} bps`);
@@ -498,7 +571,7 @@ function runBufferCheck(logs, checks) {
 
 function runInteractions(direct, calldata, checks, limits) {
   if (!direct) { checks.push(v("C13.interactions", INFO, "wrapper route: interactions not listed")); return; }
-  let inter; try { inter = decodeSettlement(calldata).interactions; } catch (e) { checks.push(v("C13.interactions", UNCERTAIN, `could not decode interactions: ${e}`)); return; }
+  let inter; try { inter = decodeSettlement(calldata).interactions; } catch (e) { checks.push(v("C13.interactions", INFO, `could not decode interactions: ${src.redact(e).slice(0, 100)} (context check)`)); return; }
   const stages = ["pre", "intra", "post"]; const flat = [];
   inter.forEach((stage, si) => stage.forEach((it) => flat.push({ stage: stages[si], target: it.target, value: it.value.toString(), selector: it.selector })));
   const counts = { pre: 0, intra: 0, post: 0 }; for (const f of flat) counts[f.stage]++;

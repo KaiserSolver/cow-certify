@@ -10,7 +10,7 @@ import unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from cow_certify import gpv2 as scorer  # noqa: E402
-from cow_certify.certify import _finish, PASS, VIOLATION, UNCERTAIN, INFO  # noqa: E402
+from cow_certify.certify import INFO, PASS, UNCERTAIN, VIOLATION, _finish  # noqa: E402
 from cow_certify.checks_flow import run_receiver_check  # noqa: E402
 
 
@@ -124,6 +124,7 @@ class TestSolverAuthC9(unittest.TestCase):
 
     def _run(self, direct, to_addr, sender, is_solver, status_ok=True):
         from unittest import mock
+
         from cow_certify.checks_onchain import run_solver_auth_check
         word = "0x" + ("0" * 63) + ("1" if is_solver else "0")
         checks, limits = [], []
@@ -152,6 +153,7 @@ class TestSolverAuthC9(unittest.TestCase):
     def test_direct_negative_on_success_is_uncertain_not_violation(self):
         # a succeeded tx passed onlySolver, so a negative reading is an artifact
         from unittest import mock
+
         from cow_certify.checks_onchain import run_solver_auth_check
         checks = []
         with mock.patch("cow_certify.sources.rpc", return_value="0x" + "0" * 64):
@@ -161,6 +163,7 @@ class TestSolverAuthC9(unittest.TestCase):
 
     def test_direct_negative_on_revert_is_violation(self):
         from unittest import mock
+
         from cow_certify.checks_onchain import run_solver_auth_check
         checks = []
         with mock.patch("cow_certify.sources.rpc", return_value="0x" + "0" * 64):
@@ -174,6 +177,7 @@ class TestRevertNotPass(unittest.TestCase):
 
     def test_reverted_settlement_overall_is_not_pass(self):
         from unittest import mock
+
         from cow_certify import certify as C
         GPV2 = "0x9008d19f58aabd9ed0d60971565aa8510560ab41"
         tx_hash = "0x" + "11" * 32
@@ -294,7 +298,8 @@ class TestBufferC15(unittest.TestCase):
     T = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
 
     def _xfer(self, token, frm, to, amt):
-        pad = lambda a: "0x" + a[2:].rjust(64, "0")
+        def pad(a):
+            return "0x" + a[2:].rjust(64, "0")
         return {"address": token, "topics": [self.T, pad(frm), pad(to)],
                 "data": hex(amt)}
 
@@ -332,6 +337,7 @@ class TestInteractionsC13(unittest.TestCase):
 
     def test_lists_and_counts_interactions(self):
         from unittest import mock
+
         from cow_certify.checks_interactions import run_interactions_check
         fake = {"interactions": [
             [("0x" + "1" * 40, 0, bytes.fromhex("12345678dead"))],   # pre
