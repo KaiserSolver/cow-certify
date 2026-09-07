@@ -1,0 +1,129 @@
+{
+ "schema_version": "0.1.0",
+ "kind": "penalty_cap_replay",
+ "tool_version": "0.5.0",
+ "subject": {
+  "network": "mainnet",
+  "chain_id": 1,
+  "env": "staging",
+  "auction_id": "16350387",
+  "source": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/mainnet/auction/16350387.json"
+ },
+ "config": {
+  "network": "mainnet",
+  "cip": "CIP-87",
+  "default_bps": 4,
+  "default_ppm": 400,
+  "default_factor_verified": false,
+  "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9",
+  "correlated_bps": 0.1,
+  "correlated_ppm": 10,
+  "overrides": [],
+  "absolute_cap_usd": 20,
+  "usd_reference": {
+   "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+   "decimals": 6
+  },
+  "usd_reference_assumed": false,
+  "wrapped_native": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+ },
+ "overall": "MATCH",
+ "summary": {
+  "orders": 2,
+  "distinct_orders": 2,
+  "verdicts": {
+   "MATCH": 2
+  },
+  "regimes": {
+   "correlated_override": 1,
+   "absolute_bound": 1
+  },
+  "inferred_matches": 1,
+  "matches_with_unknown_bound": 0,
+  "prices": 3
+ },
+ "orders": [
+  {
+   "uid": "0x71622d8563a51e03b4f32cfaa8c6e80c6fd6a22eeacf1a00d41309326ba7f13afb3c7eb936caa12b5a884d612393969a557d43076bfb1da4",
+   "kind": "sell",
+   "sell_token": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+   "buy_token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+   "partially_fillable": false,
+   "published_cap": 8030496098,
+   "amount_field": "fullSellAmount",
+   "volume_token": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+   "volume_amount": 2000000,
+   "volume_price": 401524804901506391589519360,
+   "volume_native": 803049609803012,
+   "factor_ppm": 400,
+   "factor_source": "default",
+   "volume_cap": 321219843921,
+   "absolute_bound": 8030558620474020,
+   "expected_cap": 321219843921,
+   "expected_regime": "volume_factor",
+   "inferred": true,
+   "candidates": {
+    "stated_config": 321219843921,
+    "correlated_0.1bps": 8030496098
+   },
+   "verdict": "MATCH",
+   "regime": "correlated_override",
+   "matched_by": {
+    "regime": "correlated_override",
+    "factor_ppm": 10,
+    "value": 8030496098
+   },
+   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value"
+  },
+  {
+   "uid": "0xf15f6026fe6a673030bde31d96f6c8d14cf96f4f686c78040e719827c0f20ad95b0abe214ab7875562adee331deff0fe1912fe426aa17bff",
+   "kind": "buy",
+   "sell_token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+   "buy_token": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+   "partially_fillable": true,
+   "published_cap": 8030558620474020,
+   "amount_field": "fullBuyAmount",
+   "volume_token": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+   "volume_amount": 10000000000000000000000,
+   "volume_price": 1000000000000000000,
+   "volume_native": 10000000000000000000000,
+   "factor_ppm": 400,
+   "factor_source": "default",
+   "volume_cap": 4000000000000000000,
+   "absolute_bound": 8030558620474020,
+   "expected_cap": 8030558620474020,
+   "expected_regime": "absolute_bound",
+   "inferred": false,
+   "candidates": {
+    "stated_config": 8030558620474020,
+    "correlated_0.1bps": 8030558620474020
+   },
+   "verdict": "MATCH",
+   "regime": "absolute_bound",
+   "matched_by": {
+    "regime": "absolute_bound",
+    "factor_ppm": 400,
+    "value": 8030558620474020
+   },
+   "detail": "published == replay (absolute_bound, factor default)"
+  }
+ ],
+ "not_verifiable": [
+  "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "the 4 bps default factor for mainnet is the CIP-87 text value; it has not yet been confirmed by a published cap in the volume-factor regime (the core team may retune within 0-10 bps with notice)",
+  "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
+ ],
+ "evidence": [
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/mainnet/auction/16350387.json",
+   "sha256": "c0aa7db297de8ef82621b751f2b86ec00213872da39738d6a1c0e763e2811c09",
+   "bytes": 110703,
+   "fetched_at": "2026-09-07T16:19:00Z"
+  }
+ ],
+ "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
+ "reproduce": "python3 -m cow_certify --network mainnet --penalty-cap 16350387 --env staging",
+ "generated_at": "2026-09-07T16:19:00Z"
+}

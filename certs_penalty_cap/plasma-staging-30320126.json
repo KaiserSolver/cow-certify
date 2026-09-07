@@ -1,0 +1,89 @@
+{
+ "schema_version": "0.1.0",
+ "kind": "penalty_cap_replay",
+ "tool_version": "0.5.0",
+ "subject": {
+  "network": "plasma",
+  "chain_id": 9745,
+  "env": "staging",
+  "auction_id": "30320126",
+  "source": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/plasma/auction/30320126.json"
+ },
+ "config": {
+  "network": "plasma",
+  "cip": "CIP-87",
+  "default_bps": 1,
+  "default_ppm": 100,
+  "default_factor_verified": false,
+  "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9",
+  "correlated_bps": 0.1,
+  "correlated_ppm": 10,
+  "overrides": [],
+  "absolute_cap_usd": 20,
+  "usd_reference": {
+   "token": "0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb",
+   "decimals": 6
+  },
+  "usd_reference_assumed": true,
+  "wrapped_native": "0x6100e367285b01f48d07953803a2d8dca5d19873"
+ },
+ "overall": "NO_PUBLISHED_CAP",
+ "summary": {
+  "orders": 1,
+  "distinct_orders": 1,
+  "verdicts": {
+   "NO_PUBLISHED_CAP": 1
+  },
+  "regimes": {},
+  "inferred_matches": 0,
+  "matches_with_unknown_bound": 0,
+  "prices": 2
+ },
+ "orders": [
+  {
+   "uid": "0xaff89b2fd6b96c334d1f18fc8caf4f286d99507ebf9af12d9bce2acee2e635969669e1578a356292c968406c656b29ee6115d1106a951dcf",
+   "kind": "sell",
+   "sell_token": "0x6100e367285b01f48d07953803a2d8dca5d19873",
+   "buy_token": "0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb",
+   "partially_fillable": false,
+   "published_cap": null,
+   "amount_field": "fullSellAmount",
+   "volume_token": "0x6100e367285b01f48d07953803a2d8dca5d19873",
+   "volume_amount": 289529928259871760045,
+   "volume_price": 1000000000000000000,
+   "volume_native": 289529928259871760045,
+   "factor_ppm": 100,
+   "factor_source": "default",
+   "volume_cap": 28952992825987176,
+   "absolute_bound": 223681220261581759615,
+   "expected_cap": 28952992825987176,
+   "expected_regime": "volume_factor",
+   "inferred": false,
+   "candidates": {
+    "stated_config": 28952992825987176,
+    "correlated_0.1bps": 2895299282598717
+   },
+   "verdict": "NO_PUBLISHED_CAP",
+   "detail": "body carries no penaltyCapNative for this order; expected value shown (as of 2026-09-07 only the staging autopilots publish it)"
+  }
+ ],
+ "not_verifiable": [
+  "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "usd reference token on plasma is ASSUMED (0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb); it only matters where the bound binds",
+  "the 1 bps default factor for plasma is the CIP-87 text value; it has not yet been confirmed by a published cap in the volume-factor regime (the core team may retune within 0-10 bps with notice)",
+  "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
+ ],
+ "evidence": [
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/plasma/auction/30320126.json",
+   "sha256": "d22845c93fecfadf0d4e2fb719e6fc1be0b6e96a85afb683bf208e12c72ef44a",
+   "bytes": 11466,
+   "fetched_at": "2026-09-07T16:19:03Z"
+  }
+ ],
+ "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
+ "reproduce": "python3 -m cow_certify --network plasma --penalty-cap 30320126 --env staging",
+ "generated_at": "2026-09-07T16:19:03Z"
+}

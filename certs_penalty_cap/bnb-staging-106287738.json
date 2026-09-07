@@ -1,0 +1,96 @@
+{
+ "schema_version": "0.1.0",
+ "kind": "penalty_cap_replay",
+ "tool_version": "0.5.0",
+ "subject": {
+  "network": "bnb",
+  "chain_id": 56,
+  "env": "staging",
+  "auction_id": "106287738",
+  "source": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/106287738.json"
+ },
+ "config": {
+  "network": "bnb",
+  "cip": "CIP-87",
+  "default_bps": 1,
+  "default_ppm": 100,
+  "default_factor_verified": true,
+  "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9",
+  "correlated_bps": 0.1,
+  "correlated_ppm": 10,
+  "overrides": [],
+  "absolute_cap_usd": 20,
+  "usd_reference": {
+   "token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+   "decimals": 18
+  },
+  "usd_reference_assumed": true,
+  "wrapped_native": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+ },
+ "overall": "MATCH",
+ "summary": {
+  "orders": 1,
+  "distinct_orders": 1,
+  "verdicts": {
+   "MATCH": 1
+  },
+  "regimes": {
+   "correlated_override": 1
+  },
+  "inferred_matches": 1,
+  "matches_with_unknown_bound": 0,
+  "prices": 2
+ },
+ "orders": [
+  {
+   "uid": "0xde45dcd97d379429bfa7d0de46c493e219a28148748fa5f36a4a4a7c244431cd3de0a3f95eb59dc208fbedeaac43f5197c39709d6a9820d3",
+   "kind": "sell",
+   "sell_token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+   "buy_token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+   "partially_fillable": false,
+   "published_cap": 145459536195,
+   "amount_field": "fullSellAmount",
+   "volume_token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+   "volume_amount": 9939462996832968152,
+   "volume_price": 1463454678007441,
+   "volume_native": 14545953619597065,
+   "factor_ppm": 100,
+   "factor_source": "default",
+   "volume_cap": 1454595361959,
+   "absolute_bound": 29269093560148820,
+   "expected_cap": 1454595361959,
+   "expected_regime": "volume_factor",
+   "inferred": true,
+   "candidates": {
+    "stated_config": 1454595361959,
+    "correlated_0.1bps": 145459536195
+   },
+   "verdict": "MATCH",
+   "regime": "correlated_override",
+   "matched_by": {
+    "regime": "correlated_override",
+    "factor_ppm": 10,
+    "value": 145459536195
+   },
+   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value"
+  }
+ ],
+ "not_verifiable": [
+  "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "usd reference token on bnb is ASSUMED (0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d); it only matters where the bound binds",
+  "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
+ ],
+ "evidence": [
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/106287738.json",
+   "sha256": "7003b41589996931d70b81772b6f697857665981977ac2b82c1103594afd907e",
+   "bytes": 774,
+   "fetched_at": "2026-09-07T16:18:04Z"
+  }
+ ],
+ "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
+ "reproduce": "python3 -m cow_certify --network bnb --penalty-cap 106287738 --env staging",
+ "generated_at": "2026-09-07T16:18:04Z"
+}

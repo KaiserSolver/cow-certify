@@ -1,5 +1,82 @@
 # Changelog
 
+## 0.5.0 — 2026-09-07
+
+CIP-87 penalty-cap replay: a second, independent implementation of the
+per-order penalty cap the autopilot publishes as `penaltyCapNative`, diffed
+against the published value from the same public auction body. New mode,
+new report kind; certificates and their schema are unchanged.
+
+- **`cow-certify --network <net> --penalty-cap <auction_id> [--env staging]`.**
+  Fetches the auction body from the public solver-instances bucket
+  (`<env>/<chain>/auction/<id>.json`, gzip), recomputes every order's cap
+  from the body's own inputs — signed amounts, per-token native reference
+  prices, CIP-87's per-chain factor, the $20 bound converted through the usd
+  reference token — and reports `MATCH` / `DIFFERENCE` / `NO_PUBLISHED_CAP` /
+  `NOT_COMPUTABLE` per order, always with every candidate value it derived
+  and, on a match, `matched_by` (the regime, factor and value that actually
+  reproduced the published number). The auction verdict is the worst order
+  verdict: exit 0 only when every order matches, 2 on any difference,
+  unpublished or unreplayable order (a finding for the core team, never a
+  "violation": this is rewards accounting, not settlement safety), 3 on
+  operational errors. `--json` / `--out` as for certificates; `--html` is
+  not available for this report kind; `--rpc-url` is rejected (nothing but
+  the public bucket is read).
+- **Arithmetic mirrored from services `main` at commit `d4bc794`
+  (2026-09-07)**, including the branches that are easy to get wrong: volume
+  is the SIGNED amount (sell amount for sell orders, buy amount for buy
+  orders; `fullSellAmount` / `fullBuyAmount` in the body, which the driver
+  fills from the signed amounts, not the remaining part of a partial fill),
+  the native-ETH placeholder maps to the wrapped token, factors are parts-per-
+  million (`round(factor × 1e6)`, floor division), a missing price or a
+  multiplication overflow makes the cap the $20 bound (not zero), and an
+  overflow converting the bound makes it `U256::MAX`. Override precedence is
+  first-match over the configured token sets. Every report pins the commit
+  it mirrors (`config.reference_commit`).
+- **Spec-vs-code, stated not hidden.** CIP-87's text defines the basis as the
+  order's quote net of volume fees; the implementation values the signed
+  sell side (sell orders) or buy side (buy orders) at reference prices, and
+  the CIP's scaling to the executed fraction of a partial fill happens at
+  penalty time, not in the published cap. The replay follows the code and
+  says so in every report. Per-chain default factors carry a verification
+  flag: Base, Gnosis, Arbitrum, BNB and Avalanche are confirmed by published
+  caps in the volume-factor regime; mainnet's 4 bps (its published caps were
+  all correlated or bound-bound) and Polygon/Linea/Ink/Plasma (no cap yet)
+  are the CIP text only, and the report's `not_verifiable` says so.
+- **Inference is explicit, never silent.** The correlated-token override sets
+  and the usd reference token are autopilot deployment config and are not
+  published. The replay ships CIP-87's numbers and a per-chain USDC default;
+  when a published value is only reproducible under the 0.1 bps correlated
+  factor, or as the $20 bound through a different token, the order is a
+  `MATCH` carrying `inferred: true` and the regime it needed. `--strict`
+  disables inference and turns those into `DIFFERENCE`; overrides can be
+  declared in code (`cip87_config(overrides=...)`) to make them stated
+  matches. The mainnet usd reference token (USDC) is confirmed from published
+  bound-binding caps; on every other chain the report says `assumed`.
+- **`python3 -m cow_certify.penalty_cap_batch corpus.csv --out dir/`** replays
+  a `network,env,auction_id` corpus and summarises order instances, DISTINCT
+  orders and regimes; `tools/make_penalty_cap_corpus.py` samples staging
+  auctions across the bucket's retention window on every chain that has a
+  staging prefix, and `tools/make_penalty_cap_heldout.py` takes the newest
+  auctions that are NOT in the corpus. Shipped: `penalty_cap_corpus.csv` →
+  `certs_penalty_cap/` (188 auctions; 171 of 171 capped order instances
+  reproduced, 19 distinct orders, six chains) and `penalty_cap_heldout.csv`
+  → `certs_penalty_cap_heldout/` (36 auctions; 85 of 85, 8 distinct orders).
+  Each report embeds every input, so both stay hermetic vector sets after
+  the bucket's ~30-day retention drops the bodies.
+- **Tests.** `tests/test_penalty_cap.py`: the arithmetic pinned to services'
+  own unit vectors (0.1 bps of 1e18 = 1e13, overflow → None), precedence,
+  every fallback, and hermetic replays of four recorded staging bodies
+  (Base 2 bps on partially fillable orders, BNB 1 bps, Gnosis 3 bps, mainnet
+  correlated 0.1 bps + a bound-binding 10,000 WETH buy order) served through a
+  stubbed gzip transport and mutated one thing at a time (one wei off →
+  DIFFERENCE, caps removed → NO_PUBLISHED_CAP, reference price removed →
+  fallback path, strict mode, declared override, plain-JSON body, 404).
+- Scope note: as of this release only the STAGING autopilots publish the cap;
+  prod bodies carry no `penaltyCapNative` yet, so `--env prod` reports
+  `NO_PUBLISHED_CAP` with the expected values until the field ships. The
+  browser app does not include this mode.
+
 ## 0.4.1 — 2026-09-03
 
 Never-accuse batch from a six-lane deep review (verification math, browser

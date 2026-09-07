@@ -1,0 +1,59 @@
+{
+ "id": "107241885",
+ "tokens": {
+  "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": {
+   "decimals": 18,
+   "symbol": "WBNB",
+   "referencePrice": "1000000000000000000",
+   "availableBalance": "94536199933081398",
+   "trusted": false
+  },
+  "0x55d398326f99059ff775485246999027b3197955": {
+   "decimals": 18,
+   "symbol": "USDT",
+   "referencePrice": "1338085402553224",
+   "availableBalance": "8293381368703831241",
+   "trusted": false
+  },
+  "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d": {
+   "decimals": 18,
+   "symbol": "USDC",
+   "referencePrice": "1344432105923515",
+   "availableBalance": "541963965196835459",
+   "trusted": false
+  }
+ },
+ "orders": [
+  {
+   "uid": "0x2545e3df5ed042df0653f026fb1673972c33ab5d1e696cf822bff3ad041842f68e75c9fb9a64d1d085b0b1d5f868361eacda5b026a9ebbb6",
+   "sellToken": "0x55d398326f99059ff775485246999027b3197955",
+   "buyToken": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+   "sellAmount": "3454231435669833968",
+   "fullSellAmount": "3454231435669833968",
+   "buyAmount": "4581063309003809",
+   "fullBuyAmount": "4580147096342009",
+   "penaltyCapNative": "462205666111",
+   "validTo": 1788787638,
+   "kind": "sell",
+   "receiver": "0x8e75c9fb9a64d1d085b0b1d5f868361eacda5b02",
+   "owner": "0x8e75c9fb9a64d1d085b0b1d5f868361eacda5b02",
+   "partiallyFillable": false,
+   "preInteractions": [],
+   "postInteractions": [],
+   "sellTokenSource": "erc20",
+   "buyTokenDestination": "erc20",
+   "class": "limit",
+   "appData": "0x98abff18d5c5468c9ae6c4a934ebfe40b7478ffeb9a7b0970b574fbfa083de83",
+   "signingScheme": "eip712",
+   "signature": "0xc68f21bb9fbf245c85a4be719802977eeab19061cde1a9de8ad0c9a53b8ae3c3492548942a9b3dee071da6a57d50b68ebad3ce08f3a7d9d52a27622745954a3a1c"
+  }
+ ],
+ "liquidity": [],
+ "effectiveGasPrice": "55000000",
+ "deadline": "2026-09-07T12:57:28.953395959Z",
+ "_provenance": {
+  "source": "solver-instances bucket staging/bnb/auction/107241885.json",
+  "fetched": "2026-09-07",
+  "trimmed": "liquidity and surplusCapturingJitOrderOwners dropped; tokens limited to those the kept orders reference plus the usd reference and wrapped native; orders limited to the first 4 (order objects byte-identical to the raw body)"
+ }
+}

@@ -3,6 +3,7 @@
 Every fetch is recorded (URL, sha256 of raw bytes, timestamp) so a certificate
 can cite exactly what it saw and anyone can re-fetch and compare.
 """
+import gzip
 import hashlib
 import json
 import re
@@ -112,6 +113,26 @@ GPV2 = "0x9008d19f58aabd9ed0d60971565aa8510560ab41"  # same address on all chain
 SETTLE_SELECTOR = "0x13d79a0b"
 AUCTION_ID_SUFFIX_BYTES = 8  # autopilot appends the auction id to settle() calldata
 
+# Public solver-instance bucket: one gzipped JSON object per auction, the exact
+# body the driver hands to solvers (orders, tokens with native reference prices,
+# liquidity, and since CIP-87 each order's penaltyCapNative). Kept ~30 days.
+# Chain path segments differ from the API's (arbitrum-one, xdai); listed on
+# 2026-09-07 from the bucket itself. Sepolia has no bucket prefix.
+INSTANCES_BUCKET = "https://solver-instances.s3.eu-central-1.amazonaws.com"
+BUCKET_CHAINS = {
+    "mainnet": "mainnet",
+    "arbitrum": "arbitrum-one",
+    "base": "base",
+    "gnosis": "xdai",
+    "polygon": "polygon",
+    "avalanche": "avalanche",
+    "bnb": "bnb",
+    "ink": "ink",
+    "linea": "linea",
+    "plasma": "plasma",
+}
+BUCKET_ENVS = ("prod", "staging")
+
 
 class Evidence:
     """Ledger of every external fetch backing a certificate."""
@@ -157,6 +178,56 @@ def _get(url, evidence: Evidence, kind, timeout=25, retries=3):
         if attempt < retries - 1:
             time.sleep(0.5 * (2 ** attempt))  # 0.5s, 1s
     raise RuntimeError(f"{kind}: {url} failed after {retries} attempts: {redact(last_err)}")
+
+
+def _get_raw(url, evidence: Evidence, kind, timeout=25, retries=3):
+    """GET returning the raw body bytes (for gzip / non-JSON objects), with the
+    same 404 shortcut and bounded retry/backoff as `_get`. The evidence ledger
+    records the bytes exactly as served (compressed when the object is)."""
+    last_err = None
+    for attempt in range(retries):
+        req = urllib.request.Request(url, headers=UA)
+        try:
+            raw = urllib.request.urlopen(req, timeout=timeout).read()
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                evidence.record(kind, url, b"404")
+                return None
+            last_err = e
+            if e.code not in (429, 500, 502, 503, 504):
+                raise
+        except Exception as e:  # timeouts, connection errors
+            last_err = e
+        else:
+            evidence.record(kind, url, raw)
+            return raw
+        if attempt < retries - 1:
+            time.sleep(0.5 * (2 ** attempt))
+    raise RuntimeError(f"{kind}: {url} failed after {retries} attempts: {redact(last_err)}")
+
+
+def auction_body_url(network, auction_id, env="prod"):
+    chain = BUCKET_CHAINS.get(network)
+    if chain is None:
+        return None
+    return f"{INSTANCES_BUCKET}/{env}/{chain}/auction/{auction_id}.json"
+
+
+def auction_body(network, auction_id, evidence: Evidence, env="prod"):
+    """The public auction body for one auction id, or None when the bucket has
+    no such object. Objects are served gzip-compressed; a plain JSON object is
+    accepted too."""
+    if env not in BUCKET_ENVS:
+        raise ValueError(f"env must be one of {BUCKET_ENVS}")
+    url = auction_body_url(network, auction_id, env)
+    if url is None:
+        raise ValueError(f"no public instance bucket for network '{network}'")
+    raw = _get_raw(url, evidence, f"instances:{env}")
+    if raw is None:
+        return None
+    if raw[:2] == b"\x1f\x8b":
+        raw = gzip.decompress(raw)
+    return json.loads(raw)
 
 
 def rpc(rpc_urls, method, params, evidence: Evidence, timeout=25, rounds=None):

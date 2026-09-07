@@ -2,13 +2,14 @@
 
   cow-certify --network base 0x<settlement_tx_hash>
   cow-certify --network mainnet --order 0x<order_uid>
+  cow-certify --network base --penalty-cap <auction_id> --env staging   # CIP-87 replay
 """
 import argparse
 import json
 import re
 import sys
 
-from . import sources
+from . import penalty_cap, sources
 from .certify import certify_tx, render_text
 
 _HASH_RE = re.compile(r"^0x[0-9a-fA-F]{64}$")
@@ -65,14 +66,28 @@ def main():
                "  cow-certify --network base 0x<settlement_tx_hash>\n"
                "  cow-certify --network mainnet --order 0x<order_uid>\n"
                "  cow-certify --network arbitrum 0x<tx> --json --out cert.json\n"
+               "  cow-certify --network base --penalty-cap 153714586 --env staging\n"
                "\nexit codes: 0 PASS · 1 VIOLATION · 2 UNCERTAIN · "
                "3 operational error (bad input, RPC/API unreachable)\n"
+               "--penalty-cap: 0 every order MATCHes · 2 any order that is a "
+               "DIFFERENCE, has no published cap, or could not be replayed (a "
+               "finding, never a violation) · 3 operational\n"
                "--json prints ONLY the certificate JSON on stdout; status lines "
                "go to stderr.\n")
     ap.add_argument("tx_hash", nargs="?", help="settlement transaction hash")
     ap.add_argument("--order", help="order UID (resolves to its settlement tx)")
     ap.add_argument("--network", required=True, choices=list(sources.NETWORKS),
                     help="which CoW chain the settlement is on")
+    ap.add_argument("--penalty-cap", metavar="AUCTION_ID",
+                    help="CIP-87 mode: recompute every order's penalty cap from the "
+                         "public auction body and compare with the published "
+                         "penaltyCapNative")
+    ap.add_argument("--env", choices=list(sources.BUCKET_ENVS), default=None,
+                    help="--penalty-cap only: which instance-bucket environment the "
+                         "auction id belongs to (default prod)")
+    ap.add_argument("--strict", action="store_true",
+                    help="--penalty-cap only: compare against the stated config only, "
+                         "no inference of correlated/bound regimes")
     ap.add_argument("--rpc-url", help="override the default public RPC")
     ap.add_argument("-v", "--verbose", action="store_true",
                     help="also print the full per-order ledger")
@@ -87,6 +102,11 @@ def main():
     # One evidence ledger for the whole run, so a fetch made to CHOOSE the
     # subject (the --order path's trades lookup) is cited in the certificate.
     ev = sources.Evidence()
+    if args.penalty_cap is not None:
+        _penalty_cap_mode(ap, args, ev)
+        return
+    if args.env is not None or args.strict:
+        ap.error("--env and --strict only apply to --penalty-cap")
     tx = args.tx_hash
     if args.order and not tx:
         if not _UID_RE.match(args.order.strip()):
@@ -153,6 +173,49 @@ def main():
         _fail(f"could not write output file: {e}")
 
     sys.exit(_VERDICT_EXIT.get(cert["overall"], 0))
+
+
+_PENALTY_EXIT = {penalty_cap.MATCH: 0, penalty_cap.DIFFERENCE: 2,
+                 penalty_cap.NO_PUBLISHED_CAP: 2, penalty_cap.NOT_COMPUTABLE: 2}
+
+
+def _penalty_cap_mode(ap, args, ev):
+    """`--penalty-cap AUCTION_ID`: replay CIP-87 caps for one public auction body."""
+    if args.tx_hash or args.order:
+        ap.error("--penalty-cap takes an auction id and cannot be combined with a "
+                 "settlement tx hash or --order")
+    aid = args.penalty_cap.strip()
+    if not aid.isdigit():
+        ap.error(f"'{aid}' is not an auction id (expected a decimal integer, e.g. 153714586)")
+    if args.network not in sources.BUCKET_CHAINS:
+        ap.error(f"no public instance bucket for {args.network}; --penalty-cap supports "
+                 f"{', '.join(sources.BUCKET_CHAINS)}")
+    if args.rpc_url:
+        ap.error("--rpc-url is not used by --penalty-cap (the replay reads only the public "
+                 "instance bucket)")
+    env = args.env or "prod"
+    try:
+        rep = penalty_cap.replay(args.network, int(aid), env=env,
+                                 strict=args.strict, ev=ev)
+    except SystemExit as e:
+        _fail(str(e.code) if e.code is not None else "could not replay")
+    except Exception as e:
+        _fail(f"could not replay auction {aid} on {args.network} ({env}): "
+              f"{sources.redact(e)[:160]}")
+    if args.as_json:
+        print(penalty_cap.to_json(rep))
+    else:
+        print(penalty_cap.render_text(rep))
+    try:
+        if args.out:
+            with open(args.out, "w", encoding="utf-8") as f:
+                json.dump(rep, f, indent=2)
+            _status(f"\nreport written: {args.out}")
+        if args.html:
+            _status("--html is not available for --penalty-cap reports (use --json / --out)")
+    except (OSError, UnicodeError) as e:
+        _fail(f"could not write output file: {e}")
+    sys.exit(_PENALTY_EXIT.get(rep["overall"], 2))
 
 
 def _print_ledger(cert):

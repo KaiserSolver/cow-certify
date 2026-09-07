@@ -1,0 +1,88 @@
+{
+ "schema_version": "0.1.0",
+ "kind": "penalty_cap_replay",
+ "tool_version": "0.5.0",
+ "subject": {
+  "network": "arbitrum",
+  "chain_id": 42161,
+  "env": "staging",
+  "auction_id": "205895465",
+  "source": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205895465.json"
+ },
+ "config": {
+  "network": "arbitrum",
+  "cip": "CIP-87",
+  "default_bps": 1,
+  "default_ppm": 100,
+  "default_factor_verified": true,
+  "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9",
+  "correlated_bps": 0.1,
+  "correlated_ppm": 10,
+  "overrides": [],
+  "absolute_cap_usd": 20,
+  "usd_reference": {
+   "token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+   "decimals": 6
+  },
+  "usd_reference_assumed": true,
+  "wrapped_native": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
+ },
+ "overall": "NO_PUBLISHED_CAP",
+ "summary": {
+  "orders": 1,
+  "distinct_orders": 1,
+  "verdicts": {
+   "NO_PUBLISHED_CAP": 1
+  },
+  "regimes": {},
+  "inferred_matches": 0,
+  "matches_with_unknown_bound": 0,
+  "prices": 3
+ },
+ "orders": [
+  {
+   "uid": "0xf5ada3b7f87ad63b343ccd6430f04b12e2745185942abc5fae8904128dec3e68c1cadaf64d0b842dbbd0f15eda5b1c7d54047c9d6a7e3209",
+   "kind": "sell",
+   "sell_token": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+   "buy_token": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+   "partially_fillable": false,
+   "published_cap": null,
+   "amount_field": "fullSellAmount",
+   "volume_token": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+   "volume_amount": 150000000,
+   "volume_price": 529151103627174178426191872,
+   "volume_native": 79372665544076126,
+   "factor_ppm": 100,
+   "factor_source": "default",
+   "volume_cap": 7937266554407,
+   "absolute_bound": null,
+   "expected_cap": 7937266554407,
+   "expected_regime": "volume_factor",
+   "inferred": false,
+   "candidates": {
+    "stated_config": 7937266554407,
+    "correlated_0.1bps": 793726655440
+   },
+   "verdict": "NO_PUBLISHED_CAP",
+   "detail": "body carries no penaltyCapNative for this order; expected value shown (as of 2026-09-07 only the staging autopilots publish it)"
+  }
+ ],
+ "not_verifiable": [
+  "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "usd reference token on arbitrum is ASSUMED (0xaf88d065e77c8cc2239327c5edb3a432268e5831); it only matters where the bound binds",
+  "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
+ ],
+ "evidence": [
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205895465.json",
+   "sha256": "4d9f6e157de4da2f679a78bea7694fd48ded3109e6253c29dba59ded1f643410",
+   "bytes": 129741,
+   "fetched_at": "2026-09-07T16:17:38Z"
+  }
+ ],
+ "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
+ "reproduce": "python3 -m cow_certify --network arbitrum --penalty-cap 205895465 --env staging",
+ "generated_at": "2026-09-07T16:17:38Z"
+}

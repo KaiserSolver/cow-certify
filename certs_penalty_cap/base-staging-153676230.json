@@ -1,0 +1,128 @@
+{
+ "schema_version": "0.1.0",
+ "kind": "penalty_cap_replay",
+ "tool_version": "0.5.0",
+ "subject": {
+  "network": "base",
+  "chain_id": 8453,
+  "env": "staging",
+  "auction_id": "153676230",
+  "source": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/base/auction/153676230.json"
+ },
+ "config": {
+  "network": "base",
+  "cip": "CIP-87",
+  "default_bps": 2,
+  "default_ppm": 200,
+  "default_factor_verified": true,
+  "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9",
+  "correlated_bps": 0.1,
+  "correlated_ppm": 10,
+  "overrides": [],
+  "absolute_cap_usd": 20,
+  "usd_reference": {
+   "token": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+   "decimals": 6
+  },
+  "usd_reference_assumed": true,
+  "wrapped_native": "0x4200000000000000000000000000000000000006"
+ },
+ "overall": "MATCH",
+ "summary": {
+  "orders": 2,
+  "distinct_orders": 2,
+  "verdicts": {
+   "MATCH": 2
+  },
+  "regimes": {
+   "volume_factor": 2
+  },
+  "inferred_matches": 0,
+  "matches_with_unknown_bound": 0,
+  "prices": 3
+ },
+ "orders": [
+  {
+   "uid": "0x05347e304975f371a3b0e60ff26fd2cb8a4d48f60993d8cc8d8a824c26646ab23b57a795230d9fc0d12aa1e80a0fafc5e44a82da6aa3f2b6",
+   "kind": "sell",
+   "sell_token": "0xfde4c96c8593536e31f229ea8f37b2ada2699bb2",
+   "buy_token": "0x4200000000000000000000000000000000000006",
+   "partially_fillable": true,
+   "published_cap": 9824863416357,
+   "amount_field": "fullSellAmount",
+   "volume_token": "0xfde4c96c8593536e31f229ea8f37b2ada2699bb2",
+   "volume_amount": 122417405,
+   "volume_price": 401285397952915955976765440,
+   "volume_native": 49124317081788283,
+   "factor_ppm": 200,
+   "factor_source": "default",
+   "volume_cap": 9824863416357,
+   "absolute_bound": 8025970150874628,
+   "expected_cap": 9824863416357,
+   "expected_regime": "volume_factor",
+   "inferred": false,
+   "candidates": {
+    "stated_config": 9824863416357,
+    "correlated_0.1bps": 491243170817
+   },
+   "verdict": "MATCH",
+   "regime": "volume_factor",
+   "matched_by": {
+    "regime": "volume_factor",
+    "factor_ppm": 200,
+    "value": 9824863416357
+   },
+   "detail": "published == replay (volume_factor, factor default)"
+  },
+  {
+   "uid": "0x7c3eaaaba8eebb4786170cab1395a31960d716956e9ef4693be61cb7b361d7a73b57a795230d9fc0d12aa1e80a0fafc5e44a82da6aa3f2cd",
+   "kind": "sell",
+   "sell_token": "0xfde4c96c8593536e31f229ea8f37b2ada2699bb2",
+   "buy_token": "0x4200000000000000000000000000000000000006",
+   "partially_fillable": true,
+   "published_cap": 9824863416357,
+   "amount_field": "fullSellAmount",
+   "volume_token": "0xfde4c96c8593536e31f229ea8f37b2ada2699bb2",
+   "volume_amount": 122417405,
+   "volume_price": 401285397952915955976765440,
+   "volume_native": 49124317081788283,
+   "factor_ppm": 200,
+   "factor_source": "default",
+   "volume_cap": 9824863416357,
+   "absolute_bound": 8025970150874628,
+   "expected_cap": 9824863416357,
+   "expected_regime": "volume_factor",
+   "inferred": false,
+   "candidates": {
+    "stated_config": 9824863416357,
+    "correlated_0.1bps": 491243170817
+   },
+   "verdict": "MATCH",
+   "regime": "volume_factor",
+   "matched_by": {
+    "regime": "volume_factor",
+    "factor_ppm": 200,
+    "value": 9824863416357
+   },
+   "detail": "published == replay (volume_factor, factor default)"
+  }
+ ],
+ "not_verifiable": [
+  "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "usd reference token on base is ASSUMED (0x833589fcd6edb6e08f4c7c32d4f71b54bda02913); it only matters where the bound binds",
+  "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
+ ],
+ "evidence": [
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/base/auction/153676230.json",
+   "sha256": "539c7daef0da7e7bd5a6bbeceb28baf66965795d61686aa3bed2dc7ff1989866",
+   "bytes": 3548,
+   "fetched_at": "2026-09-07T16:17:59Z"
+  }
+ ],
+ "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
+ "reproduce": "python3 -m cow_certify --network base --penalty-cap 153676230 --env staging",
+ "generated_at": "2026-09-07T16:17:59Z"
+}

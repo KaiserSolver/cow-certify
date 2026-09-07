@@ -1,0 +1,96 @@
+{
+ "schema_version": "0.1.0",
+ "kind": "penalty_cap_replay",
+ "tool_version": "0.5.0",
+ "subject": {
+  "network": "avalanche",
+  "chain_id": 43114,
+  "env": "staging",
+  "auction_id": "258490216",
+  "source": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/avalanche/auction/258490216.json"
+ },
+ "config": {
+  "network": "avalanche",
+  "cip": "CIP-87",
+  "default_bps": 2,
+  "default_ppm": 200,
+  "default_factor_verified": true,
+  "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9",
+  "correlated_bps": 0.1,
+  "correlated_ppm": 10,
+  "overrides": [],
+  "absolute_cap_usd": 20,
+  "usd_reference": {
+   "token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+   "decimals": 6
+  },
+  "usd_reference_assumed": true,
+  "wrapped_native": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"
+ },
+ "overall": "MATCH",
+ "summary": {
+  "orders": 1,
+  "distinct_orders": 1,
+  "verdicts": {
+   "MATCH": 1
+  },
+  "regimes": {
+   "correlated_override": 1
+  },
+  "inferred_matches": 1,
+  "matches_with_unknown_bound": 0,
+  "prices": 3
+ },
+ "orders": [
+  {
+   "uid": "0xeb75354a518755a832ba3d9d2de79d93511c451c75a64e77e38e4e0e93ed25ac9fa3c00a92ec5f96b1ad2527ab41b3932efeda586a9ac653",
+   "kind": "sell",
+   "sell_token": "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
+   "buy_token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+   "partially_fillable": false,
+   "published_cap": 1417515544027,
+   "amount_field": "fullSellAmount",
+   "volume_token": "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
+   "volume_amount": 1051462,
+   "volume_price": 134813768260524917177836371968,
+   "volume_native": 141751554402748050,
+   "factor_ppm": 200,
+   "factor_source": "default",
+   "volume_cap": 28350310880549,
+   "absolute_bound": 2719380879876642940,
+   "expected_cap": 28350310880549,
+   "expected_regime": "volume_factor",
+   "inferred": true,
+   "candidates": {
+    "stated_config": 28350310880549,
+    "correlated_0.1bps": 1417515544027
+   },
+   "verdict": "MATCH",
+   "regime": "correlated_override",
+   "matched_by": {
+    "regime": "correlated_override",
+    "factor_ppm": 10,
+    "value": 1417515544027
+   },
+   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value"
+  }
+ ],
+ "not_verifiable": [
+  "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "usd reference token on avalanche is ASSUMED (0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e); it only matters where the bound binds",
+  "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
+ ],
+ "evidence": [
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/avalanche/auction/258490216.json",
+   "sha256": "309839caeb3bfc51d53210a12d6c23a8c8be897f8c914ce7a77714c748b7128f",
+   "bytes": 29711,
+   "fetched_at": "2026-09-07T16:17:45Z"
+  }
+ ],
+ "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
+ "reproduce": "python3 -m cow_certify --network avalanche --penalty-cap 258490216 --env staging",
+ "generated_at": "2026-09-07T16:17:45Z"
+}

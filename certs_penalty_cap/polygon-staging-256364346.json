@@ -1,0 +1,89 @@
+{
+ "schema_version": "0.1.0",
+ "kind": "penalty_cap_replay",
+ "tool_version": "0.5.0",
+ "subject": {
+  "network": "polygon",
+  "chain_id": 137,
+  "env": "staging",
+  "auction_id": "256364346",
+  "source": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/polygon/auction/256364346.json"
+ },
+ "config": {
+  "network": "polygon",
+  "cip": "CIP-87",
+  "default_bps": 3,
+  "default_ppm": 300,
+  "default_factor_verified": false,
+  "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9",
+  "correlated_bps": 0.1,
+  "correlated_ppm": 10,
+  "overrides": [],
+  "absolute_cap_usd": 20,
+  "usd_reference": {
+   "token": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+   "decimals": 6
+  },
+  "usd_reference_assumed": true,
+  "wrapped_native": "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"
+ },
+ "overall": "NO_PUBLISHED_CAP",
+ "summary": {
+  "orders": 1,
+  "distinct_orders": 1,
+  "verdicts": {
+   "NO_PUBLISHED_CAP": 1
+  },
+  "regimes": {},
+  "inferred_matches": 0,
+  "matches_with_unknown_bound": 0,
+  "prices": 3
+ },
+ "orders": [
+  {
+   "uid": "0xdffa2e7b3b2603c00818b2e225583d8a18a6b68e0dffaef0f1b5e88285d9d5899669e1578a356292c968406c656b29ee6115d1106a8c4f14",
+   "kind": "sell",
+   "sell_token": "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+   "buy_token": "0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39",
+   "partially_fillable": false,
+   "published_cap": null,
+   "amount_field": "fullSellAmount",
+   "volume_token": "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+   "volume_amount": 21688532,
+   "volume_price": 11429877700308606822235976499200,
+   "volume_native": 247897268259229628939,
+   "factor_ppm": 300,
+   "factor_source": "default",
+   "volume_cap": 74369180477768888,
+   "absolute_bound": null,
+   "expected_cap": 74369180477768888,
+   "expected_regime": "volume_factor",
+   "inferred": false,
+   "candidates": {
+    "stated_config": 74369180477768888,
+    "correlated_0.1bps": 2478972682592296
+   },
+   "verdict": "NO_PUBLISHED_CAP",
+   "detail": "body carries no penaltyCapNative for this order; expected value shown (as of 2026-09-07 only the staging autopilots publish it)"
+  }
+ ],
+ "not_verifiable": [
+  "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "usd reference token on polygon is ASSUMED (0x3c499c542cef5e3811e1192ce70d8cc03d5c3359); it only matters where the bound binds",
+  "the 3 bps default factor for polygon is the CIP-87 text value; it has not yet been confirmed by a published cap in the volume-factor regime (the core team may retune within 0-10 bps with notice)",
+  "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
+ ],
+ "evidence": [
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/polygon/auction/256364346.json",
+   "sha256": "767b125776707c92c5839ccfbf50e450ef777604be392958a65e27d27b34a5e3",
+   "bytes": 25598,
+   "fetched_at": "2026-09-07T16:19:07Z"
+  }
+ ],
+ "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
+ "reproduce": "python3 -m cow_certify --network polygon --penalty-cap 256364346 --env staging",
+ "generated_at": "2026-09-07T16:19:07Z"
+}

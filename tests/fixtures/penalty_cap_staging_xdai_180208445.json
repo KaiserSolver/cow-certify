@@ -1,0 +1,59 @@
+{
+ "id": "180208445",
+ "tokens": {
+  "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d": {
+   "decimals": 18,
+   "symbol": "WXDAI",
+   "referencePrice": "1000000000000000000",
+   "availableBalance": "81118066611198944",
+   "trusted": false
+  },
+  "0x7f7440c5098462f833e123b44b8a03e1d9785bab": {
+   "decimals": 18,
+   "symbol": "1INCH",
+   "referencePrice": "89123180376878672",
+   "availableBalance": "0",
+   "trusted": false
+  },
+  "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83": {
+   "decimals": null,
+   "symbol": null,
+   "referencePrice": null,
+   "availableBalance": "0",
+   "trusted": false
+  }
+ },
+ "orders": [
+  {
+   "uid": "0x5daaa894a14a02015ce5f4e5c45da6aaadb496b72d72e2f79b786c22ad5ebad9fb3c7eb936caa12b5a884d612393969a557d43076bfaf99c",
+   "sellToken": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d",
+   "buyToken": "0x7f7440c5098462f833e123b44b8a03e1d9785bab",
+   "sellAmount": "100000000000",
+   "fullSellAmount": "100000000000",
+   "buyAmount": "1102477079968",
+   "fullBuyAmount": "1102256584553",
+   "penaltyCapNative": "30000000",
+   "validTo": 1811610012,
+   "kind": "sell",
+   "receiver": "0xfb3c7eb936caa12b5a884d612393969a557d4307",
+   "owner": "0xfb3c7eb936caa12b5a884d612393969a557d4307",
+   "partiallyFillable": false,
+   "preInteractions": [],
+   "postInteractions": [],
+   "sellTokenSource": "erc20",
+   "buyTokenDestination": "erc20",
+   "class": "limit",
+   "appData": "0xbc9e102748829db8395db85375d62375efe09b7109bc3aab8c12518fa22fe459",
+   "signingScheme": "eip712",
+   "signature": "0x2fc181d68b9f706e38044158f84a7acd34bf8412b09da2fe199878ab1bd1ab883d6da99302614976d056b1753b48ceaa91a9be9dc58d5b4be6abb9e418c505fb1b"
+  }
+ ],
+ "liquidity": [],
+ "effectiveGasPrice": "100000",
+ "deadline": "2026-09-07T15:11:45.766496654Z",
+ "_provenance": {
+  "source": "solver-instances bucket staging/xdai/auction/180208445.json",
+  "fetched": "2026-09-07",
+  "trimmed": "liquidity and surplusCapturingJitOrderOwners dropped; tokens limited to those the kept orders reference plus the usd reference and wrapped native; orders limited to the first 4 (order objects byte-identical to the raw body)"
+ }
+}

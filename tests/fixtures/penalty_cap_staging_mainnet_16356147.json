@@ -1,0 +1,88 @@
+{
+ "id": "16356147",
+ "tokens": {
+  "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": {
+   "decimals": 6,
+   "symbol": "USDC",
+   "referencePrice": "401510791959640396043124736",
+   "availableBalance": "1030169147",
+   "trusted": true
+  },
+  "0xdac17f958d2ee523a2206206994597c13d831ec7": {
+   "decimals": 6,
+   "symbol": "USDT",
+   "referencePrice": "401712879615909476652023808",
+   "availableBalance": "320754215",
+   "trusted": true
+  },
+  "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+   "decimals": 18,
+   "symbol": "WETH",
+   "referencePrice": "1000000000000000000",
+   "availableBalance": "845349914362681613",
+   "trusted": true
+  }
+ },
+ "orders": [
+  {
+   "uid": "0x71622d8563a51e03b4f32cfaa8c6e80c6fd6a22eeacf1a00d41309326ba7f13afb3c7eb936caa12b5a884d612393969a557d43076bfb1da4",
+   "sellToken": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+   "buyToken": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+   "sellAmount": "2000000",
+   "fullSellAmount": "2000000",
+   "buyAmount": "10000300",
+   "fullBuyAmount": "10000000",
+   "penaltyCapNative": "8034257592",
+   "validTo": 1811619236,
+   "kind": "sell",
+   "receiver": "0xfb3c7eb936caa12b5a884d612393969a557d4307",
+   "owner": "0xfb3c7eb936caa12b5a884d612393969a557d4307",
+   "partiallyFillable": false,
+   "preInteractions": [],
+   "postInteractions": [],
+   "sellTokenSource": "erc20",
+   "buyTokenDestination": "erc20",
+   "class": "limit",
+   "appData": "0xbc9e102748829db8395db85375d62375efe09b7109bc3aab8c12518fa22fe459",
+   "signingScheme": "eip712",
+   "signature": "0x783f2227c3a4c0d7fd34b813c03f1f2f0fc6e20aab1dd09e243e30b2f5ca85250c5b02b84cca40dd76001fb268b143f4ad8426b902fcb18d1b04f43a3189b7961c"
+  },
+  {
+   "uid": "0xf15f6026fe6a673030bde31d96f6c8d14cf96f4f686c78040e719827c0f20ad95b0abe214ab7875562adee331deff0fe1912fe426aa17bff",
+   "sellToken": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+   "buyToken": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+   "sellAmount": "26105508",
+   "fullSellAmount": "10000000000",
+   "buyAmount": "26110730000000000000",
+   "fullBuyAmount": "10000000000000000000000",
+   "penaltyCapNative": "8030215839192807",
+   "validTo": 1788967935,
+   "kind": "buy",
+   "receiver": "0x5b0abe214ab7875562adee331deff0fe1912fe42",
+   "owner": "0x5b0abe214ab7875562adee331deff0fe1912fe42",
+   "partiallyFillable": true,
+   "preInteractions": [
+    {
+     "target": "0xd496f9fcfba14d7bd1e45e4840d38ad85ded14dd",
+     "value": "0",
+     "callData": "0x760f2a0b000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000020000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb480000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000001388000000000000000000000000000000000000000000000000000000000000000e4d505accf0000000000000000000000005b0abe214ab7875562adee331deff0fe1912fe42000000000000000000000000c7242d167563352e2bca4d71c043fbe542db8fb200000000000000000000000000000000000000000000000000000002540be4000000000000000000000000000000000000000000000000000000000073ffe8e4000000000000000000000000000000000000000000000000000000000000001ba89776e6fd5f90aa30d208c1b465b8e18e2d9219d5b0a9b67fbadcac038eae3735abe941a1de99ac13fc32e7d666fadb031310e5b8b84f1b4ab0a7926be62aeb00000000000000000000000000000000000000000000000000000000"
+    }
+   ],
+   "postInteractions": [],
+   "sellTokenSource": "erc20",
+   "buyTokenDestination": "erc20",
+   "class": "limit",
+   "appData": "0x6c7c0aeeb41006931e2e16a686b5e9a40933737291ed8421fcbb172dfed8b898",
+   "signingScheme": "eip712",
+   "signature": "0xfc5e933105cff79d4e497fd2f1281ac0d1fe5f076218f5437a3e699e8d4da170063e45b7de78abec402b390c42448812836d7f3ddae2ab992574e651e79846a41b"
+  }
+ ],
+ "liquidity": [],
+ "effectiveGasPrice": "1260322184",
+ "deadline": "2026-09-07T15:04:32.798921425Z",
+ "_provenance": {
+  "source": "solver-instances bucket staging/mainnet/auction/16356147.json",
+  "fetched": "2026-09-07",
+  "trimmed": "liquidity and surplusCapturingJitOrderOwners dropped; tokens limited to those the kept orders reference plus the usd reference and wrapped native; orders limited to the first 4 (order objects byte-identical to the raw body)"
+ }
+}
