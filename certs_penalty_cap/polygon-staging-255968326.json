@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "polygon",
   "chain_id": 137,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
-   "decimals": 6
+   "decimals": 6,
+   "price": null
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"
@@ -56,6 +57,12 @@
    "factor_source": "default",
    "volume_cap": 86865318831239700,
    "absolute_bound": null,
+   "absolute_bound_inputs": {
+    "token": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+    "decimals": 6,
+    "price": null,
+    "usd": 20
+   },
    "expected_cap": 86865318831239700,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -80,10 +87,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/polygon/auction/255968326.json",
    "sha256": "6ab4c2c1fde16d166d9763d730418597cbe69cf9eafee5c3cdc2152b0d2c37d4",
    "bytes": 426885,
-   "fetched_at": "2026-09-07T16:19:06Z"
+   "fetched_at": "2026-09-07T19:54:25Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network polygon --penalty-cap 255968326 --env staging",
- "generated_at": "2026-09-07T16:19:06Z"
+ "generated_at": "2026-09-07T19:54:25Z"
 }

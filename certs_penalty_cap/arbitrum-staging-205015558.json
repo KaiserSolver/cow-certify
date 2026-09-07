@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "arbitrum",
   "chain_id": 42161,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
-   "decimals": 6
+   "decimals": 6,
+   "price": 533938130036648385041137664
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
@@ -56,6 +57,12 @@
    "factor_source": "default",
    "volume_cap": 37108700037547,
    "absolute_bound": 10678762600732967,
+   "absolute_bound_inputs": {
+    "token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+    "decimals": 6,
+    "price": 533938130036648385041137664,
+    "usd": 20
+   },
    "expected_cap": 37108700037547,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -79,10 +86,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205015558.json",
    "sha256": "b15004514eedda040d75a15c79c522aef91177bb2a388eaeca2e3db82a87d13d",
    "bytes": 129722,
-   "fetched_at": "2026-09-07T16:17:36Z"
+   "fetched_at": "2026-09-07T19:52:55Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network arbitrum --penalty-cap 205015558 --env staging",
- "generated_at": "2026-09-07T16:17:36Z"
+ "generated_at": "2026-09-07T19:52:55Z"
 }

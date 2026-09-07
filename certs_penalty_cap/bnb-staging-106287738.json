@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "bnb",
   "chain_id": 56,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
-   "decimals": 18
+   "decimals": 18,
+   "price": 1463454678007441
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
@@ -58,6 +59,12 @@
    "factor_source": "default",
    "volume_cap": 1454595361959,
    "absolute_bound": 29269093560148820,
+   "absolute_bound_inputs": {
+    "token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+    "decimals": 18,
+    "price": 1463454678007441,
+    "usd": 20
+   },
    "expected_cap": 1454595361959,
    "expected_regime": "volume_factor",
    "inferred": true,
@@ -72,7 +79,43 @@
     "factor_ppm": 10,
     "value": 145459536195
    },
-   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value"
+   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value",
+   "vector": {
+    "id": "bnb/staging/106287738/0xde45dcd97d379429bfa7d0de46c493e219a28148748fa5f36a4a4a7c244431cd3de0a3f95eb59dc208fbedeaac43f5197c39709d6a9820d3",
+    "network": "bnb",
+    "env": "staging",
+    "auction_id": "106287738",
+    "order_uid": "0xde45dcd97d379429bfa7d0de46c493e219a28148748fa5f36a4a4a7c244431cd3de0a3f95eb59dc208fbedeaac43f5197c39709d6a9820d3",
+    "order": {
+     "kind": "sell",
+     "sell_token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+     "buy_token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+     "sell_amount": "9939462996832968152",
+     "buy_amount": "9931577311921569452"
+    },
+    "prices": {
+     "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d": "1463454678007441"
+    },
+    "config": {
+     "default_factor_ppm": 100,
+     "overrides": [
+      {
+       "tokens": [
+        "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"
+       ],
+       "factor_ppm": 10
+      }
+     ],
+     "absolute_cap_usd": 20,
+     "usd_reference_token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+     "usd_reference_decimals": 18,
+     "wrapped_native": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+    },
+    "expected_cap": "145459536195",
+    "regime": "correlated_override",
+    "inferred": true,
+    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
+   }
   }
  ],
  "not_verifiable": [
@@ -87,10 +130,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/106287738.json",
    "sha256": "7003b41589996931d70b81772b6f697857665981977ac2b82c1103594afd907e",
    "bytes": 774,
-   "fetched_at": "2026-09-07T16:18:04Z"
+   "fetched_at": "2026-09-07T19:53:23Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network bnb --penalty-cap 106287738 --env staging",
- "generated_at": "2026-09-07T16:18:04Z"
+ "generated_at": "2026-09-07T19:53:23Z"
 }

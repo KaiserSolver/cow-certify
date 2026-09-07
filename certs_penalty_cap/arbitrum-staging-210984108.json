@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "arbitrum",
   "chain_id": 42161,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
-   "decimals": 6
+   "decimals": 6,
+   "price": 396345424514297614829617152
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
@@ -58,6 +59,12 @@
    "factor_source": "default",
    "volume_cap": 163040369674,
    "absolute_bound": 7926908490285952,
+   "absolute_bound_inputs": {
+    "token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+    "decimals": 6,
+    "price": 396345424514297614829617152,
+    "usd": 20
+   },
    "expected_cap": 163040369674,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -72,7 +79,37 @@
     "factor_ppm": 100,
     "value": 163040369674
    },
-   "detail": "published == replay (volume_factor, factor default)"
+   "detail": "published == replay (volume_factor, factor default)",
+   "vector": {
+    "id": "arbitrum/staging/210984108/0xc8326abdaa9a60d8107f58a0c4f98fe5e2fd2a531b13b0bcdac5c78710a5369c3de0a3f95eb59dc208fbedeaac43f5197c39709d6a9ab08c",
+    "network": "arbitrum",
+    "env": "staging",
+    "auction_id": "210984108",
+    "order_uid": "0xc8326abdaa9a60d8107f58a0c4f98fe5e2fd2a531b13b0bcdac5c78710a5369c3de0a3f95eb59dc208fbedeaac43f5197c39709d6a9ab08c",
+    "order": {
+     "kind": "sell",
+     "sell_token": "0xcb8b5cd20bdcaea9a010ac1f8d835824f5c87a04",
+     "buy_token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+     "sell_amount": "32000000000000000000",
+     "buy_amount": "4069222"
+    },
+    "prices": {
+     "0xcb8b5cd20bdcaea9a010ac1f8d835824f5c87a04": "50950115523218",
+     "0xaf88d065e77c8cc2239327c5edb3a432268e5831": "396345424514297614829617152"
+    },
+    "config": {
+     "default_factor_ppm": 100,
+     "overrides": [],
+     "absolute_cap_usd": 20,
+     "usd_reference_token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+     "usd_reference_decimals": 6,
+     "wrapped_native": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
+    },
+    "expected_cap": "163040369674",
+    "regime": "volume_factor",
+    "inferred": false,
+    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
+   }
   }
  ],
  "not_verifiable": [
@@ -87,10 +124,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/210984108.json",
    "sha256": "79662ae7847a4cbb200860cdc6db2447e16ab0b81350d8f4ac1382238459a5af",
    "bytes": 129050,
-   "fetched_at": "2026-09-07T16:17:42Z"
+   "fetched_at": "2026-09-07T19:53:02Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network arbitrum --penalty-cap 210984108 --env staging",
- "generated_at": "2026-09-07T16:17:42Z"
+ "generated_at": "2026-09-07T19:53:02Z"
 }

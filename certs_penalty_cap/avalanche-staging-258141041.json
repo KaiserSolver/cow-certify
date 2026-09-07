@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "avalanche",
   "chain_id": 43114,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
-   "decimals": 6
+   "decimals": 6,
+   "price": 139186399818500947205131599872
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"
@@ -56,6 +57,12 @@
    "factor_source": "default",
    "volume_cap": 608300547976856,
    "absolute_bound": 2783727996370018944,
+   "absolute_bound_inputs": {
+    "token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+    "decimals": 6,
+    "price": 139186399818500947205131599872,
+    "usd": 20
+   },
    "expected_cap": 608300547976856,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -79,10 +86,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/avalanche/auction/258141041.json",
    "sha256": "0ee697721794bd7ef132174d8debca4140ef580e4821a36c32491fe3d0de7d2a",
    "bytes": 29527,
-   "fetched_at": "2026-09-07T16:17:44Z"
+   "fetched_at": "2026-09-07T19:53:03Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network avalanche --penalty-cap 258141041 --env staging",
- "generated_at": "2026-09-07T16:17:44Z"
+ "generated_at": "2026-09-07T19:53:03Z"
 }

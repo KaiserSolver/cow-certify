@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "avalanche",
   "chain_id": 43114,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
-   "decimals": 6
+   "decimals": 6,
+   "price": 135969043993832147038374985728
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"
@@ -58,6 +59,12 @@
    "factor_source": "default",
    "volume_cap": 28350310880549,
    "absolute_bound": 2719380879876642940,
+   "absolute_bound_inputs": {
+    "token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+    "decimals": 6,
+    "price": 135969043993832147038374985728,
+    "usd": 20
+   },
    "expected_cap": 28350310880549,
    "expected_regime": "volume_factor",
    "inferred": true,
@@ -72,7 +79,45 @@
     "factor_ppm": 10,
     "value": 1417515544027
    },
-   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value"
+   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value",
+   "vector": {
+    "id": "avalanche/staging/258490216/0xeb75354a518755a832ba3d9d2de79d93511c451c75a64e77e38e4e0e93ed25ac9fa3c00a92ec5f96b1ad2527ab41b3932efeda586a9ac653",
+    "network": "avalanche",
+    "env": "staging",
+    "auction_id": "258490216",
+    "order_uid": "0xeb75354a518755a832ba3d9d2de79d93511c451c75a64e77e38e4e0e93ed25ac9fa3c00a92ec5f96b1ad2527ab41b3932efeda586a9ac653",
+    "order": {
+     "kind": "sell",
+     "sell_token": "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
+     "buy_token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+     "sell_amount": "1051462",
+     "buy_amount": "1045317"
+    },
+    "prices": {
+     "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7": "134813768260524917177836371968",
+     "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e": "135969043993832147038374985728"
+    },
+    "config": {
+     "default_factor_ppm": 200,
+     "overrides": [
+      {
+       "tokens": [
+        "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
+        "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e"
+       ],
+       "factor_ppm": 10
+      }
+     ],
+     "absolute_cap_usd": 20,
+     "usd_reference_token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+     "usd_reference_decimals": 6,
+     "wrapped_native": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"
+    },
+    "expected_cap": "1417515544027",
+    "regime": "correlated_override",
+    "inferred": true,
+    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
+   }
   }
  ],
  "not_verifiable": [
@@ -87,10 +132,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/avalanche/auction/258490216.json",
    "sha256": "309839caeb3bfc51d53210a12d6c23a8c8be897f8c914ce7a77714c748b7128f",
    "bytes": 29711,
-   "fetched_at": "2026-09-07T16:17:45Z"
+   "fetched_at": "2026-09-07T19:53:05Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network avalanche --penalty-cap 258490216 --env staging",
- "generated_at": "2026-09-07T16:17:45Z"
+ "generated_at": "2026-09-07T19:53:05Z"
 }

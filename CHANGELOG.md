@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.5.1 — 2026-09-07
+
+Penalty-cap reports are now self-contained fixtures, and the corpus ships as
+one vector file a second implementation can load. Asked for on the forum
+within hours of 0.5.0 (report schema 0.1.0 → 0.2.0; certificates unchanged).
+
+- **Every input behind the bound is preserved.** Each order carries
+  `absolute_bound_inputs` — the usd reference token, its decimals, its price
+  in this body and the $ bound — and `config.usd_reference` now records the
+  price too, so the absolute-bound branch can be recomputed from the report
+  alone after the body leaves the bucket. An inferred bound match records the
+  token that actually reproduced it.
+- **Vectors.** Every matched order carries a `vector`: the signed order
+  fields, the native prices the formula consumed, the configuration that
+  reproduces the published value (default factor in ppm, any override
+  needed, the $ bound, the usd reference token and decimals, the wrapped
+  native token), and `expected_cap` = the published `penaltyCapNative`.
+  Inferred regimes are made explicit in the vector's config (a declared
+  override for a correlated match; the matched token as the usd reference
+  for an inferred bound), so a literal implementation of the formula
+  reproduces every vector without knowing about inference.
+  `python3 -m cow_certify.penalty_cap_vectors <report dirs> --out
+  penalty_cap_vectors.json --check` collects them into one file (schema
+  `cow-certify/penalty-cap-vectors/1`) and `--check` recomputes each vector
+  from its own fields, failing on any mismatch — the same check any other
+  implementation should run against the file. Shipped:
+  `penalty_cap_vectors.json` (the corpus and held-out set, deduplicated).
+- `penalty_cap.cap_from_vector(v)` is the reference recomputation from a
+  vector's fields only; `order_vector(...)` builds one.
+
 ## 0.5.0 — 2026-09-07
 
 CIP-87 penalty-cap replay: a second, independent implementation of the

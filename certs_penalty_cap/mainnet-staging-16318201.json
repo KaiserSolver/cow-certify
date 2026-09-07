@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "mainnet",
   "chain_id": 1,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-   "decimals": 6
+   "decimals": 6,
+   "price": 412805198573600133888344064
   },
   "usd_reference_assumed": false,
   "wrapped_native": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
@@ -58,6 +59,12 @@
    "factor_source": "default",
    "volume_cap": 330194340505,
    "absolute_bound": 8256103971472002,
+   "absolute_bound_inputs": {
+    "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "decimals": 6,
+    "price": 412805198573600133888344064,
+    "usd": 20
+   },
    "expected_cap": 330194340505,
    "expected_regime": "volume_factor",
    "inferred": true,
@@ -72,7 +79,45 @@
     "factor_ppm": 10,
     "value": 8254858512
    },
-   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value"
+   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value",
+   "vector": {
+    "id": "mainnet/staging/16318201/0x71622d8563a51e03b4f32cfaa8c6e80c6fd6a22eeacf1a00d41309326ba7f13afb3c7eb936caa12b5a884d612393969a557d43076bfb1da4",
+    "network": "mainnet",
+    "env": "staging",
+    "auction_id": "16318201",
+    "order_uid": "0x71622d8563a51e03b4f32cfaa8c6e80c6fd6a22eeacf1a00d41309326ba7f13afb3c7eb936caa12b5a884d612393969a557d43076bfb1da4",
+    "order": {
+     "kind": "sell",
+     "sell_token": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+     "buy_token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+     "sell_amount": "2000000",
+     "buy_amount": "10000000"
+    },
+    "prices": {
+     "0xdac17f958d2ee523a2206206994597c13d831ec7": "412742925631272892133015552",
+     "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": "412805198573600133888344064"
+    },
+    "config": {
+     "default_factor_ppm": 400,
+     "overrides": [
+      {
+       "tokens": [
+        "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "0xdac17f958d2ee523a2206206994597c13d831ec7"
+       ],
+       "factor_ppm": 10
+      }
+     ],
+     "absolute_cap_usd": 20,
+     "usd_reference_token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+     "usd_reference_decimals": 6,
+     "wrapped_native": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+    },
+    "expected_cap": "8254858512",
+    "regime": "correlated_override",
+    "inferred": true,
+    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
+   }
   }
  ],
  "not_verifiable": [
@@ -87,10 +132,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/mainnet/auction/16318201.json",
    "sha256": "fac9fb1173b8573029b2729fffcd475dbe3d7063a83fffab15523b4f377e00ac",
    "bytes": 110373,
-   "fetched_at": "2026-09-07T16:18:45Z"
+   "fetched_at": "2026-09-07T19:54:04Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network mainnet --penalty-cap 16318201 --env staging",
- "generated_at": "2026-09-07T16:18:45Z"
+ "generated_at": "2026-09-07T19:54:04Z"
 }

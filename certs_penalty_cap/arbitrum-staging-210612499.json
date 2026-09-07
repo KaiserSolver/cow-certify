@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "arbitrum",
   "chain_id": 42161,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
-   "decimals": 6
+   "decimals": 6,
+   "price": 410469643974023394409578496
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
@@ -58,6 +59,12 @@
    "factor_source": "default",
    "volume_cap": 41083601011,
    "absolute_bound": 8209392879480467,
+   "absolute_bound_inputs": {
+    "token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+    "decimals": 6,
+    "price": 410469643974023394409578496,
+    "usd": 20
+   },
    "expected_cap": 41083601011,
    "expected_regime": "volume_factor",
    "inferred": true,
@@ -72,7 +79,45 @@
     "factor_ppm": 10,
     "value": 4108360101
    },
-   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value"
+   "detail": "published == replay under the 0.1 bps correlated factor (10 ppm), not the stated default factor; the override token sets are deployment config, so this regime is INFERRED from the published value",
+   "vector": {
+    "id": "arbitrum/staging/210612499/0xb02cfb4a17178d2e25b9bb2b3a5a795083cec30eae9524f3b5cb63ec4a0bbd4b9fa3c00a92ec5f96b1ad2527ab41b3932efeda586a993693",
+    "network": "arbitrum",
+    "env": "staging",
+    "auction_id": "210612499",
+    "order_uid": "0xb02cfb4a17178d2e25b9bb2b3a5a795083cec30eae9524f3b5cb63ec4a0bbd4b9fa3c00a92ec5f96b1ad2527ab41b3932efeda586a993693",
+    "order": {
+     "kind": "sell",
+     "sell_token": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+     "buy_token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+     "sell_amount": "1000000",
+     "buy_amount": "999643"
+    },
+    "prices": {
+     "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9": "410836010114815387615887360",
+     "0xaf88d065e77c8cc2239327c5edb3a432268e5831": "410469643974023394409578496"
+    },
+    "config": {
+     "default_factor_ppm": 100,
+     "overrides": [
+      {
+       "tokens": [
+        "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+        "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9"
+       ],
+       "factor_ppm": 10
+      }
+     ],
+     "absolute_cap_usd": 20,
+     "usd_reference_token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+     "usd_reference_decimals": 6,
+     "wrapped_native": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
+    },
+    "expected_cap": "4108360101",
+    "regime": "correlated_override",
+    "inferred": true,
+    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
+   }
   }
  ],
  "not_verifiable": [
@@ -87,10 +132,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/210612499.json",
    "sha256": "314b2a2532d7f9c41ca6a2446c71ce749e67b3d7c510cf9610feaf039f39144d",
    "bytes": 3808,
-   "fetched_at": "2026-09-07T16:17:42Z"
+   "fetched_at": "2026-09-07T19:53:01Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network arbitrum --penalty-cap 210612499 --env staging",
- "generated_at": "2026-09-07T16:17:42Z"
+ "generated_at": "2026-09-07T19:53:01Z"
 }

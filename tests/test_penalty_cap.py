@@ -426,6 +426,67 @@ class TestRecordedBodies(unittest.TestCase):
         self.assertEqual(code, 2, err)
         self.assertIn("2 matched", out)
 
+    def test_reports_preserve_the_bound_inputs_and_carry_vectors(self):
+        # every MATCH keeps the usd reference token/decimals/price behind the bound
+        # and a self-contained vector that reproduces the published cap from its
+        # own fields - nothing needs the body once it has left the bucket
+        from cow_certify.penalty_cap_vectors import check
+        for chain, body in FIX.items():
+            rep = replay_with(Transport(), NETWORK_OF[chain], body["id"])
+            self.assertIn("price", rep["config"]["usd_reference"])
+            for o in rep["orders"]:
+                self.assertEqual(o["verdict"], pc.MATCH)
+                bi = o["absolute_bound_inputs"]
+                self.assertEqual(bi["token"], rep["config"]["usd_reference"]["token"])
+                self.assertEqual(bi["price"], rep["config"]["usd_reference"]["price"])
+                v = o["vector"]
+                self.assertEqual(v["expected_cap"], str(o["published_cap"]))
+                self.assertEqual(str(pc.cap_from_vector(v)), v["expected_cap"], (chain, v["id"]))
+                self.assertEqual(v["reference_commit"], rep["config"]["reference_commit"])
+            self.assertEqual(check([o["vector"] for o in rep["orders"]]), [])
+        # gnosis: reference token has no price -> inputs say so, vector still reproduces
+        gno = replay_with(Transport(), "gnosis", FIX["xdai"]["id"])
+        self.assertIsNone(gno["orders"][0]["absolute_bound_inputs"]["price"])
+        self.assertIsNone(gno["config"]["usd_reference"]["price"])
+        # mainnet: the inferred correlated match is made explicit as a declared override
+        main = replay_with(Transport(), "mainnet", FIX["mainnet"]["id"])
+        corr = next(o for o in main["orders"] if o["regime"] == "correlated_override")
+        self.assertTrue(corr["vector"]["inferred"])
+        self.assertEqual(corr["vector"]["config"]["overrides"][0]["factor_ppm"], 10)
+        self.assertEqual(sorted(corr["vector"]["config"]["overrides"][0]["tokens"]),
+                         sorted([corr["sell_token"], corr["buy_token"]]))
+        bound = next(o for o in main["orders"] if o["regime"] == "absolute_bound")
+        self.assertEqual(bound["vector"]["config"]["usd_reference_token"], USDC_MAINNET)
+        self.assertIn(USDC_MAINNET, bound["vector"]["prices"])
+
+    def test_vector_check_catches_a_tampered_expected_value(self):
+        from cow_certify.penalty_cap_vectors import check
+        rep = replay_with(Transport(), "base", FIX["base"]["id"])
+        v = json.loads(json.dumps(rep["orders"][0]["vector"]))
+        v["expected_cap"] = str(int(v["expected_cap"]) + 1)
+        self.assertEqual(len(check([v])), 1)
+
+    def test_inferred_bound_vector_uses_the_matched_token(self):
+        prices = {"0x4200000000000000000000000000000000000006": 10 ** 18,
+                  "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": 4 * 10 ** 26,
+                  "0x00000000000000000000000000000000000000aa": 10 ** 15}
+        decimals = {"0x4200000000000000000000000000000000000006": 18,
+                    "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": 6,
+                    "0x00000000000000000000000000000000000000aa": 18}
+        cfg = pc.cip87_config("base")
+        o = {"uid": "0x" + "22" * 56, "kind": "sell",
+             "sellToken": "0x4200000000000000000000000000000000000006",
+             "buyToken": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+             "fullSellAmount": str(10_000 * 10 ** 18), "fullBuyAmount": "1",
+             "partiallyFillable": False, "penaltyCapNative": str(2 * 10 ** 16)}
+        r = pc.replay_order(o, prices, decimals, cfg)
+        self.assertEqual(r["regime"], "absolute_bound")
+        self.assertTrue(r["inferred"])
+        self.assertEqual(r["absolute_bound_inputs"]["token"], "0x00000000000000000000000000000000000000aa")
+        v = pc.order_vector("base", "staging", 1, o, r, prices, decimals, cfg)
+        self.assertEqual(v["config"]["usd_reference_token"], "0x00000000000000000000000000000000000000aa")
+        self.assertEqual(str(pc.cap_from_vector(v)), v["expected_cap"])
+
     def test_gnosis_match_with_unknown_bound_is_explained_in_text(self):
         # the assumed reference token has no price in the Gnosis body: the match is
         # sound (published == volume cap) but the caveat must be visible in the render

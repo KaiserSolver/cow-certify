@@ -64,7 +64,8 @@ import time
 
 from . import __version__, sources
 
-SCHEMA_VERSION = "0.1.0"          # penalty-cap report format (independent of certificates)
+SCHEMA_VERSION = "0.2.0"          # penalty-cap report format (independent of certificates)
+VECTOR_SCHEMA = "cow-certify/penalty-cap-vectors/1"
 KIND = "penalty_cap_replay"
 
 MATCH = "MATCH"
@@ -234,14 +235,88 @@ def cip87_config(network, overrides=None, usd_reference=None, default_bps=None,
     }
 
 
-def _config_public(cfg):
+def _config_public(cfg, prices=None):
     out = dict(cfg)
     out["overrides"] = [{"name": o["name"], "bps": o["ppm"] / 100,
                          "tokens": sorted(o["tokens"])} for o in cfg["overrides"]]
     if cfg["usd_reference"]:
         out["usd_reference"] = {"token": cfg["usd_reference"][0],
-                                "decimals": cfg["usd_reference"][1]}
+                                "decimals": cfg["usd_reference"][1],
+                                # the price this body carried for the reference token
+                                # (None when absent: the bound was not computable)
+                                "price": (prices or {}).get(cfg["usd_reference"][0])}
     return out
+
+
+# ---------------------------------------------------------------------------
+# vectors: self-contained (inputs, expected) records a second implementation
+# can consume - the shared fixture that connects this replay to any other
+# implementation (services' own Rust tests included)
+# ---------------------------------------------------------------------------
+
+def order_vector(network, env, auction_id, order, res, prices, decimals, cfg):
+    """A vector for one MATCHed order: every input the formula consumes, verbatim
+    from the body, plus the configuration that reproduces the published value.
+    Inferred regimes are made explicit (a declared override for a correlated
+    match; the matched token as the usd reference for an inferred bound), so a
+    literal implementation of the formula reproduces `expected_cap` without
+    knowing anything about inference."""
+    if res.get("verdict") != MATCH:
+        return None
+    sell = res["sell_token"]
+    buy = res["buy_token"]
+    buy_w = cfg["wrapped_native"] if buy == BUY_ETH else buy
+    overrides = [{"tokens": sorted(o["tokens"]), "factor_ppm": o["ppm"]} for o in cfg["overrides"]]
+    if res.get("regime") == "correlated_override" and res.get("inferred"):
+        overrides = [{"tokens": sorted({sell, buy_w}), "factor_ppm": cfg["correlated_ppm"]}] + overrides
+    bi = res.get("absolute_bound_inputs") or {}
+    ref_token, ref_dec = bi.get("token"), bi.get("decimals")
+    vec_prices = {}
+    if res.get("volume_price") is not None:
+        vec_prices[res["volume_token"]] = str(res["volume_price"])
+    if ref_token and bi.get("price") is not None:
+        vec_prices[ref_token] = str(bi["price"])
+    return {
+        "id": f"{network}/{env}/{auction_id}/{order.get('uid')}",
+        "network": network, "env": env, "auction_id": auction_id, "order_uid": order.get("uid"),
+        "order": {"kind": order.get("kind"), "sell_token": sell, "buy_token": buy,
+                  "sell_amount": str(_int_or_none(order.get("fullSellAmount"))),
+                  "buy_amount": str(_int_or_none(order.get("fullBuyAmount")))},
+        "prices": vec_prices,
+        "config": {"default_factor_ppm": cfg["default_ppm"], "overrides": overrides,
+                   "absolute_cap_usd": cfg["absolute_cap_usd"],
+                   "usd_reference_token": ref_token, "usd_reference_decimals": ref_dec,
+                   "wrapped_native": cfg["wrapped_native"]},
+        "expected_cap": str(res["published_cap"]),
+        "regime": res.get("regime"), "inferred": bool(res.get("inferred")),
+        "reference_commit": cfg.get("reference_commit"),
+    }
+
+
+def cap_from_vector(v):
+    """Recompute a vector's cap from ITS OWN fields only (no body, no network,
+    no inference) - the arithmetic a foreign implementation must reproduce."""
+    o, c = v["order"], v["config"]
+    prices = {k.lower(): int(p) for k, p in v["prices"].items()}
+    kind = o["kind"]
+    sell, buy = o["sell_token"].lower(), o["buy_token"].lower()
+    wrapped = c["wrapped_native"].lower()
+    tok, amount = (sell, int(o["sell_amount"])) if kind == "sell" else (buy, int(o["buy_amount"]))
+    tok_w = wrapped if tok == BUY_ETH else tok
+    buy_w = wrapped if buy == BUY_ETH else buy
+    overrides = [{"tokens": {t.lower() for t in ov["tokens"]}, "ppm": ov["factor_ppm"],
+                  "name": "vector"} for ov in c.get("overrides", [])]
+    ppm, _ = factor_for(sell, buy_w, overrides, c["default_factor_ppm"])
+    volume = volume_native(amount, prices.get(tok_w))
+    volume_cap = apply_factor(volume, ppm) if volume is not None else None
+    ref_price = prices.get((c.get("usd_reference_token") or "").lower())
+    bound = (absolute_cap_native(c["absolute_cap_usd"], c["usd_reference_decimals"], ref_price)
+             if ref_price is not None and c.get("usd_reference_decimals") is not None else None)
+    if volume_cap is None:
+        return bound
+    if bound is None:
+        return volume_cap
+    return min(volume_cap, bound)
 
 
 # ---------------------------------------------------------------------------
@@ -325,6 +400,10 @@ def replay_order(order, prices, decimals, cfg, strict=False):
         "volume_token": tok_w, "volume_amount": amount, "volume_price": price,
         "volume_native": volume, "factor_ppm": ppm, "factor_source": factor_source,
         "volume_cap": volume_cap, "absolute_bound": bound,
+        # Every input behind the bound, kept verbatim so the branch can be
+        # recomputed from the report alone after the body leaves the bucket.
+        "absolute_bound_inputs": ({"token": ref[0], "decimals": ref[1], "price": ref_price,
+                                   "usd": cfg["absolute_cap_usd"]} if ref else None),
     })
 
     # Expected value under the STATED configuration.
@@ -388,6 +467,10 @@ def replay_order(order, prices, decimals, cfg, strict=False):
         if via:
             res.update(verdict=MATCH, regime="absolute_bound", inferred=True,
                        bound_token_inferred=via if len(via) > 1 else via[0],
+                       absolute_bound_inputs={"token": via[0], "decimals": decimals[via[0]],
+                                              "price": prices[via[0]],
+                                              "usd": cfg["absolute_cap_usd"],
+                                              "inferred": True},
                        matched_by={"regime": "absolute_bound", "factor_ppm": None,
                                    "value": published},
                        detail=f"published == the ${cfg['absolute_cap_usd']} bound converted "
@@ -412,8 +495,13 @@ def replay_body(network, body, env="prod", strict=False, cfg=None, ev=None):
     ev = ev if ev is not None else sources.Evidence()
     auction_id = body.get("id")
     prices, decimals = body_prices(body)
-    orders = [replay_order(o, prices, decimals, cfg, strict=strict)
-              for o in (body.get("orders") or [])]
+    orders = []
+    for o in (body.get("orders") or []):
+        res = replay_order(o, prices, decimals, cfg, strict=strict)
+        vec = order_vector(network, env, auction_id, o, res, prices, decimals, cfg)
+        if vec is not None:
+            res["vector"] = vec
+        orders.append(res)
     counts, regimes, inferred, bound_unknown = {}, {}, 0, 0
     for o in orders:
         counts[o["verdict"]] = counts.get(o["verdict"], 0) + 1
@@ -464,7 +552,7 @@ def replay_body(network, body, env="prod", strict=False, cfg=None, ev=None):
         "subject": {"network": network, "chain_id": sources.CHAIN_IDS.get(network),
                     "env": env, "auction_id": auction_id,
                     "source": sources.auction_body_url(network, auction_id, env)},
-        "config": _config_public(cfg),
+        "config": _config_public(cfg, prices),
         "overall": overall,
         "summary": {"orders": len(orders),
                     "distinct_orders": len({str(o.get("uid")) for o in orders}),

@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "mainnet",
   "chain_id": 1,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-   "decimals": 6
+   "decimals": 6,
+   "price": 524136792202196951312105472
   },
   "usd_reference_assumed": false,
   "wrapped_native": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
@@ -56,6 +57,12 @@
    "factor_source": "default",
    "volume_cap": 419173714157,
    "absolute_bound": 10482735844043939,
+   "absolute_bound_inputs": {
+    "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "decimals": 6,
+    "price": 524136792202196951312105472,
+    "usd": 20
+   },
    "expected_cap": 419173714157,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -79,10 +86,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/mainnet/auction/16207024.json",
    "sha256": "4fe7e6c5d81d5bff56806e2b395803ba0220648c17666f895bea06e759f92b2c",
    "bytes": 113079,
-   "fetched_at": "2026-09-07T16:18:34Z"
+   "fetched_at": "2026-09-07T19:53:53Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network mainnet --penalty-cap 16207024 --env staging",
- "generated_at": "2026-09-07T16:18:34Z"
+ "generated_at": "2026-09-07T19:53:53Z"
 }

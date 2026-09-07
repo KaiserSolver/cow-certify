@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "gnosis",
   "chain_id": 100,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
-   "decimals": 6
+   "decimals": 6,
+   "price": null
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d"
@@ -56,6 +57,12 @@
    "factor_source": "default",
    "volume_cap": 30000000,
    "absolute_bound": null,
+   "absolute_bound_inputs": {
+    "token": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
+    "decimals": 6,
+    "price": null,
+    "usd": 20
+   },
    "expected_cap": 30000000,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -79,10 +86,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180041726.json",
    "sha256": "95b27e073de8f1209ed7f739de4d7ebbacbde0fc6b8d18deafa467a00ac1a20c",
    "bytes": 8635,
-   "fetched_at": "2026-09-07T16:18:12Z"
+   "fetched_at": "2026-09-07T19:53:32Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network gnosis --penalty-cap 180041726 --env staging",
- "generated_at": "2026-09-07T16:18:12Z"
+ "generated_at": "2026-09-07T19:53:32Z"
 }

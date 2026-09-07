@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "base",
   "chain_id": 8453,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-   "decimals": 6
+   "decimals": 6,
+   "price": 396029651688447686907789312
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0x4200000000000000000000000000000000000006"
@@ -58,6 +59,12 @@
    "factor_source": "default",
    "volume_cap": 1000000000000,
    "absolute_bound": 7920593033768953,
+   "absolute_bound_inputs": {
+    "token": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+    "decimals": 6,
+    "price": 396029651688447686907789312,
+    "usd": 20
+   },
    "expected_cap": 1000000000000,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -72,7 +79,37 @@
     "factor_ppm": 200,
     "value": 1000000000000
    },
-   "detail": "published == replay (volume_factor, factor default)"
+   "detail": "published == replay (volume_factor, factor default)",
+   "vector": {
+    "id": "base/staging/153581432/0xfcabf68a84f9488ccba1c71bb53565d7b894fe06cb9b23b6a3991984fac9e8723b57a795230d9fc0d12aa1e80a0fafc5e44a82da6aa3f05e",
+    "network": "base",
+    "env": "staging",
+    "auction_id": "153581432",
+    "order_uid": "0xfcabf68a84f9488ccba1c71bb53565d7b894fe06cb9b23b6a3991984fac9e8723b57a795230d9fc0d12aa1e80a0fafc5e44a82da6aa3f05e",
+    "order": {
+     "kind": "sell",
+     "sell_token": "0x4200000000000000000000000000000000000006",
+     "buy_token": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+     "sell_amount": "5000000000000000",
+     "buy_amount": "15000000"
+    },
+    "prices": {
+     "0x4200000000000000000000000000000000000006": "1000000000000000000",
+     "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "396029651688447686907789312"
+    },
+    "config": {
+     "default_factor_ppm": 200,
+     "overrides": [],
+     "absolute_cap_usd": 20,
+     "usd_reference_token": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+     "usd_reference_decimals": 6,
+     "wrapped_native": "0x4200000000000000000000000000000000000006"
+    },
+    "expected_cap": "1000000000000",
+    "regime": "volume_factor",
+    "inferred": false,
+    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
+   }
   }
  ],
  "not_verifiable": [
@@ -87,10 +124,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/base/auction/153581432.json",
    "sha256": "4d95ae749b99f9f458a58fe61174705aa03e7f7ac4e6d36ef87ee8c3e4b9cbd0",
    "bytes": 3036,
-   "fetched_at": "2026-09-07T16:17:53Z"
+   "fetched_at": "2026-09-07T19:53:12Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network base --penalty-cap 153581432 --env staging",
- "generated_at": "2026-09-07T16:17:53Z"
+ "generated_at": "2026-09-07T19:53:12Z"
 }

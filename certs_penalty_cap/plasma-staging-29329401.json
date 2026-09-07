@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "plasma",
   "chain_id": 9745,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb",
-   "decimals": 6
+   "decimals": 6,
+   "price": null
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0x6100e367285b01f48d07953803a2d8dca5d19873"
@@ -56,6 +57,12 @@
    "factor_source": "default",
    "volume_cap": 14011057003529010,
    "absolute_bound": null,
+   "absolute_bound_inputs": {
+    "token": "0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb",
+    "decimals": 6,
+    "price": null,
+    "usd": 20
+   },
    "expected_cap": 14011057003529010,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -80,10 +87,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/plasma/auction/29329401.json",
    "sha256": "f73040a4d1cd53de02e16d3f7c36e9056f8559720789291b87a508c333c0edda",
    "bytes": 11920,
-   "fetched_at": "2026-09-07T16:19:03Z"
+   "fetched_at": "2026-09-07T19:54:22Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network plasma --penalty-cap 29329401 --env staging",
- "generated_at": "2026-09-07T16:19:03Z"
+ "generated_at": "2026-09-07T19:54:22Z"
 }

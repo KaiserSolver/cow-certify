@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "bnb",
   "chain_id": 56,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
-   "decimals": 18
+   "decimals": 18,
+   "price": null
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
@@ -56,6 +57,12 @@
    "factor_source": "default",
    "volume_cap": 3627046078310,
    "absolute_bound": null,
+   "absolute_bound_inputs": {
+    "token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+    "decimals": 18,
+    "price": null,
+    "usd": 20
+   },
    "expected_cap": 3627046078310,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -79,10 +86,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/102271370.json",
    "sha256": "b7f896a8d58118ef40f2737d990723c7deff9944be422cec36764c8e67fbdb26",
    "bytes": 4154,
-   "fetched_at": "2026-09-07T16:18:01Z"
+   "fetched_at": "2026-09-07T19:53:20Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network bnb --penalty-cap 102271370 --env staging",
- "generated_at": "2026-09-07T16:18:01Z"
+ "generated_at": "2026-09-07T19:53:20Z"
 }

@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "avalanche",
   "chain_id": 43114,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
-   "decimals": 6
+   "decimals": 6,
+   "price": 138263522647463925215513280512
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"
@@ -58,6 +59,12 @@
    "factor_source": "default",
    "volume_cap": 27652704529492,
    "absolute_bound": 2765270452949278504,
+   "absolute_bound_inputs": {
+    "token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+    "decimals": 6,
+    "price": 138263522647463925215513280512,
+    "usd": 20
+   },
    "expected_cap": 27652704529492,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -72,7 +79,36 @@
     "factor_ppm": 200,
     "value": 27652704529492
    },
-   "detail": "published == replay (volume_factor, factor default)"
+   "detail": "published == replay (volume_factor, factor default)",
+   "vector": {
+    "id": "avalanche/staging/258401617/0x9a2f5bab8181b1c996f2738d66223eff5eff1db1a3a92522eb2bd7be31f018f69fa3c00a92ec5f96b1ad2527ab41b3932efeda586a995202",
+    "network": "avalanche",
+    "env": "staging",
+    "auction_id": "258401617",
+    "order_uid": "0x9a2f5bab8181b1c996f2738d66223eff5eff1db1a3a92522eb2bd7be31f018f69fa3c00a92ec5f96b1ad2527ab41b3932efeda586a995202",
+    "order": {
+     "kind": "sell",
+     "sell_token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+     "buy_token": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7",
+     "sell_amount": "1000000",
+     "buy_amount": "1000000000000000000"
+    },
+    "prices": {
+     "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e": "138263522647463925215513280512"
+    },
+    "config": {
+     "default_factor_ppm": 200,
+     "overrides": [],
+     "absolute_cap_usd": 20,
+     "usd_reference_token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+     "usd_reference_decimals": 6,
+     "wrapped_native": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"
+    },
+    "expected_cap": "27652704529492",
+    "regime": "volume_factor",
+    "inferred": false,
+    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
+   }
   }
  ],
  "not_verifiable": [
@@ -87,10 +123,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/avalanche/auction/258401617.json",
    "sha256": "fa4dbd678fa9c8635ae42ba55d404c3d23ae5265f1c00e10cb6d74c6a12ecbfa",
    "bytes": 29774,
-   "fetched_at": "2026-09-07T16:17:45Z"
+   "fetched_at": "2026-09-07T19:53:04Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network avalanche --penalty-cap 258401617 --env staging",
- "generated_at": "2026-09-07T16:17:45Z"
+ "generated_at": "2026-09-07T19:53:04Z"
 }

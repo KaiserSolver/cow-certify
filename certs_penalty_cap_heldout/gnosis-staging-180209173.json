@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "gnosis",
   "chain_id": 100,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
-   "decimals": 6
+   "decimals": 6,
+   "price": null
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d"
@@ -58,6 +59,12 @@
    "factor_source": "default",
    "volume_cap": 30000000,
    "absolute_bound": null,
+   "absolute_bound_inputs": {
+    "token": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
+    "decimals": 6,
+    "price": null,
+    "usd": 20
+   },
    "expected_cap": 30000000,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -72,7 +79,36 @@
     "factor_ppm": 300,
     "value": 30000000
    },
-   "detail": "published == replay (volume_factor, factor default) (absolute bound not computable: the reference token has no price in this body; consistent only if bound >= volume cap)"
+   "detail": "published == replay (volume_factor, factor default) (absolute bound not computable: the reference token has no price in this body; consistent only if bound >= volume cap)",
+   "vector": {
+    "id": "gnosis/staging/180209173/0x5daaa894a14a02015ce5f4e5c45da6aaadb496b72d72e2f79b786c22ad5ebad9fb3c7eb936caa12b5a884d612393969a557d43076bfaf99c",
+    "network": "gnosis",
+    "env": "staging",
+    "auction_id": "180209173",
+    "order_uid": "0x5daaa894a14a02015ce5f4e5c45da6aaadb496b72d72e2f79b786c22ad5ebad9fb3c7eb936caa12b5a884d612393969a557d43076bfaf99c",
+    "order": {
+     "kind": "sell",
+     "sell_token": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d",
+     "buy_token": "0x7f7440c5098462f833e123b44b8a03e1d9785bab",
+     "sell_amount": "100000000000",
+     "buy_amount": "1102256584553"
+    },
+    "prices": {
+     "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d": "1000000000000000000"
+    },
+    "config": {
+     "default_factor_ppm": 300,
+     "overrides": [],
+     "absolute_cap_usd": 20,
+     "usd_reference_token": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
+     "usd_reference_decimals": 6,
+     "wrapped_native": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d"
+    },
+    "expected_cap": "30000000",
+    "regime": "volume_factor",
+    "inferred": false,
+    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
+   }
   }
  ],
  "not_verifiable": [
@@ -87,10 +123,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180209173.json",
    "sha256": "a197fb7bced3eeb9f47a1d4e6836d88cb24cc58eaa68b38637de212e7be87c0a",
    "bytes": 8728,
-   "fetched_at": "2026-09-07T16:17:35Z"
+   "fetched_at": "2026-09-07T19:54:43Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network gnosis --penalty-cap 180209173 --env staging",
- "generated_at": "2026-09-07T16:17:35Z"
+ "generated_at": "2026-09-07T19:54:43Z"
 }

@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "mainnet",
   "chain_id": 1,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-   "decimals": 6
+   "decimals": 6,
+   "price": 412202656171261521513414656
   },
   "usd_reference_assumed": false,
   "wrapped_native": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
@@ -56,6 +57,12 @@
    "factor_source": "default",
    "volume_cap": 1307807568433,
    "absolute_bound": 8244053123425230,
+   "absolute_bound_inputs": {
+    "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "decimals": 6,
+    "price": 412202656171261521513414656,
+    "usd": 20
+   },
    "expected_cap": 1307807568433,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -82,6 +89,12 @@
    "factor_source": "default",
    "volume_cap": 824160709657,
    "absolute_bound": 8244053123425230,
+   "absolute_bound_inputs": {
+    "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "decimals": 6,
+    "price": 412202656171261521513414656,
+    "usd": 20
+   },
    "expected_cap": 824160709657,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -108,6 +121,12 @@
    "factor_source": "default",
    "volume_cap": 329664283862,
    "absolute_bound": 8244053123425230,
+   "absolute_bound_inputs": {
+    "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "decimals": 6,
+    "price": 412202656171261521513414656,
+    "usd": 20
+   },
    "expected_cap": 329664283862,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -131,10 +150,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/mainnet/auction/16242132.json",
    "sha256": "3eadf856d1af8559f6dc66fa90bba6fdb85de5a04dca78f1d85fda9a9f244d04",
    "bytes": 113044,
-   "fetched_at": "2026-09-07T16:18:37Z"
+   "fetched_at": "2026-09-07T19:53:56Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network mainnet --penalty-cap 16242132 --env staging",
- "generated_at": "2026-09-07T16:18:37Z"
+ "generated_at": "2026-09-07T19:53:56Z"
 }

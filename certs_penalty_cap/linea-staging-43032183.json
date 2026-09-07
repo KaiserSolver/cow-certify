@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "linea",
   "chain_id": 59144,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
-   "decimals": 6
+   "decimals": 6,
+   "price": 516634638246691664247652352
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f"
@@ -56,6 +57,12 @@
    "factor_source": "default",
    "volume_cap": 2257759842936,
    "absolute_bound": 10332692764933833,
+   "absolute_bound_inputs": {
+    "token": "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
+    "decimals": 6,
+    "price": 516634638246691664247652352,
+    "usd": 20
+   },
    "expected_cap": 2257759842936,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -80,10 +87,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/linea/auction/43032183.json",
    "sha256": "abc0634f6e0e2093312605a568ee6695190b7817e63a12114c3bb485c17762fd",
    "bytes": 2773,
-   "fetched_at": "2026-09-07T16:18:28Z"
+   "fetched_at": "2026-09-07T19:53:47Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network linea --penalty-cap 43032183 --env staging",
- "generated_at": "2026-09-07T16:18:28Z"
+ "generated_at": "2026-09-07T19:53:47Z"
 }

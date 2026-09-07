@@ -195,11 +195,23 @@ public data.
 
 Per order the report says `MATCH`, `DIFFERENCE`, `NO_PUBLISHED_CAP` or
 `NOT_COMPUTABLE`, with the volume, the factor and its source, the volume
-cap, the bound, the regime that produced the expected value
-(`volume_factor`, `absolute_bound`, `no_price_fallback`), every candidate
-value the replay could derive from the body, and — on a match — `matched_by`,
-the regime, factor and value that actually reproduced the published number
-(for an inferred match that is not the stated config's `expected_cap`). A
+cap, the bound and every input behind it (`absolute_bound_inputs`: the usd
+reference token, its decimals and its price in this body), the regime that
+produced the expected value (`volume_factor`, `absolute_bound`,
+`no_price_fallback`), every candidate value the replay could derive from the
+body, and — on a match — `matched_by`, the regime, factor and value that
+actually reproduced the published number (for an inferred match that is not
+the stated config's `expected_cap`). A matched order also carries a
+`vector`: its signed order fields, the prices the formula consumed, the
+configuration that reproduces the published value, and `expected_cap`.
+Inferred regimes are made explicit in the vector's config, so a literal
+implementation of the formula — in any language — reproduces every vector
+without knowing about inference. `python3 -m cow_certify.penalty_cap_vectors
+certs_penalty_cap/ certs_penalty_cap_heldout/ --out penalty_cap_vectors.json
+--check` collects them into one file (schema
+`cow-certify/penalty-cap-vectors/1`) and `--check` recomputes each vector
+from its own fields, failing on any mismatch; the shipped
+`penalty_cap_vectors.json` is that file for the corpus and held-out set. A
 `DIFFERENCE` is a finding to take to the core team, never a "violation" —
 this is rewards accounting, and the tool has no standing to call it anything
 else. The auction's overall verdict is the *worst* order verdict, so exit 0

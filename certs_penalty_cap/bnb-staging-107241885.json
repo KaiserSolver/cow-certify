@@ -1,7 +1,7 @@
 {
- "schema_version": "0.1.0",
+ "schema_version": "0.2.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.0",
+ "tool_version": "0.5.1",
  "subject": {
   "network": "bnb",
   "chain_id": 56,
@@ -22,7 +22,8 @@
   "absolute_cap_usd": 20,
   "usd_reference": {
    "token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
-   "decimals": 18
+   "decimals": 18,
+   "price": 1344432105923515
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
@@ -58,6 +59,12 @@
    "factor_source": "default",
    "volume_cap": 462205666111,
    "absolute_bound": 26888642118470300,
+   "absolute_bound_inputs": {
+    "token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+    "decimals": 18,
+    "price": 1344432105923515,
+    "usd": 20
+   },
    "expected_cap": 462205666111,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -72,7 +79,37 @@
     "factor_ppm": 100,
     "value": 462205666111
    },
-   "detail": "published == replay (volume_factor, factor default)"
+   "detail": "published == replay (volume_factor, factor default)",
+   "vector": {
+    "id": "bnb/staging/107241885/0x2545e3df5ed042df0653f026fb1673972c33ab5d1e696cf822bff3ad041842f68e75c9fb9a64d1d085b0b1d5f868361eacda5b026a9ebbb6",
+    "network": "bnb",
+    "env": "staging",
+    "auction_id": "107241885",
+    "order_uid": "0x2545e3df5ed042df0653f026fb1673972c33ab5d1e696cf822bff3ad041842f68e75c9fb9a64d1d085b0b1d5f868361eacda5b026a9ebbb6",
+    "order": {
+     "kind": "sell",
+     "sell_token": "0x55d398326f99059ff775485246999027b3197955",
+     "buy_token": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+     "sell_amount": "3454231435669833968",
+     "buy_amount": "4580147096342009"
+    },
+    "prices": {
+     "0x55d398326f99059ff775485246999027b3197955": "1338085402553224",
+     "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d": "1344432105923515"
+    },
+    "config": {
+     "default_factor_ppm": 100,
+     "overrides": [],
+     "absolute_cap_usd": 20,
+     "usd_reference_token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+     "usd_reference_decimals": 18,
+     "wrapped_native": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+    },
+    "expected_cap": "462205666111",
+    "regime": "volume_factor",
+    "inferred": false,
+    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
+   }
   }
  ],
  "not_verifiable": [
@@ -87,10 +124,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/107241885.json",
    "sha256": "3353e87921c64307a088f6079cc5b7cc51bb5f60473640444777bd8f1fbceb54",
    "bytes": 4252,
-   "fetched_at": "2026-09-07T16:18:05Z"
+   "fetched_at": "2026-09-07T19:53:24Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
  "reproduce": "python3 -m cow_certify --network bnb --penalty-cap 107241885 --env staging",
- "generated_at": "2026-09-07T16:18:05Z"
+ "generated_at": "2026-09-07T19:53:24Z"
 }
