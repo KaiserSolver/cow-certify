@@ -1,7 +1,7 @@
 {
- "schema_version": "0.2.0",
+ "schema_version": "0.3.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.1",
+ "tool_version": "0.5.2",
  "subject": {
   "network": "linea",
   "chain_id": 59144,
@@ -23,7 +23,12 @@
   "usd_reference": {
    "token": "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
    "decimals": 6,
-   "price": 472318412097238279569539072
+   "price": 472318412097238279569539072,
+   "token_in_body": true,
+   "price_in_body": true,
+   "retained_price": null,
+   "retained_from_auction": null,
+   "retained_scanned": 0
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f"
@@ -38,6 +43,8 @@
   "regimes": {},
   "inferred_matches": 0,
   "matches_with_unknown_bound": 0,
+  "reference_price_in_body": true,
+  "reference_price_retained": false,
   "prices": 2
  },
  "orders": [
@@ -61,8 +68,11 @@
     "token": "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
     "decimals": 6,
     "price": 472318412097238279569539072,
-    "usd": 20
+    "usd": 20,
+    "token_in_body": true,
+    "price_in_body": true
    },
+   "min_usd_reference_price": null,
    "expected_cap": 858071154196,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -76,7 +86,7 @@
  ],
  "not_verifiable": [
   "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
-  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is only observable when a prior body carried one: the replay uses this auction's price, else the most recent prior body's within --retained-lookback (reported as retained), else it reports the minimum reference price that reproduces the published cap",
   "usd reference token on linea is ASSUMED (0x176211869ca2b568f2a7d4ee941e073a821ee1ff); it only matters where the bound binds",
   "the 2 bps default factor for linea is the CIP-87 text value; it has not yet been confirmed by a published cap in the volume-factor regime (the core team may retune within 0-10 bps with notice)",
   "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
@@ -87,10 +97,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/linea/auction/43099010.json",
    "sha256": "1a9b98027dfd61ec70202062cf4e500f66378be4cc0b1659fd10736546968606",
    "bytes": 2758,
-   "fetched_at": "2026-09-07T19:53:47Z"
+   "fetched_at": "2026-09-08T18:34:38Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
- "reproduce": "python3 -m cow_certify --network linea --penalty-cap 43099010 --env staging",
- "generated_at": "2026-09-07T19:53:47Z"
+ "reproduce": "python3 -m cow_certify --network linea --penalty-cap 43099010 --env staging --retained-lookback 20",
+ "generated_at": "2026-09-08T18:34:38Z"
 }

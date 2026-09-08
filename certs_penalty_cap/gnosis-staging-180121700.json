@@ -1,7 +1,7 @@
 {
- "schema_version": "0.2.0",
+ "schema_version": "0.3.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.1",
+ "tool_version": "0.5.2",
  "subject": {
   "network": "gnosis",
   "chain_id": 100,
@@ -23,7 +23,12 @@
   "usd_reference": {
    "token": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
    "decimals": 6,
-   "price": null
+   "price": null,
+   "token_in_body": true,
+   "price_in_body": false,
+   "retained_price": null,
+   "retained_from_auction": null,
+   "retained_scanned": 20
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d"
@@ -40,6 +45,8 @@
   },
   "inferred_matches": 0,
   "matches_with_unknown_bound": 1,
+  "reference_price_in_body": false,
+  "reference_price_retained": false,
   "prices": 3
  },
  "orders": [
@@ -63,8 +70,12 @@
     "token": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
     "decimals": 6,
     "price": null,
-    "usd": 20
+    "usd": 20,
+    "token_in_body": true,
+    "price_in_body": false,
+    "retained_scanned": 20
    },
+   "min_usd_reference_price": 1500000000000000000,
    "expected_cap": 30000000,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -107,13 +118,17 @@
     "expected_cap": "30000000",
     "regime": "volume_factor",
     "inferred": false,
+    "usd_reference_price": null,
+    "usd_reference_price_source": "unpublished",
+    "usd_reference_token_in_body": true,
+    "min_usd_reference_price": "1500000000000000000",
     "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
    }
   }
  ],
  "not_verifiable": [
   "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
-  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is only observable when a prior body carried one: the replay uses this auction's price, else the most recent prior body's within --retained-lookback (reported as retained), else it reports the minimum reference price that reproduces the published cap",
   "usd reference token on gnosis is ASSUMED (0xddafbb505ad214d7b80b1f830fccc89b60fb7a83); it only matters where the bound binds",
   "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
  ],
@@ -123,10 +138,150 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121700.json",
    "sha256": "54c2a918358a754fbbcc56825990258d508ce97ea262ce040d6b42d9e2defe51",
    "bytes": 8724,
-   "fetched_at": "2026-09-07T19:53:35Z"
+   "fetched_at": "2026-09-08T18:31:25Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121699.json",
+   "sha256": "6dc47ac42441770bd037cb38d8822b307bf202649839cda40e0d451c5ca00e3a",
+   "bytes": 8714,
+   "fetched_at": "2026-09-08T18:31:25Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121698.json",
+   "sha256": "deb3b1adb3dbf7199fb86b02e2e5e76d47dfe2ffe45f22865ca140d647336b38",
+   "bytes": 8683,
+   "fetched_at": "2026-09-08T18:31:26Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121697.json",
+   "sha256": "206cb63df0f1c266cb78aae5f1e0b1bdec6e2183c501579b082aacb7998df5a3",
+   "bytes": 8709,
+   "fetched_at": "2026-09-08T18:31:26Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121696.json",
+   "sha256": "086c4945d88c9fa71a6bd0c5c48e793efddba7f4ca4f53af55240a6f02565f93",
+   "bytes": 8696,
+   "fetched_at": "2026-09-08T18:31:26Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121695.json",
+   "sha256": "710cdf4564b0d88e73f9573772ea09dc1804dd7dbf8e5a8f46685159e9683423",
+   "bytes": 8663,
+   "fetched_at": "2026-09-08T18:31:27Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121694.json",
+   "sha256": "8038109bd79b06c917d88be498d1190178e3b2ba2b83543a795411235f3547c6",
+   "bytes": 8712,
+   "fetched_at": "2026-09-08T18:31:27Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121693.json",
+   "sha256": "adffc57dfccb297fdd11eb39a6366806d9285274dc58c8870c013a8df809fd21",
+   "bytes": 8702,
+   "fetched_at": "2026-09-08T18:31:27Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121692.json",
+   "sha256": "9ca751059073c5ae9a623e2b951d0f1e47974b11c3b26e49cfd968a96d693280",
+   "bytes": 8714,
+   "fetched_at": "2026-09-08T18:31:28Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121691.json",
+   "sha256": "a25ee7dc7be87a1f37eae175a3490db2339920600f06af3ec99e9b1fd95f12c9",
+   "bytes": 8738,
+   "fetched_at": "2026-09-08T18:31:28Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121690.json",
+   "sha256": "a2b40e34ae13056af559b6f2fe121a9bc7129f14eb4ea383253ba8f90015700e",
+   "bytes": 8701,
+   "fetched_at": "2026-09-08T18:31:28Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121689.json",
+   "sha256": "5bb636b0ef78e34e37670e754f4fe95dc9a49d8a5bc56523cea14356ccd69567",
+   "bytes": 8704,
+   "fetched_at": "2026-09-08T18:31:29Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121688.json",
+   "sha256": "a3c33ed7d8a25597e5f8d8180fc04be7adbb422f802558f4cf1f75aa25cec968",
+   "bytes": 8689,
+   "fetched_at": "2026-09-08T18:31:29Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121687.json",
+   "sha256": "8b6de08fc98ff21bc0882e1792c4199680209858cd2bdb532494c57748208a94",
+   "bytes": 8722,
+   "fetched_at": "2026-09-08T18:31:29Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121686.json",
+   "sha256": "a6257294e58e6dc56f976930e0eb85bad8e40de520863ecbc30d7c038d7933e8",
+   "bytes": 8714,
+   "fetched_at": "2026-09-08T18:31:29Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121685.json",
+   "sha256": "e97e4b2eea4901c2cdb080bddbb30c3c51e79a9e61bbdf75bb1a43180ff764e5",
+   "bytes": 8703,
+   "fetched_at": "2026-09-08T18:31:30Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121684.json",
+   "sha256": "a37157cf9912fff3546fd58bec74acfb7a04d67224204e6ae2debe0244cda102",
+   "bytes": 8693,
+   "fetched_at": "2026-09-08T18:31:30Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121683.json",
+   "sha256": "ecfdcc85a8a80c5694362b50a70936542673a63e955f360fc4ca60509644a0b7",
+   "bytes": 8712,
+   "fetched_at": "2026-09-08T18:31:30Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121682.json",
+   "sha256": "245bef37ec278312e420bf6a521c0f4cadd15f935c2c4afecd83646ea6b90300",
+   "bytes": 8708,
+   "fetched_at": "2026-09-08T18:31:31Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121681.json",
+   "sha256": "6c33ea209d1bfedc0560a77d4f352bce2ec9602d00c35d132695f901a6d03408",
+   "bytes": 8699,
+   "fetched_at": "2026-09-08T18:31:31Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/xdai/auction/180121680.json",
+   "sha256": "590bf13b258002512ae69f1620ccdd1e60afcfc626ea4a9cecd42afe3d0627fc",
+   "bytes": 8696,
+   "fetched_at": "2026-09-08T18:31:31Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
- "reproduce": "python3 -m cow_certify --network gnosis --penalty-cap 180121700 --env staging",
- "generated_at": "2026-09-07T19:53:35Z"
+ "reproduce": "python3 -m cow_certify --network gnosis --penalty-cap 180121700 --env staging --retained-lookback 20",
+ "generated_at": "2026-09-08T18:31:31Z"
 }

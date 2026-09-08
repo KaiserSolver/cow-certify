@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.5.2 — 2026-09-08
+
+Every vector now says which usd reference price to construct the calculator
+with, and proves a threshold where the exact value is not public. Asked for
+on the forum after a Rust harness loaded 0.5.1's file into the production
+`PenaltyCapCalculator` and could construct 209 of 256 vectors (report schema
+0.2.0 → 0.3.0; vectors schema 1 → 2; certificates unchanged).
+
+- **`usd_reference_price` + `usd_reference_price_source` per vector.**
+  `auction` when this body carried the price (209 of the 256 shipped
+  vectors); `retained:<auction id>` when `--retained-lookback N` recovered
+  it from the most recent prior body that carried one — the value the
+  autopilot keeps when a cycle brings none (never used when it would
+  contradict the published cap); `unpublished` when the body lists the
+  token with a null price and no prior body within the lookback had one;
+  `absent` when the body does not list it.
+- **`min_usd_reference_price`** for volume-side caps: the smallest reference
+  price at which the absolute bound still exceeds the published cap, so a
+  literal implementation constructed with any price at or above it returns
+  `expected_cap` and one wei below it returns the bound. `--check` proves
+  both directions for every vector without an exact price. The 47 Gnosis
+  staging vectors that could not be constructed before carry it: the
+  reference token is listed in every Gnosis staging body with a null price
+  (sampled across the corpus span: 0 of 61 bodies priced it), so the
+  autopilot's retained value there is its startup fetch and is not public.
+- **Reports** record `config.usd_reference.token_in_body` / `price_in_body`
+  and, with `--retained-lookback`, the retained price, its source auction
+  and how many bodies were scanned; each order's `absolute_bound_inputs`
+  carries the same plus `bound_from_retained` / `retained_consistent`, and
+  `min_usd_reference_price`. A reference token listed in a body without any
+  order using it is public evidence that it is the deployed reference token
+  — which corroborated the BNB and Gnosis assumptions.
+- New flag `--retained-lookback N` on `--penalty-cap` and the batch runner
+  (default 0 = off); the reproduce line carries it.
+- Corpus and held-out reports regenerated with `--retained-lookback 20`:
+  171/171 and 85/85 MATCH as before; 256 vectors, 209 with the body's own
+  reference price, 47 with the proven threshold; `--check` 256/256. Two
+  pre-rollout corpus bodies without published caps have since expired from
+  the bucket; their 2026-09-07 reports are kept unchanged.
+
 ## 0.5.1 — 2026-09-07
 
 Penalty-cap reports are now self-contained fixtures, and the corpus ships as

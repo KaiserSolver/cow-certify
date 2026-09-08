@@ -64,10 +64,11 @@ class Transport:
     def urlopen(self, req, timeout=None):
         url = req.full_url
         self.calls.append(url)
-        for chain, body in self.bodies.items():
-            if f"/staging/{chain}/auction/{body['id']}.json" in url:
-                raw = json.dumps(body).encode()
-                return _Resp(raw if self.plain else gzip.compress(raw))
+        for chain, bodies in self.bodies.items():
+            for body in (bodies if isinstance(bodies, list) else [bodies]):
+                if f"/staging/{chain}/auction/{body['id']}.json" in url:
+                    raw = json.dumps(body).encode()
+                    return _Resp(raw if self.plain else gzip.compress(raw))
         raise _http_error(url, 404)
 
 
@@ -158,6 +159,17 @@ class TestArithmetic(unittest.TestCase):
         self.assertEqual(pc.factor_for(b, c, overrides[:1], 200), (200, "default"))
         # both tokens must be in the SAME set
         self.assertEqual(pc.factor_for(a, "0xd", overrides, 200), (200, "default"))
+
+    def test_min_reference_price_is_the_tight_threshold(self):
+        # bound(price) = atoms * price // 1e18; the threshold is the least price with
+        # bound >= expected, so one wei below it the bound falls short.
+        for expected, usd, dec in [(30_000_000, 20, 6), (8_037_316_304, 20, 6), (1, 20, 18),
+                                   (10 ** 18, 20, 18), (123_456_789_012_345, 20, 6)]:
+            m = pc.min_reference_price(expected, usd, dec)
+            self.assertGreaterEqual(pc.absolute_cap_native(usd, dec, m), expected)
+            if m > 0:
+                self.assertLess(pc.absolute_cap_native(usd, dec, m - 1), expected)
+        self.assertIsNone(pc.min_reference_price(None, 20, 6))
 
 
 class TestOrderReplay(unittest.TestCase):
@@ -522,6 +534,98 @@ class TestRecordedBodies(unittest.TestCase):
         with self.assertRaises(ValueError):
             replay_with(Transport(), "sepolia", 1)
 
+    def test_vectors_state_the_reference_price_and_its_source(self):
+        from cow_certify.penalty_cap_vectors import check
+        for chain in ("base", "bnb", "mainnet"):
+            rep = replay_with(Transport(), NETWORK_OF[chain], FIX[chain]["id"])
+            self.assertTrue(rep["summary"]["reference_price_in_body"])
+            self.assertTrue(rep["config"]["usd_reference"]["token_in_body"])
+            for o in rep["orders"]:
+                v = o["vector"]
+                self.assertEqual(v["usd_reference_price_source"], "auction")
+                self.assertEqual(v["usd_reference_price"], str(rep["config"]["usd_reference"]["price"]))
+                self.assertTrue(v["usd_reference_token_in_body"])
+                if o["regime"] == "absolute_bound":
+                    self.assertIsNone(v["min_usd_reference_price"])
+        # bnb: the reference token is listed although no order uses it - public
+        # evidence that the assumed token is the deployed one
+        bnb = replay_with(Transport(), "bnb", FIX["bnb"]["id"])
+        used = {t for o in FIX["bnb"]["orders"] for t in (o["sellToken"].lower(), o["buyToken"].lower())}
+        self.assertNotIn(bnb["config"]["usd_reference"]["token"], used)
+        self.assertTrue(bnb["config"]["usd_reference"]["token_in_body"])
+        # gnosis: listed with a null price -> unpublished, and the threshold is proven
+        gno = replay_with(Transport(), "gnosis", FIX["xdai"]["id"])
+        self.assertFalse(gno["summary"]["reference_price_in_body"])
+        self.assertTrue(gno["config"]["usd_reference"]["token_in_body"])
+        o = gno["orders"][0]
+        v = o["vector"]
+        self.assertEqual(v["usd_reference_price_source"], "unpublished")
+        self.assertIsNone(v["usd_reference_price"])
+        m = int(v["min_usd_reference_price"])
+        self.assertEqual(str(pc.cap_from_vector(dict(v, usd_reference_price=str(m)))), v["expected_cap"])
+        self.assertNotEqual(str(pc.cap_from_vector(dict(v, usd_reference_price=str(m - 1)))), v["expected_cap"])
+        self.assertEqual(check([v]), [])
+        # a loosened threshold fails the file's own check
+        self.assertNotEqual(check([dict(v, min_usd_reference_price=str(m - 1))]), [])
+        self.assertIn("published cap holds for any reference price >=", pc.render_text(gno))
+
+    def test_retained_lookback_recovers_the_prior_price(self):
+        ref = pc.USD_REFERENCE["gnosis"][0]
+        cur = FIX["xdai"]
+        n = int(cur["id"])
+        def prior(aid, with_price=None, listed=True):
+            b = json.loads(json.dumps(cur))
+            b["id"] = aid
+            toks = {a: t for a, t in b["tokens"].items() if a.lower() != ref}
+            if listed:
+                toks[ref] = {"decimals": 6, "referencePrice": with_price}
+            b["tokens"] = toks
+            return b
+        price = 10 ** 30 // 1000               # a plausible 6-decimal stable in xDAI wei
+        tr = Transport({"xdai": [cur, prior(n - 1, None), prior(n - 3, price)]})   # n-2 is a 404
+        rep = replay_with(tr, "gnosis", n, retained_lookback=5)
+        cfgref = rep["config"]["usd_reference"]
+        self.assertEqual((cfgref["retained_price"], cfgref["retained_from_auction"], cfgref["retained_scanned"]),
+                         (price, n - 3, 2))
+        self.assertTrue(rep["summary"]["reference_price_retained"])
+        o = rep["orders"][0]
+        bi = o["absolute_bound_inputs"]
+        self.assertIsNone(bi["price"])
+        self.assertEqual(bi["bound_from_retained"], pc.absolute_cap_native(20, 6, price))
+        self.assertTrue(bi["retained_consistent"])
+        self.assertEqual(o["verdict"], pc.MATCH)          # still the volume-side match
+        v = o["vector"]
+        self.assertEqual(v["usd_reference_price_source"], f"retained:{n - 3}")
+        self.assertEqual(v["usd_reference_price"], str(price))
+        self.assertEqual(str(pc.cap_from_vector(v)), v["expected_cap"])
+        self.assertIn("--retained-lookback 5", rep["reproduce"])
+        self.assertIn("retained", pc.render_text(rep))
+        # the lookback fetches are on the evidence ledger
+        self.assertTrue(any(f"/{n - 3}.json" in e["ref"] for e in rep["evidence"]))
+        # a retained value that would make the bound bind below the published cap is
+        # reported but never used to construct the vector
+        tiny = pc.min_reference_price(o["published_cap"], 20, 6) - 1
+        tr2 = Transport({"xdai": [cur, prior(n - 1, tiny)]})
+        rep2 = replay_with(tr2, "gnosis", n, retained_lookback=2)
+        bi2 = rep2["orders"][0]["absolute_bound_inputs"]
+        self.assertFalse(bi2["retained_consistent"])
+        self.assertEqual(rep2["orders"][0]["verdict"], pc.MATCH)
+        self.assertEqual(rep2["orders"][0]["vector"]["usd_reference_price_source"], "unpublished")
+        self.assertIsNone(rep2["orders"][0]["vector"]["usd_reference_price"])
+        self.assertIn("CONTRADICTS", pc.render_text(rep2))
+
+    def test_lookback_without_a_prior_price_reports_unpublished(self):
+        cur = FIX["xdai"]
+        n = int(cur["id"])
+        older = json.loads(json.dumps(cur))
+        older["id"] = n - 1
+        rep = replay_with(Transport({"xdai": [cur, older]}), "gnosis", n, retained_lookback=3)
+        cfgref = rep["config"]["usd_reference"]
+        self.assertIsNone(cfgref["retained_price"])
+        self.assertEqual(cfgref["retained_scanned"], 1)      # n-2 and n-3 do not exist
+        self.assertEqual(rep["orders"][0]["vector"]["usd_reference_price_source"], "unpublished")
+        self.assertIn("none in the 1 prior bodies scanned", pc.render_text(rep))
+
 
 class TestCli(unittest.TestCase):
     def test_json_output_and_exit_code(self):
@@ -557,6 +661,23 @@ class TestCli(unittest.TestCase):
         code, _, err = _cli(["--network", "base", "--penalty-cap", "5", "--rpc-url", "https://x"])
         self.assertEqual(code, 3, err)
         self.assertIn("not used by --penalty-cap", err)
+
+    def test_retained_lookback_flag(self):
+        with mock.patch("urllib.request.urlopen", Transport().urlopen), \
+             mock.patch("time.sleep", lambda s: None):
+            code, out, err = _cli(["--network", "gnosis", "--penalty-cap", str(FIX["xdai"]["id"]),
+                                   "--env", "staging", "--retained-lookback", "2", "--json"])
+        self.assertEqual(code, 0, err)
+        rep = json.loads(out)
+        self.assertEqual(rep["config"]["usd_reference"]["retained_scanned"], 0)   # priors 404
+        self.assertIn("--retained-lookback 2", rep["reproduce"])
+        code, out, err = _cli(["--network", "gnosis", "--penalty-cap", "1", "--env", "staging",
+                               "--retained-lookback", "-1"])
+        self.assertEqual(code, 3, err)                       # parser errors are operational (3)
+        self.assertIn("must be >= 0", err)
+        code, out, err = _cli(["--network", "base", "--retained-lookback", "3", "0x" + "ab" * 32])
+        self.assertEqual(code, 3, err)
+        self.assertIn("only apply to --penalty-cap", err)
 
     def test_env_and_strict_only_with_penalty_cap(self):
         code, _, err = _cli(["--network", "base", "--env", "staging", "0x" + "ab" * 32])

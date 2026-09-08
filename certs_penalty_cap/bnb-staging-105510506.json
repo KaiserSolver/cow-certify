@@ -1,7 +1,7 @@
 {
- "schema_version": "0.2.0",
+ "schema_version": "0.3.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.1",
+ "tool_version": "0.5.2",
  "subject": {
   "network": "bnb",
   "chain_id": 56,
@@ -23,7 +23,12 @@
   "usd_reference": {
    "token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
    "decimals": 18,
-   "price": null
+   "price": null,
+   "token_in_body": false,
+   "price_in_body": false,
+   "retained_price": null,
+   "retained_from_auction": null,
+   "retained_scanned": 0
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
@@ -38,6 +43,8 @@
   "regimes": {},
   "inferred_matches": 0,
   "matches_with_unknown_bound": 0,
+  "reference_price_in_body": false,
+  "reference_price_retained": false,
   "prices": 3
  },
  "orders": [
@@ -61,8 +68,12 @@
     "token": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
     "decimals": 18,
     "price": null,
-    "usd": 20
+    "usd": 20,
+    "token_in_body": false,
+    "price_in_body": false,
+    "retained_scanned": 0
    },
+   "min_usd_reference_price": null,
    "expected_cap": 4174583816907,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -76,7 +87,7 @@
  ],
  "not_verifiable": [
   "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
-  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is only observable when a prior body carried one: the replay uses this auction's price, else the most recent prior body's within --retained-lookback (reported as retained), else it reports the minimum reference price that reproduces the published cap",
   "usd reference token on bnb is ASSUMED (0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d); it only matters where the bound binds",
   "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
  ],
@@ -86,10 +97,150 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510506.json",
    "sha256": "07a97e729e54035142ce3d6e167b659bd489916229c4f50d77b97371270813e7",
    "bytes": 4310,
-   "fetched_at": "2026-09-07T19:53:21Z"
+   "fetched_at": "2026-09-08T18:28:24Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510505.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:25Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510504.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:25Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510503.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:25Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510502.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:25Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510501.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:26Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510500.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:26Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510499.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:26Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510498.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:26Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510497.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:27Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510496.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:27Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510495.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:27Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510494.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:28Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510493.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:28Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510492.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:28Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510491.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:28Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510490.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:29Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510489.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:29Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510488.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:29Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510487.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:29Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/bnb/auction/105510486.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:28:30Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
- "reproduce": "python3 -m cow_certify --network bnb --penalty-cap 105510506 --env staging",
- "generated_at": "2026-09-07T19:53:21Z"
+ "reproduce": "python3 -m cow_certify --network bnb --penalty-cap 105510506 --env staging --retained-lookback 20",
+ "generated_at": "2026-09-08T18:28:30Z"
 }

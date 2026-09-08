@@ -1,7 +1,7 @@
 {
- "schema_version": "0.2.0",
+ "schema_version": "0.3.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.1",
+ "tool_version": "0.5.2",
  "subject": {
   "network": "avalanche",
   "chain_id": 43114,
@@ -23,7 +23,12 @@
   "usd_reference": {
    "token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
    "decimals": 6,
-   "price": 138263522647463925215513280512
+   "price": 138263522647463925215513280512,
+   "token_in_body": true,
+   "price_in_body": true,
+   "retained_price": null,
+   "retained_from_auction": null,
+   "retained_scanned": 0
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"
@@ -40,6 +45,8 @@
   },
   "inferred_matches": 0,
   "matches_with_unknown_bound": 0,
+  "reference_price_in_body": true,
+  "reference_price_retained": false,
   "prices": 2
  },
  "orders": [
@@ -63,8 +70,11 @@
     "token": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
     "decimals": 6,
     "price": 138263522647463925215513280512,
-    "usd": 20
+    "usd": 20,
+    "token_in_body": true,
+    "price_in_body": true
    },
+   "min_usd_reference_price": 1382635226474600000000000,
    "expected_cap": 27652704529492,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -107,13 +117,17 @@
     "expected_cap": "27652704529492",
     "regime": "volume_factor",
     "inferred": false,
+    "usd_reference_price": "138263522647463925215513280512",
+    "usd_reference_price_source": "auction",
+    "usd_reference_token_in_body": true,
+    "min_usd_reference_price": "1382635226474600000000000",
     "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
    }
   }
  ],
  "not_verifiable": [
   "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
-  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is only observable when a prior body carried one: the replay uses this auction's price, else the most recent prior body's within --retained-lookback (reported as retained), else it reports the minimum reference price that reproduces the published cap",
   "usd reference token on avalanche is ASSUMED (0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e); it only matters where the bound binds",
   "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
  ],
@@ -123,10 +137,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/avalanche/auction/258401616.json",
    "sha256": "a3227f6aecd7960704e2326aeed967c53cf31800bad6c00fa639efbd9ab085a7",
    "bytes": 29716,
-   "fetched_at": "2026-09-07T19:53:04Z"
+   "fetched_at": "2026-09-08T18:27:20Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
- "reproduce": "python3 -m cow_certify --network avalanche --penalty-cap 258401616 --env staging",
- "generated_at": "2026-09-07T19:53:04Z"
+ "reproduce": "python3 -m cow_certify --network avalanche --penalty-cap 258401616 --env staging --retained-lookback 20",
+ "generated_at": "2026-09-08T18:27:20Z"
 }

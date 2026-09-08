@@ -64,8 +64,8 @@ import time
 
 from . import __version__, sources
 
-SCHEMA_VERSION = "0.2.0"          # penalty-cap report format (independent of certificates)
-VECTOR_SCHEMA = "cow-certify/penalty-cap-vectors/1"
+SCHEMA_VERSION = "0.3.0"          # penalty-cap report format (independent of certificates)
+VECTOR_SCHEMA = "cow-certify/penalty-cap-vectors/2"
 KIND = "penalty_cap_replay"
 
 MATCH = "MATCH"
@@ -190,6 +190,43 @@ def absolute_cap_native(usd_cap, ref_decimals, ref_price):
     return prod // WAD
 
 
+def min_reference_price(expected_cap, usd_cap, ref_decimals):
+    """The smallest usd reference price (native wei per 10^18 atoms) at which the
+    absolute bound is still >= `expected_cap`, i.e. at which the published value
+    keeps coming from the volume factor: bound(price) = atoms * price // 1e18 >=
+    expected  <=>  price >= ceil(expected * 1e18 / atoms). A literal
+    implementation constructed with ANY price at or above it returns
+    `expected_cap`; one wei below it the bound binds and it returns the bound."""
+    atoms = usd_cap_atoms(usd_cap, ref_decimals)
+    if expected_cap is None or atoms <= 0:
+        return None
+    return -(-int(expected_cap) * 10 ** 18 // atoms)
+
+
+def retained_reference_price(network, env, auction_id, token, ev, lookback):
+    """The autopilot keeps the last price it fetched for the usd reference token
+    when a cycle brings none (Gnosis staging lists the token in every body with a
+    null price). The body publishes the same price map the calculator reads, so
+    the retained value is the price in the most recent PRIOR body that carried
+    one - unless the autopilot restarted in between (its startup fetch is never
+    published). Walks back up to `lookback` auction ids; every fetch is recorded
+    as evidence. Returns (price, from_auction_id, bodies_scanned)."""
+    scanned = 0
+    for back in range(1, int(lookback) + 1):
+        aid = int(auction_id) - back
+        if aid < 0:
+            break
+        body = sources.auction_body(network, aid, ev, env=env)
+        if not isinstance(body, dict):
+            continue
+        scanned += 1
+        prices, _ = body_prices(body)
+        p = prices.get(token)
+        if p is not None:
+            return p, aid, scanned
+    return None, None, scanned
+
+
 def factor_for(sell, buy_wrapped, overrides, default_ppm):
     """First override whose token set contains BOTH tokens wins (Vec order),
     else the default. `overrides` = [{"name", "tokens": set, "ppm"}]."""
@@ -235,7 +272,7 @@ def cip87_config(network, overrides=None, usd_reference=None, default_bps=None,
     }
 
 
-def _config_public(cfg, prices=None):
+def _config_public(cfg, prices=None, ref_info=None):
     out = dict(cfg)
     out["overrides"] = [{"name": o["name"], "bps": o["ppm"] / 100,
                          "tokens": sorted(o["tokens"])} for o in cfg["overrides"]]
@@ -245,6 +282,16 @@ def _config_public(cfg, prices=None):
                                 # the price this body carried for the reference token
                                 # (None when absent: the bound was not computable)
                                 "price": (prices or {}).get(cfg["usd_reference"][0])}
+        if ref_info:
+            out["usd_reference"].update({
+                # the token being listed in the body without any order using it is
+                # public evidence that it IS the deployed reference token
+                "token_in_body": ref_info.get("in_body"),
+                "price_in_body": ref_info.get("price_in_body"),
+                "retained_price": ref_info.get("retained_price"),
+                "retained_from_auction": ref_info.get("retained_from_auction"),
+                "retained_scanned": ref_info.get("retained_scanned"),
+            })
     return out
 
 
@@ -271,6 +318,20 @@ def order_vector(network, env, auction_id, order, res, prices, decimals, cfg):
         overrides = [{"tokens": sorted({sell, buy_w}), "factor_ppm": cfg["correlated_ppm"]}] + overrides
     bi = res.get("absolute_bound_inputs") or {}
     ref_token, ref_dec = bi.get("token"), bi.get("decimals")
+    # The usd reference price the calculator must be constructed with: the body's
+    # own when it carried one; else the retained value recovered from a prior body
+    # (only when it does not contradict the published cap); else unknown - then
+    # `min_usd_reference_price` is the provable threshold.
+    ref_price_out, ref_src = None, None
+    if ref_token:
+        if bi.get("price") is not None:
+            ref_price_out, ref_src = bi["price"], "auction"
+        elif bi.get("retained_price") is not None and bi.get("retained_consistent"):
+            ref_price_out, ref_src = bi["retained_price"], f"retained:{bi['retained_from_auction']}"
+        elif bi.get("token_in_body"):
+            ref_src = "unpublished"     # listed in the body with a null price
+        else:
+            ref_src = "absent"
     vec_prices = {}
     if res.get("volume_price") is not None:
         vec_prices[res["volume_token"]] = str(res["volume_price"])
@@ -289,6 +350,11 @@ def order_vector(network, env, auction_id, order, res, prices, decimals, cfg):
                    "wrapped_native": cfg["wrapped_native"]},
         "expected_cap": str(res["published_cap"]),
         "regime": res.get("regime"), "inferred": bool(res.get("inferred")),
+        "usd_reference_price": str(ref_price_out) if ref_price_out is not None else None,
+        "usd_reference_price_source": ref_src,
+        "usd_reference_token_in_body": bi.get("token_in_body") if ref_token else None,
+        "min_usd_reference_price": (str(res["min_usd_reference_price"])
+                                    if res.get("min_usd_reference_price") is not None else None),
         "reference_commit": cfg.get("reference_commit"),
     }
 
@@ -310,6 +376,8 @@ def cap_from_vector(v):
     volume = volume_native(amount, prices.get(tok_w))
     volume_cap = apply_factor(volume, ppm) if volume is not None else None
     ref_price = prices.get((c.get("usd_reference_token") or "").lower())
+    if ref_price is None and v.get("usd_reference_price") is not None:
+        ref_price = int(v["usd_reference_price"])
     bound = (absolute_cap_native(c["absolute_cap_usd"], c["usd_reference_decimals"], ref_price)
              if ref_price is not None and c.get("usd_reference_decimals") is not None else None)
     if volume_cap is None:
@@ -352,7 +420,7 @@ def body_prices(body):
     return prices, decimals
 
 
-def replay_order(order, prices, decimals, cfg, strict=False):
+def replay_order(order, prices, decimals, cfg, strict=False, ref_info=None):
     """Recompute one order's cap and compare with the published value."""
     res = {"uid": order.get("uid"), "kind": order.get("kind"),
            "sell_token": str(order.get("sellToken", "")).lower(),
@@ -405,6 +473,24 @@ def replay_order(order, prices, decimals, cfg, strict=False):
         "absolute_bound_inputs": ({"token": ref[0], "decimals": ref[1], "price": ref_price,
                                    "usd": cfg["absolute_cap_usd"]} if ref else None),
     })
+    ri = ref_info or {}
+    abi = res["absolute_bound_inputs"]
+    if abi is not None:
+        abi["token_in_body"] = ri.get("in_body")
+        abi["price_in_body"] = ref_price is not None
+        if ref_price is None:
+            abi["retained_scanned"] = ri.get("retained_scanned")
+            if ri.get("retained_price") is not None:
+                abi["retained_price"] = ri["retained_price"]
+                abi["retained_from_auction"] = ri.get("retained_from_auction")
+                abi["bound_from_retained"] = absolute_cap_native(
+                    cfg["absolute_cap_usd"], ref[1], ri["retained_price"])
+    # The threshold below which the bound would have overtaken the published value
+    # (meaningful when the published cap came from the volume side).
+    res["min_usd_reference_price"] = (min_reference_price(published, cfg["absolute_cap_usd"], ref[1])
+                                      if ref and published is not None else None)
+    if abi is not None and abi.get("bound_from_retained") is not None and published is not None:
+        abi["retained_consistent"] = abi["bound_from_retained"] >= published
 
     # Expected value under the STATED configuration.
     if volume_cap is None:
@@ -438,6 +524,8 @@ def replay_order(order, prices, decimals, cfg, strict=False):
                     "this body; consistent only if bound >= volume cap)")
         else:
             note = ""
+        if regime != "volume_factor":
+            res["min_usd_reference_price"] = None
         res.update(verdict=MATCH, regime=regime,
                    matched_by={"regime": regime, "factor_ppm": ppm, "value": expected},
                    detail=f"published == replay ({regime}, factor {factor_source})" + note)
@@ -465,6 +553,7 @@ def replay_order(order, prices, decimals, cfg, strict=False):
                 via.append(addr)
                 candidates["absolute_bound_via:" + addr] = b
         if via:
+            res["min_usd_reference_price"] = None
             res.update(verdict=MATCH, regime="absolute_bound", inferred=True,
                        bound_token_inferred=via if len(via) > 1 else via[0],
                        absolute_bound_inputs={"token": via[0], "decimals": decimals[via[0]],
@@ -490,14 +579,24 @@ def replay_order(order, prices, decimals, cfg, strict=False):
 # whole auction
 # ---------------------------------------------------------------------------
 
-def replay_body(network, body, env="prod", strict=False, cfg=None, ev=None):
+def replay_body(network, body, env="prod", strict=False, cfg=None, ev=None, retained_lookback=0):
     cfg = cfg or cip87_config(network)
     ev = ev if ev is not None else sources.Evidence()
     auction_id = body.get("id")
     prices, decimals = body_prices(body)
+    ref = cfg["usd_reference"]
+    ref_info = None
+    if ref:
+        listed = {str(a).lower() for a in (body.get("tokens") or {})}
+        ref_info = {"in_body": ref[0] in listed, "price_in_body": ref[0] in prices,
+                    "retained_price": None, "retained_from_auction": None, "retained_scanned": 0}
+        if ref[0] not in prices and retained_lookback and auction_id is not None:
+            p, frm, scanned = retained_reference_price(network, env, auction_id, ref[0], ev,
+                                                       retained_lookback)
+            ref_info.update(retained_price=p, retained_from_auction=frm, retained_scanned=scanned)
     orders = []
     for o in (body.get("orders") or []):
-        res = replay_order(o, prices, decimals, cfg, strict=strict)
+        res = replay_order(o, prices, decimals, cfg, strict=strict, ref_info=ref_info)
         vec = order_vector(network, env, auction_id, o, res, prices, decimals, cfg)
         if vec is not None:
             res["vector"] = vec
@@ -526,8 +625,10 @@ def replay_body(network, body, env="prod", strict=False, cfg=None, ev=None):
         "deployment config, not published; the replay uses CIP-87's numbers plus a "
         "per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
         "a stale usd reference price (the autopilot keeps its last value when the "
-        "reference token has no price in a cycle) is not observable from public data; "
-        "the replay uses the price in this auction",
+        "reference token has no price in a cycle) is only observable when a prior body "
+        "carried one: the replay uses this auction's price, else the most recent prior "
+        "body's within --retained-lookback (reported as retained), else it reports the "
+        "minimum reference price that reproduces the published cap",
     ]
     if cfg.get("usd_reference_assumed"):
         limits.append(f"usd reference token on {network} is ASSUMED "
@@ -552,12 +653,14 @@ def replay_body(network, body, env="prod", strict=False, cfg=None, ev=None):
         "subject": {"network": network, "chain_id": sources.CHAIN_IDS.get(network),
                     "env": env, "auction_id": auction_id,
                     "source": sources.auction_body_url(network, auction_id, env)},
-        "config": _config_public(cfg, prices),
+        "config": _config_public(cfg, prices, ref_info),
         "overall": overall,
         "summary": {"orders": len(orders),
                     "distinct_orders": len({str(o.get("uid")) for o in orders}),
                     "verdicts": counts, "regimes": regimes, "inferred_matches": inferred,
                     "matches_with_unknown_bound": bound_unknown,
+                    "reference_price_in_body": bool(ref_info and ref_info.get("price_in_body")),
+                    "reference_price_retained": bool(ref_info and ref_info.get("retained_price") is not None),
                     "prices": len(prices)},
         "orders": orders,
         "not_verifiable": limits,
@@ -566,12 +669,14 @@ def replay_body(network, body, env="prod", strict=False, cfg=None, ev=None):
                       "this replay recomputes a rewards-accounting parameter from public "
                       "data and reports differences, it does not adjudicate them.",
         "reproduce": f"python3 -m cow_certify --network {network} --penalty-cap "
-                     f"{auction_id} --env {env}" + (" --strict" if strict else ""),
+                     f"{auction_id} --env {env}" + (" --strict" if strict else "")
+                     + (f" --retained-lookback {int(retained_lookback)}" if retained_lookback else ""),
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
 
 
-def replay(network, auction_id, env="prod", strict=False, ev=None, overrides=None):
+def replay(network, auction_id, env="prod", strict=False, ev=None, overrides=None,
+           retained_lookback=0):
     """Fetch the public auction body and replay it. Raises SystemExit(str) when
     the body does not exist (an input problem, not a verdict)."""
     ev = ev if ev is not None else sources.Evidence()
@@ -582,7 +687,8 @@ def replay(network, auction_id, env="prod", strict=False, ev=None, overrides=Non
                          f"public instance bucket (bodies are kept ~30 days; is --env right?)")
     if not isinstance(body, dict) or "orders" not in body:
         raise SystemExit(f"auction body {auction_id} on {network} has no orders field")
-    return replay_body(network, body, env=env, strict=strict, cfg=cfg, ev=ev)
+    return replay_body(network, body, env=env, strict=strict, cfg=cfg, ev=ev,
+                       retained_lookback=retained_lookback)
 
 
 # ---------------------------------------------------------------------------
@@ -643,6 +749,21 @@ def render_text(rep):
         elif o["verdict"] == MATCH and (o.get("inferred") or o.get("absolute_bound") is None):
             # a green mark next to two different numbers needs its reason printed
             lines.append(f"       {o['detail']}")
+        if o["verdict"] == MATCH and o.get("absolute_bound") is None and o.get("absolute_bound_inputs"):
+            bi = o["absolute_bound_inputs"]
+            where = ("listed in the body with no price" if bi.get("token_in_body")
+                     else "not listed in the body")
+            if bi.get("retained_price") is not None:
+                ret = (f"retained {bi['retained_price']} from auction {bi['retained_from_auction']} "
+                       f"({'consistent' if bi.get('retained_consistent') else 'CONTRADICTS the published cap'})")
+            elif bi.get("retained_scanned"):
+                ret = f"none in the {bi['retained_scanned']} prior bodies scanned"
+            else:
+                ret = "no lookback (--retained-lookback N)"
+            lines.append(f"       usd reference price: {where} · {ret}"
+                         + (f" · published cap holds for any reference price >= "
+                            f"{o['min_usd_reference_price']}"
+                            if o.get("min_usd_reference_price") is not None else ""))
     if len(rep["orders"]) > len(shown):
         lines.append(f"  … {len(rep['orders']) - len(shown)} more orders not listed "
                      f"(use --json for every order)")

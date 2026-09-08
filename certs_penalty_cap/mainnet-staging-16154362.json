@@ -1,7 +1,7 @@
 {
- "schema_version": "0.2.0",
+ "schema_version": "0.3.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.1",
+ "tool_version": "0.5.2",
  "subject": {
   "network": "mainnet",
   "chain_id": 1,
@@ -23,7 +23,12 @@
   "usd_reference": {
    "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
    "decimals": 6,
-   "price": 521330563219056909491372032
+   "price": 521330563219056909491372032,
+   "token_in_body": true,
+   "price_in_body": true,
+   "retained_price": null,
+   "retained_from_auction": null,
+   "retained_scanned": 0
   },
   "usd_reference_assumed": false,
   "wrapped_native": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
@@ -38,6 +43,8 @@
   "regimes": {},
   "inferred_matches": 0,
   "matches_with_unknown_bound": 0,
+  "reference_price_in_body": true,
+  "reference_price_retained": false,
   "prices": 3
  },
  "orders": [
@@ -61,8 +68,11 @@
     "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     "decimals": 6,
     "price": 521330563219056909491372032,
-    "usd": 20
+    "usd": 20,
+    "token_in_body": true,
+    "price_in_body": true
    },
+   "min_usd_reference_price": null,
    "expected_cap": 416877932475,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -76,7 +86,7 @@
  ],
  "not_verifiable": [
   "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
-  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is only observable when a prior body carried one: the replay uses this auction's price, else the most recent prior body's within --retained-lookback (reported as retained), else it reports the minimum reference price that reproduces the published cap",
   "the 4 bps default factor for mainnet is the CIP-87 text value; it has not yet been confirmed by a published cap in the volume-factor regime (the core team may retune within 0-10 bps with notice)",
   "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
  ],
@@ -86,10 +96,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/mainnet/auction/16154362.json",
    "sha256": "e67eb200e2607ade94bf8541c347923a325c1562cbd8cd2ddfb6fac7eb3cd4a1",
    "bytes": 112361,
-   "fetched_at": "2026-09-07T19:53:50Z"
+   "fetched_at": "2026-09-08T18:34:40Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
- "reproduce": "python3 -m cow_certify --network mainnet --penalty-cap 16154362 --env staging",
- "generated_at": "2026-09-07T19:53:50Z"
+ "reproduce": "python3 -m cow_certify --network mainnet --penalty-cap 16154362 --env staging --retained-lookback 20",
+ "generated_at": "2026-09-08T18:34:40Z"
 }

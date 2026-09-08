@@ -1,7 +1,7 @@
 {
- "schema_version": "0.2.0",
+ "schema_version": "0.3.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.1",
+ "tool_version": "0.5.2",
  "subject": {
   "network": "arbitrum",
   "chain_id": 42161,
@@ -23,7 +23,12 @@
   "usd_reference": {
    "token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
    "decimals": 6,
-   "price": null
+   "price": null,
+   "token_in_body": true,
+   "price_in_body": false,
+   "retained_price": null,
+   "retained_from_auction": null,
+   "retained_scanned": 0
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
@@ -38,6 +43,8 @@
   "regimes": {},
   "inferred_matches": 0,
   "matches_with_unknown_bound": 0,
+  "reference_price_in_body": false,
+  "reference_price_retained": false,
   "prices": 2
  },
  "orders": [
@@ -61,8 +68,12 @@
     "token": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
     "decimals": 6,
     "price": null,
-    "usd": 20
+    "usd": 20,
+    "token_in_body": true,
+    "price_in_body": false,
+    "retained_scanned": 0
    },
+   "min_usd_reference_price": null,
    "expected_cap": 1138342206100,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -76,7 +87,7 @@
  ],
  "not_verifiable": [
   "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
-  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is only observable when a prior body carried one: the replay uses this auction's price, else the most recent prior body's within --retained-lookback (reported as retained), else it reports the minimum reference price that reproduces the published cap",
   "usd reference token on arbitrum is ASSUMED (0xaf88d065e77c8cc2239327c5edb3a432268e5831); it only matters where the bound binds",
   "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
  ],
@@ -86,10 +97,150 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415064.json",
    "sha256": "2e98288da5c6eda7401ffa1ee09e96ff1d71122a658404b7d919e973abc7efdf",
    "bytes": 256538,
-   "fetched_at": "2026-09-07T19:52:56Z"
+   "fetched_at": "2026-09-08T18:27:00Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415063.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:00Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415062.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:01Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415061.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:01Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415060.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:01Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415059.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:01Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415058.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:02Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415057.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:02Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415056.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:02Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415055.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:02Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415054.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:03Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415053.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:03Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415052.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:03Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415051.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:04Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415050.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:04Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415049.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:04Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415048.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:04Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415047.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:05Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415046.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:05Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415045.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:05Z"
+  },
+  {
+   "kind": "instances:staging",
+   "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/arbitrum-one/auction/205415044.json",
+   "sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+   "bytes": 3,
+   "fetched_at": "2026-09-08T18:27:06Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
- "reproduce": "python3 -m cow_certify --network arbitrum --penalty-cap 205415064 --env staging",
- "generated_at": "2026-09-07T19:52:56Z"
+ "reproduce": "python3 -m cow_certify --network arbitrum --penalty-cap 205415064 --env staging --retained-lookback 20",
+ "generated_at": "2026-09-08T18:27:06Z"
 }

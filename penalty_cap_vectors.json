@@ -1,8 +1,8 @@
 {
- "schema": "cow-certify/penalty-cap-vectors/1",
- "tool_version": "0.5.1",
+ "schema": "cow-certify/penalty-cap-vectors/2",
+ "tool_version": "0.5.2",
  "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9",
- "generated_at": "2026-09-07T19:54:44Z",
+ "generated_at": "2026-09-08T18:37:32Z",
  "count": 256,
  "regimes": {
   "absolute_bound": 40,
@@ -10,6 +10,10 @@
   "volume_factor": 162
  },
  "inferred": 54,
+ "reference_prices": {
+  "auction": 209,
+  "unpublished": 47
+ },
  "vectors": [
   {
    "id": "arbitrum/staging/209984826/0x2dba1dc3f91b34ced29f2ce50df0fa80be80a72c6f656504a1904980b1d0ca449fa3c00a92ec5f96b1ad2527ab41b3932efeda586a96ca00",
@@ -45,6 +49,10 @@
    "expected_cap": "3920386055",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "407414425950812670703697920",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "196019302750000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -74,6 +82,10 @@
    "expected_cap": "41046964397",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "410469643974023394409578496",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "2052348219850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -112,6 +124,10 @@
    "expected_cap": "4108360101",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "410469643974023394409578496",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "205418005050000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -142,6 +158,10 @@
    "expected_cap": "163040369674",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "396345424514297614829617152",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "8152018483700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -171,6 +191,10 @@
    "expected_cap": "27652704529492",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "138263522647463925215513280512",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1382635226474600000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -200,6 +224,10 @@
    "expected_cap": "27652704529492",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "138263522647463925215513280512",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1382635226474600000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -238,6 +266,10 @@
    "expected_cap": "1417515544027",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "135969043993832147038374985728",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "70875777201350000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -268,6 +300,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "414133566912117140378091520",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -298,6 +334,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "414133566912117140378091520",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -328,6 +368,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "417422241284969633459208192",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -358,6 +402,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "419569267944630735175942144",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -388,6 +436,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "408871559349405710389608448",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -418,6 +470,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "418322237718775263012061184",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -448,6 +504,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "418913790212617140132904960",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -478,6 +538,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "415373095398183117392969728",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -508,6 +572,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "415373095398183117392969728",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -538,6 +606,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "396029651688447686907789312",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -568,6 +640,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407331335596778654051336192",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -598,6 +674,10 @@
    "expected_cap": "9972894617746",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407331335596778654051336192",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "498644730887300000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -628,6 +708,10 @@
    "expected_cap": "9972894617746",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407331335596778654051336192",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "498644730887300000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -658,6 +742,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407763490650715205415206912",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -688,6 +776,10 @@
    "expected_cap": "10000775545814",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407763490650715205415206912",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "500038777290700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -718,6 +810,10 @@
    "expected_cap": "10000775545814",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407763490650715205415206912",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "500038777290700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -748,6 +844,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407072121042417665255145472",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -778,6 +878,10 @@
    "expected_cap": "9969938223979",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407072121042417665255145472",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "498496911198950000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -808,6 +912,10 @@
    "expected_cap": "9969938223979",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407072121042417665255145472",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "498496911198950000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -838,6 +946,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407575266705686053565497344",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -868,6 +980,10 @@
    "expected_cap": "9982619512234",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407575266705686053565497344",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "499130975611700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -898,6 +1014,10 @@
    "expected_cap": "9982619512234",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407575266705686053565497344",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "499130975611700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -928,6 +1048,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407471887580455481875890176",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -958,6 +1082,10 @@
    "expected_cap": "9984020116228",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407471887580455481875890176",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "499201005811400000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -988,6 +1116,10 @@
    "expected_cap": "9984020116228",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407471887580455481875890176",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "499201005811400000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1018,6 +1150,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407200896102837413780389888",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1048,6 +1184,10 @@
    "expected_cap": "9965584359549",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407200896102837413780389888",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "498279217977450000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1078,6 +1218,10 @@
    "expected_cap": "9965584359549",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407200896102837413780389888",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "498279217977450000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1108,6 +1252,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407200896102837413780389888",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1138,6 +1286,10 @@
    "expected_cap": "9965584359549",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407200896102837413780389888",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "498279217977450000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1168,6 +1320,10 @@
    "expected_cap": "9965584359549",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407200896102837413780389888",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "498279217977450000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1198,6 +1354,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407057500849751391941427200",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1228,6 +1388,10 @@
    "expected_cap": "9952920798673",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407057500849751391941427200",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "497646039933650000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1258,6 +1422,10 @@
    "expected_cap": "9952920798673",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "407057500849751391941427200",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "497646039933650000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1288,6 +1456,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "403430658546236875731894272",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1318,6 +1490,10 @@
    "expected_cap": "9879452377544",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "403430658546236875731894272",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "493972618877200000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1348,6 +1524,10 @@
    "expected_cap": "9879452377544",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "403430658546236875731894272",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "493972618877200000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1378,6 +1558,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "402851896278297784352768000",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1408,6 +1592,10 @@
    "expected_cap": "9866346961733",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "402851896278297784352768000",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "493317348086650000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1438,6 +1626,10 @@
    "expected_cap": "9866346961733",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "402851896278297784352768000",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "493317348086650000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1468,6 +1660,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399257564823496554321018880",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1498,6 +1694,10 @@
    "expected_cap": "9774655204649",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399257564823496554321018880",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "488732760232450000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1528,6 +1728,10 @@
    "expected_cap": "9774655204649",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399257564823496554321018880",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "488732760232450000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1558,6 +1762,10 @@
    "expected_cap": "9798927204562",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "400294708996675455537905664",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "489946360228100000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1588,6 +1796,10 @@
    "expected_cap": "9798927204562",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "400294708996675455537905664",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "489946360228100000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1618,6 +1830,10 @@
    "expected_cap": "9812031714194",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "400520514165657791157501952",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "490601585709700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1648,6 +1864,10 @@
    "expected_cap": "9812031714194",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "400520514165657791157501952",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "490601585709700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1678,6 +1898,10 @@
    "expected_cap": "9812031714194",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "401034039163736594728353792",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "490601585709700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1708,6 +1932,10 @@
    "expected_cap": "9812031714194",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "401034039163736594728353792",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "490601585709700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1738,6 +1966,10 @@
    "expected_cap": "9824863416357",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "401298507543731405628375040",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "491243170817850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1768,6 +2000,10 @@
    "expected_cap": "9824863416357",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "401298507543731405628375040",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "491243170817850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1798,6 +2034,10 @@
    "expected_cap": "9767105231934",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "400090489912731099711143936",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "488355261596700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1828,6 +2068,10 @@
    "expected_cap": "9767105231934",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "400090489912731099711143936",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "488355261596700000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1858,6 +2102,10 @@
    "expected_cap": "9767895066503",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399038319166766113028571136",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "488394753325150000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1888,6 +2136,10 @@
    "expected_cap": "9767895066503",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399038319166766113028571136",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "488394753325150000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1918,6 +2170,10 @@
    "expected_cap": "9788688169885",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399453190391756924508962816",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "489434408494250000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1948,6 +2204,10 @@
    "expected_cap": "9788688169885",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399453190391756924508962816",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "489434408494250000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -1978,6 +2238,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399257564823496554321018880",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2008,6 +2272,10 @@
    "expected_cap": "9835162781337",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399257564823496554321018880",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "491758139066850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2038,6 +2306,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399257564823496554321018880",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2068,6 +2340,10 @@
    "expected_cap": "9835162781337",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "399257564823496554321018880",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "491758139066850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2106,6 +2382,10 @@
    "expected_cap": "464556373822",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "1467253807157218",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "23227818692",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2142,6 +2422,10 @@
    "expected_cap": "145459536195",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "1463454678007441",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "7272976810",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2178,6 +2462,10 @@
    "expected_cap": "14268343269",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "1426834326949123",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "713417164",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2208,6 +2496,10 @@
    "expected_cap": "10000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "1287588177785833",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "500000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2238,6 +2530,10 @@
    "expected_cap": "462205666111",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "1344432105923515",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "23110283306",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2267,6 +2563,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2296,6 +2596,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2325,6 +2629,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2354,6 +2662,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2383,6 +2695,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2412,6 +2728,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2441,6 +2761,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2470,6 +2794,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2499,6 +2827,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2528,6 +2860,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2557,6 +2893,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2586,6 +2926,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2615,6 +2959,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2644,6 +2992,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2673,6 +3025,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2702,6 +3058,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2731,6 +3091,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2760,6 +3124,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2789,6 +3157,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2818,6 +3190,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2847,6 +3223,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2876,6 +3256,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2905,6 +3289,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2934,6 +3322,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2963,6 +3355,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -2992,6 +3388,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3021,6 +3421,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3050,6 +3454,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3079,6 +3487,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3108,6 +3520,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3137,6 +3553,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3166,6 +3586,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3195,6 +3619,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3224,6 +3652,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3253,6 +3685,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3291,6 +3727,10 @@
    "expected_cap": "8126947801",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "406538364649423977970663424",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "406347390050000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3329,6 +3769,10 @@
    "expected_cap": "8126947801",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "406538364649423977970663424",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "406347390050000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3367,6 +3811,10 @@
    "expected_cap": "8218669417",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "410993813629979399227965440",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "410933470850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3405,6 +3853,10 @@
    "expected_cap": "8295434579",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "414458705945847479131963392",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "414771728950000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3443,6 +3895,10 @@
    "expected_cap": "8307746339",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "415297049873865752769986560",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "415387316950000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3481,6 +3937,10 @@
    "expected_cap": "8254858512",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "412805198573600133888344064",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "412742925600000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3519,6 +3979,10 @@
    "expected_cap": "8390978101",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "419479010064826593099907072",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "419548905050000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3557,6 +4021,10 @@
    "expected_cap": "8420490426",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "421133123537784297542909952",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "421024521300000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3587,6 +4055,10 @@
    "expected_cap": "8422662470755685",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "421133123537784297542909952",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3625,6 +4097,10 @@
    "expected_cap": "8420490426",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "421133123537784297542909952",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "421024521300000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3655,6 +4131,10 @@
    "expected_cap": "8422662470755685",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "421133123537784297542909952",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3693,6 +4173,10 @@
    "expected_cap": "8401636785",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "419497201309739082120691712",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "420081839250000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3723,6 +4207,10 @@
    "expected_cap": "8389944026194781",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "419497201309739082120691712",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3761,6 +4249,10 @@
    "expected_cap": "8318270401",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "415397231765431280524591104",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "415913520050000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3791,6 +4283,10 @@
    "expected_cap": "8307944635308625",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "415397231765431280524591104",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3829,6 +4325,10 @@
    "expected_cap": "8303124910",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "415475734955056046318551040",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "415156245500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3859,6 +4359,10 @@
    "expected_cap": "8309514699101120",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "415475734955056046318551040",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3897,6 +4401,10 @@
    "expected_cap": "8275090492",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "413899122848381285183782912",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "413754524600000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3927,6 +4435,10 @@
    "expected_cap": "8277982456967625",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "413899122848381285183782912",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3965,6 +4477,10 @@
    "expected_cap": "7998987456",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "400016098401429979221983232",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "399949372800000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -3995,6 +4511,10 @@
    "expected_cap": "8000321968028599",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "400016098401429979221983232",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4033,6 +4553,10 @@
    "expected_cap": "8008736057",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "400267884885710110961172480",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "400436802850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4063,6 +4587,10 @@
    "expected_cap": "8005357697714202",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "400267884885710110961172480",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4101,6 +4629,10 @@
    "expected_cap": "8008736057",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "400267884885710110961172480",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "400436802850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4131,6 +4663,10 @@
    "expected_cap": "8005357697714202",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "400267884885710110961172480",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4169,6 +4705,10 @@
    "expected_cap": "7979109064",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "398925241623294148178083840",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "398955453200000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4199,6 +4739,10 @@
    "expected_cap": "7978504832465882",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "398925241623294148178083840",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4237,6 +4781,10 @@
    "expected_cap": "7921278623",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "395969515380420333761724416",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "396063931150000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4267,6 +4815,10 @@
    "expected_cap": "7919390307608406",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "395969515380420333761724416",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4305,6 +4857,10 @@
    "expected_cap": "8167934039",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "408466979678453233396744192",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "408396701950000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4335,6 +4891,10 @@
    "expected_cap": "8169339593569064",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "408466979678453233396744192",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4373,6 +4933,10 @@
    "expected_cap": "8164626999",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "408198017119351296151781376",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "408231349950000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4403,6 +4967,10 @@
    "expected_cap": "8163960342387025",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "408198017119351296151781376",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4441,6 +5009,10 @@
    "expected_cap": "8149854139",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "407423009294304771150184448",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "407492706950000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4471,6 +5043,10 @@
    "expected_cap": "8148460185886095",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "407423009294304771150184448",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4509,6 +5085,10 @@
    "expected_cap": "8157644442",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "407738710710472077066895360",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "407882222100000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4539,6 +5119,10 @@
    "expected_cap": "8154774214209441",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "407738710710472077066895360",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4577,6 +5161,10 @@
    "expected_cap": "8157644442",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "407738710710472077066895360",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "407882222100000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4607,6 +5195,10 @@
    "expected_cap": "8154774214209441",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "407738710710472077066895360",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4645,6 +5237,10 @@
    "expected_cap": "8139094409",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "406763495756582281040363520",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "406954720450000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4675,6 +5271,10 @@
    "expected_cap": "8135269915131645",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "406763495756582281040363520",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4713,6 +5313,10 @@
    "expected_cap": "8149791576",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "407411185144982585290522624",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "407489578800000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4743,6 +5347,10 @@
    "expected_cap": "8148223702899651",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "407411185144982585290522624",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4781,6 +5389,10 @@
    "expected_cap": "8073923519",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "403228911964604233685139456",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "403696175950000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4811,6 +5423,10 @@
    "expected_cap": "8064578239292084",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "403228911964604233685139456",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4849,6 +5465,10 @@
    "expected_cap": "8062492573",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "403080885870533195824365568",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "403124628650000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4879,6 +5499,10 @@
    "expected_cap": "8061617717410663",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "403080885870533195824365568",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4917,6 +5541,10 @@
    "expected_cap": "7986788669",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "399373585725777777912709120",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "399339433450000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4947,6 +5575,10 @@
    "expected_cap": "7987471714515555",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "399373585725777777912709120",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -4985,6 +5617,10 @@
    "expected_cap": "8006207020",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "400594588933580966798032896",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "400310351000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5015,6 +5651,10 @@
    "expected_cap": "8011891778671619",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "400594588933580966798032896",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5053,6 +5693,10 @@
    "expected_cap": "8006207020",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "400594588933580966798032896",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "400310351000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5083,6 +5727,10 @@
    "expected_cap": "8011891778671619",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "400594588933580966798032896",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5121,6 +5769,10 @@
    "expected_cap": "8059004415",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "403244354016916355294429184",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "402950220750000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5151,6 +5803,10 @@
    "expected_cap": "8064887080338327",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "403244354016916355294429184",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5189,6 +5845,10 @@
    "expected_cap": "8030496098",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "401527931023701037264404480",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "401524804900000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5219,6 +5879,10 @@
    "expected_cap": "8030558620474020",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "401527931023701037264404480",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5257,6 +5921,10 @@
    "expected_cap": "7944397290",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "397511717036133431524720640",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "397219864500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5287,6 +5955,10 @@
    "expected_cap": "7950234340722668",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "397511717036133431524720640",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5325,6 +5997,10 @@
    "expected_cap": "7984537371",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "398238615954051889853628416",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "399226868550000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5355,6 +6031,10 @@
    "expected_cap": "7964772319081037",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "398238615954051889853628416",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5393,6 +6073,10 @@
    "expected_cap": "8037316304",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "401918794084136370579701760",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "401865815200000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5423,6 +6107,10 @@
    "expected_cap": "8038375881682727",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "401918794084136370579701760",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5453,6 +6141,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5483,6 +6175,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5513,6 +6209,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5543,6 +6243,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5573,6 +6277,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5603,6 +6311,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5633,6 +6345,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5663,6 +6379,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5693,6 +6413,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5723,6 +6447,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5753,6 +6481,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5783,6 +6515,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5813,6 +6549,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5843,6 +6583,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5873,6 +6617,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5903,6 +6651,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5933,6 +6685,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5963,6 +6719,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -5993,6 +6753,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6023,6 +6787,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6053,6 +6821,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6083,6 +6855,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6113,6 +6889,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6143,6 +6923,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6173,6 +6957,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6203,6 +6991,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6233,6 +7025,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6263,6 +7059,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6293,6 +7093,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6323,6 +7127,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6353,6 +7161,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6383,6 +7195,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6413,6 +7229,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6443,6 +7263,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6473,6 +7297,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6503,6 +7331,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6533,6 +7365,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6563,6 +7399,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6593,6 +7433,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6623,6 +7467,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6653,6 +7501,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6683,6 +7535,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6713,6 +7569,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6743,6 +7603,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6773,6 +7637,10 @@
    "expected_cap": "3000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "150000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6803,6 +7671,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6833,6 +7705,10 @@
    "expected_cap": "1000000000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "50000000000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6863,6 +7739,10 @@
    "expected_cap": "9902610674097",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": "404049819283691788822380544",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "495130533704850000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6892,6 +7772,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6921,6 +7805,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6950,6 +7838,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -6979,6 +7871,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7008,6 +7904,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7037,6 +7937,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7066,6 +7970,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7095,6 +8003,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7124,6 +8036,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7153,6 +8069,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7182,6 +8102,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7211,6 +8135,10 @@
    "expected_cap": "30000000",
    "regime": "volume_factor",
    "inferred": false,
+   "usd_reference_price": null,
+   "usd_reference_price_source": "unpublished",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "1500000000000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7249,6 +8177,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7279,6 +8211,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7317,6 +8253,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7347,6 +8287,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7385,6 +8329,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7415,6 +8363,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7453,6 +8405,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7483,6 +8439,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7521,6 +8481,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7551,6 +8515,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7589,6 +8557,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7619,6 +8591,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7657,6 +8633,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7687,6 +8667,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7725,6 +8709,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7755,6 +8743,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7793,6 +8785,10 @@
    "expected_cap": "1211717950228",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "60585897511400000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7831,6 +8827,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7861,6 +8861,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7899,6 +8903,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7929,6 +8937,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7967,6 +8979,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -7997,6 +9013,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -8035,6 +9055,10 @@
    "expected_cap": "8096546950",
    "regime": "correlated_override",
    "inferred": true,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": "404827347500000000000",
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   },
   {
@@ -8065,6 +9089,10 @@
    "expected_cap": "8093804426256908",
    "regime": "absolute_bound",
    "inferred": false,
+   "usd_reference_price": "404690221312845436621422592",
+   "usd_reference_price_source": "auction",
+   "usd_reference_token_in_body": true,
+   "min_usd_reference_price": null,
    "reference_commit": "cowprotocol/services@d4bc7947eb49992ed1d71bb93514211f546c7ca9"
   }
  ]

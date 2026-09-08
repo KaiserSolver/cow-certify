@@ -85,6 +85,10 @@ def main():
     ap.add_argument("--env", choices=list(sources.BUCKET_ENVS), default=None,
                     help="--penalty-cap only: which instance-bucket environment the "
                          "auction id belongs to (default prod)")
+    ap.add_argument("--retained-lookback", type=int, default=0, metavar="N",
+                    help="--penalty-cap only: when the body carries no price for the usd "
+                         "reference token, look back up to N prior auction bodies for the "
+                         "price the autopilot retained (default 0 = off)")
     ap.add_argument("--strict", action="store_true",
                     help="--penalty-cap only: compare against the stated config only, "
                          "no inference of correlated/bound regimes")
@@ -105,8 +109,8 @@ def main():
     if args.penalty_cap is not None:
         _penalty_cap_mode(ap, args, ev)
         return
-    if args.env is not None or args.strict:
-        ap.error("--env and --strict only apply to --penalty-cap")
+    if args.env is not None or args.strict or args.retained_lookback:
+        ap.error("--env, --strict and --retained-lookback only apply to --penalty-cap")
     tx = args.tx_hash
     if args.order and not tx:
         if not _UID_RE.match(args.order.strip()):
@@ -194,9 +198,12 @@ def _penalty_cap_mode(ap, args, ev):
         ap.error("--rpc-url is not used by --penalty-cap (the replay reads only the public "
                  "instance bucket)")
     env = args.env or "prod"
+    if args.retained_lookback < 0:
+        ap.error("--retained-lookback must be >= 0")
     try:
         rep = penalty_cap.replay(args.network, int(aid), env=env,
-                                 strict=args.strict, ev=ev)
+                                 strict=args.strict, ev=ev,
+                                 retained_lookback=args.retained_lookback)
     except SystemExit as e:
         _fail(str(e.code) if e.code is not None else "could not replay")
     except Exception as e:

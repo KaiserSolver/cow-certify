@@ -209,9 +209,23 @@ implementation of the formula — in any language — reproduces every vector
 without knowing about inference. `python3 -m cow_certify.penalty_cap_vectors
 certs_penalty_cap/ certs_penalty_cap_heldout/ --out penalty_cap_vectors.json
 --check` collects them into one file (schema
-`cow-certify/penalty-cap-vectors/1`) and `--check` recomputes each vector
+`cow-certify/penalty-cap-vectors/2`) and `--check` recomputes each vector
 from its own fields, failing on any mismatch; the shipped
-`penalty_cap_vectors.json` is that file for the corpus and held-out set. A
+`penalty_cap_vectors.json` is that file for the corpus and held-out set.
+Every vector states the usd reference price the calculator must be
+constructed with (`usd_reference_price`) and where it came from
+(`usd_reference_price_source`: `auction` — this body carried it;
+`retained:<id>` — recovered from the most recent prior body that carried
+one, the value the autopilot keeps when a cycle brings none; `unpublished` —
+the body lists the token with a null price and no prior body within
+`--retained-lookback` had one; `absent`). For a volume-side cap it also
+states `min_usd_reference_price`, the smallest reference price at which the
+bound still exceeds the published cap: constructed with any price at or
+above it a literal implementation returns `expected_cap`, one wei below it
+the bound binds — and `--check` proves both. On Gnosis staging the reference
+token is listed in every body with a null price (the autopilot's native
+price estimator fails for it there), so its retained value is the startup
+fetch and never public; those vectors carry the threshold instead. A
 `DIFFERENCE` is a finding to take to the core team, never a "violation" —
 this is rewards accounting, and the tool has no standing to call it anything
 else. The auction's overall verdict is the *worst* order verdict, so exit 0
@@ -230,7 +244,10 @@ the order is a `MATCH` marked `inferred: true` with the regime it needed.
 be declared in code (`penalty_cap.cip87_config(network, overrides=[...])`) so
 they count as stated matches. The mainnet reference token (USDC) is
 confirmed from published bound-binding caps; elsewhere the report prints
-`assumed` until a bound-binding order confirms it. A stale reference price
+`assumed` until a bound-binding order confirms it — with one public hint the
+report records: the autopilot lists its reference token in every body even
+when no order uses it (`config.usd_reference.token_in_body`), which is how
+the BNB and Gnosis assumptions were corroborated. A stale reference price
 (the autopilot keeps its last value when the reference token has no price in
 a cycle) is not observable from outside; the replay uses the price in the
 auction. This mode is CLI-only (not in the browser app) and, as of this
@@ -245,7 +262,10 @@ staging bots repeat a handful of orders across many auctions, so the honest
 count is *distinct orders*, re-priced per auction; each report embeds its
 inputs, so the corpus stays a hermetic vector set after the bodies expire.
 
-Result on 2026-09-07 (188 auctions, 0 fetch errors): every one of the 171
+Result on 2026-09-07 (188 auctions, 0 fetch errors), unchanged when regenerated
+on 2026-09-08 with `--retained-lookback 20` (186 bodies still in the bucket; two
+pre-rollout bodies without published caps had expired and their 09-07 reports
+are kept as they were): every one of the 171
 order instances that carries a published cap is reproduced exactly — 0
 differences — across 19 distinct orders on six chains. The other 77 auctions
 carry no cap: older than the rollout on their chain, or on a chain that is

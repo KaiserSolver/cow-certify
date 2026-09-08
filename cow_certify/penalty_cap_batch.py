@@ -28,6 +28,9 @@ def main():
     ap.add_argument("--sleep", type=float, default=0.2)
     ap.add_argument("--strict", action="store_true",
                     help="no regime inference; only the stated config counts")
+    ap.add_argument("--retained-lookback", type=int, default=0, metavar="N",
+                    help="look back up to N prior bodies for a retained usd reference price "
+                         "when a body carries none (default 0 = off)")
     args = ap.parse_args()
 
     rows = []
@@ -58,7 +61,8 @@ def main():
             print(f"  !! {network} {env} {aid}: bad row (network/env/auction id)", flush=True)
             continue
         try:
-            rep = replay(network, int(aid), env=env, strict=args.strict)
+            rep = replay(network, int(aid), env=env, strict=args.strict,
+                         retained_lookback=args.retained_lookback)
         except (Exception, SystemExit) as e:
             errors += 1
             msg = str(e.code) if isinstance(e, SystemExit) else str(e)

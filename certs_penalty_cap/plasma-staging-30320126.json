@@ -1,7 +1,7 @@
 {
- "schema_version": "0.2.0",
+ "schema_version": "0.3.0",
  "kind": "penalty_cap_replay",
- "tool_version": "0.5.1",
+ "tool_version": "0.5.2",
  "subject": {
   "network": "plasma",
   "chain_id": 9745,
@@ -23,7 +23,12 @@
   "usd_reference": {
    "token": "0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb",
    "decimals": 6,
-   "price": 11184061013079087980773726224384
+   "price": 11184061013079087980773726224384,
+   "token_in_body": true,
+   "price_in_body": true,
+   "retained_price": null,
+   "retained_from_auction": null,
+   "retained_scanned": 0
   },
   "usd_reference_assumed": true,
   "wrapped_native": "0x6100e367285b01f48d07953803a2d8dca5d19873"
@@ -38,6 +43,8 @@
   "regimes": {},
   "inferred_matches": 0,
   "matches_with_unknown_bound": 0,
+  "reference_price_in_body": true,
+  "reference_price_retained": false,
   "prices": 2
  },
  "orders": [
@@ -61,8 +68,11 @@
     "token": "0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb",
     "decimals": 6,
     "price": 11184061013079087980773726224384,
-    "usd": 20
+    "usd": 20,
+    "token_in_body": true,
+    "price_in_body": true
    },
+   "min_usd_reference_price": null,
    "expected_cap": 28952992825987176,
    "expected_regime": "volume_factor",
    "inferred": false,
@@ -76,7 +86,7 @@
  ],
  "not_verifiable": [
   "the correlated-token override sets and the usd reference token are autopilot deployment config, not published; the replay uses CIP-87's numbers plus a per-chain USDC default and marks any regime it had to infer (`inferred: true`)",
-  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is not observable from public data; the replay uses the price in this auction",
+  "a stale usd reference price (the autopilot keeps its last value when the reference token has no price in a cycle) is only observable when a prior body carried one: the replay uses this auction's price, else the most recent prior body's within --retained-lookback (reported as retained), else it reports the minimum reference price that reproduces the published cap",
   "usd reference token on plasma is ASSUMED (0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb); it only matters where the bound binds",
   "the 1 bps default factor for plasma is the CIP-87 text value; it has not yet been confirmed by a published cap in the volume-factor regime (the core team may retune within 0-10 bps with notice)",
   "the CIP text defines the basis as the order's quote (net of volume fees); the implementation values the signed sell side (sell orders) or buy side (buy orders) at reference prices - the replay follows the implementation; the CIP's scaling to the executed fraction of a partial fill happens at penalty time and is not part of the published per-order cap"
@@ -87,10 +97,10 @@
    "ref": "https://solver-instances.s3.eu-central-1.amazonaws.com/staging/plasma/auction/30320126.json",
    "sha256": "d22845c93fecfadf0d4e2fb719e6fc1be0b6e96a85afb683bf208e12c72ef44a",
    "bytes": 11466,
-   "fetched_at": "2026-09-07T19:54:22Z"
+   "fetched_at": "2026-09-08T18:35:24Z"
   }
  ],
  "disclaimer": "cow-certify is independent and not affiliated with CoW Protocol; this replay recomputes a rewards-accounting parameter from public data and reports differences, it does not adjudicate them.",
- "reproduce": "python3 -m cow_certify --network plasma --penalty-cap 30320126 --env staging",
- "generated_at": "2026-09-07T19:54:22Z"
+ "reproduce": "python3 -m cow_certify --network plasma --penalty-cap 30320126 --env staging --retained-lookback 20",
+ "generated_at": "2026-09-08T18:35:24Z"
 }
