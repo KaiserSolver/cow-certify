@@ -269,9 +269,8 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
     # signed limits (see gpv2.surplus_from_execution) — never from a
     # solver-chosen clearing-price slot — and valued at the auction's native
     # reference prices. It is REPORTED, not adjudicated against the competition
-    # score: the score folds in fee policy and the CIP-38 objective that public
-    # data does not expose, so a legitimate fee-bearing settlement has
-    # score > delivered surplus. The value here is that the delivered surplus
+    # score: the score also includes protocol fees, so a legitimate fee-bearing
+    # settlement has score > delivered surplus. The value here is that the delivered surplus
     # is un-forgeable — it is what the old price-based reconstruction tried to
     # confirm and a solver could game by editing an unread price slot.
     if not this_sol:
@@ -335,12 +334,11 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
         score = int(this_sol.get("score"))
         coverage = (f"{priced}/{len(results)} priced trade(s)"
                     if priced != len(results) else f"{priced} trade(s)")
-        # The competition score is NOT the user surplus: it folds in protocol
-        # fee policies and the CIP-38 objective, none of which are exposed in
-        # public data, so `score` routinely exceeds the delivered user surplus
-        # (a legitimate fee-bearing settlement shows exactly that). C5 therefore
-        # REPORTS the un-forgeable delivered surplus rather than asserting it
-        # equals the score — it is context (INFO), never a verdict. (The delivered
+        # The competition score is NOT the user surplus: it also includes
+        # protocol fees, so `score` routinely exceeds the delivered user surplus
+        # (a legitimate fee-bearing settlement shows exactly that). C5 REPORTS
+        # the un-forgeable delivered surplus rather than asserting it equals
+        # the score — it is context (INFO), never a verdict. (The delivered
         # surplus is what the earlier price-based reconstruction tried to confirm
         # and a solver could game by editing an unread clearing-price slot; here
         # it is fixed by the on-chain Trade events and cannot be gamed.)
@@ -356,9 +354,8 @@ def run_decode_checks(network, direct, calldata, logs, this_sol, comp,
                   f"settlement's clearing prices).{jit_note} The reported "
                   f"competition score is {score}. C5 reports the delivered "
                   f"surplus; it does not independently confirm the score, which "
-                  f"folds in fee policy and the CIP-38 objective that public "
-                  f"data does not expose (so score >= delivered surplus is "
-                  f"expected).")
+                  f"also includes protocol fees (so score >= delivered surplus "
+                  f"is expected).")
         checks.append(_v("C5.surplus-delivered", INFO, detail,
                          delivered_surplus_native=str(total_native),
                          reported_score=str(score)))

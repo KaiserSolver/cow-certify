@@ -315,14 +315,13 @@ python3 -m cow_certify.penalty_cap_batch penalty_cap_heldout.csv --out /tmp/repl
 
 ## What it cannot check, honestly
 
-- **C5 does not confirm the competition score.** The reported score folds in
-  protocol fee policy and the CIP-38 objective, none of which are exposed in
-  public data, so a legitimate fee-bearing settlement has a score well above the
-  user surplus. C5 therefore *reports* the surplus actually delivered on-chain —
-  computed from the executed Trade-event amounts against the signed limits, so
-  it **cannot be inflated by the settlement's clearing prices** — and states
-  plainly that it does not independently confirm the score. It is context, never
-  a verdict.
+- **C5 does not confirm the competition score.** C5 *reports* the surplus
+  actually delivered on-chain — computed from the executed Trade-event amounts
+  against the signed limits, so it **cannot be inflated by the settlement's
+  clearing prices** — and states plainly that it does not independently confirm
+  the score. The score also includes protocol fees, so a legitimate fee-bearing
+  settlement shows a score above the delivered surplus; that gap is expected,
+  not a finding. It is context, never a verdict.
 - **Best-execution / EBBO** (whether a better price was available elsewhere) is
   out of scope by design. This tool verifies a settlement's *validity*, not its
   *optimality*. It does not detect, or claim to detect, EBBO violations. C14 is

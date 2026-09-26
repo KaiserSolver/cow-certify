@@ -72,9 +72,9 @@ class TestSurplusMath(unittest.TestCase):
 
 class TestC5IsContextNotAccusation(unittest.TestCase):
     """C5 reports the delivered user surplus as context (INFO). It does NOT
-    assert the surplus equals the competition score: the score folds in fee
-    policy + the CIP-38 objective that public data does not expose, so a
-    legitimate fee-bearing settlement has score > delivered surplus. C5 must
+    assert the surplus equals the competition score: the score also includes
+    protocol fees, so a legitimate fee-bearing settlement has score > delivered
+    surplus. C5 must
     therefore never emit PASS/ATTENTION/VIOLATION on the score relationship —
     only INFO (or UNCERTAIN if it cannot price the surplus)."""
 

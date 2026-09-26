@@ -325,8 +325,8 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
   // C5 — the user surplus actually delivered on-chain (context, INFO), from the
   // executed Trade-event amounts vs the signed limits (no clearing price → not
   // forgeable). It is REPORTED, not adjudicated against the competition score,
-  // which folds in fee policy + the CIP-38 objective that public data does not
-  // expose (so score >= delivered surplus is expected).
+  // which also includes protocol fees (so score >= delivered surplus is
+  // expected).
   if (!thisSol) return;
   try {
     const kinds = new Map();
@@ -361,7 +361,7 @@ async function runDecodeChecks(network, direct, calldata, logs, thisSol, comp, e
     const coverage = priced !== results.length ? `${priced}/${results.length} priced trade(s)` : `${priced} trade(s)`;
     const jitNote = jitExcluded ? ` ${jitExcluded} JIT/liquidity leg(s) were excluded (maker surplus, not user).` : "";
     checks.push(v("C5.surplus-delivered", INFO,
-      `delivered user surplus ≈ ${totalNative} native atoms over ${coverage} (computed from the on-chain executed amounts against the signed limits — it cannot be inflated by the settlement's clearing prices).${jitNote} The reported competition score is ${score}. C5 reports the delivered surplus; it does not independently confirm the score, which folds in fee policy and the CIP-38 objective that public data does not expose (so score >= delivered surplus is expected).`,
+      `delivered user surplus ≈ ${totalNative} native atoms over ${coverage} (computed from the on-chain executed amounts against the signed limits — it cannot be inflated by the settlement's clearing prices).${jitNote} The reported competition score is ${score}. C5 reports the delivered surplus; it does not independently confirm the score, which also includes protocol fees (so score >= delivered surplus is expected).`,
       { delivered_surplus_native: totalNative.toString(), reported_score: score.toString() }));
   } catch (e) {
     checks.push(v("C5.surplus-delivered", INFO, `surplus not computed: ${src.redact(e).slice(0, 120)} (context check; not a finding)`));
