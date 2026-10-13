@@ -2,7 +2,7 @@
 // Faithful port of the Python htmlreport design; CSS lives in index.html.
 import { EXPLORER, CHAIN_IDS } from "./sources.js";
 
-const TOOL_VERSION = "0.4.0"; // display; cert schema_version is the format version
+const TOOL_VERSION = "0.5.2"; // display; cert schema_version is the format version
 const FRIENDLY = {
   C0: ["Settlement type", "How the trade reached the chain — CoW's contract directly, or via a solver's own contract."],
   C1: ["Bound to its auction", "The on-chain settlement matches the auction it claims to have won."],

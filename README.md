@@ -8,7 +8,7 @@ settlement faithfully executed the auction it claims — with the evidence to
 re-run the check yourself.
 
 Built and maintained by [kaisersolver](https://github.com/KaiserSolver), a live
-CoW solver on Arbitrum and Base. Not affiliated with the CoW Protocol core
+CoW solver on Arbitrum, Base and BNB Chain. Not affiliated with the CoW Protocol core
 team. Everything here works from public data only: chain RPC, the public
 competition API, and the public orderbook. No keys, no accounts, no privileged
 access. That is the point: anyone can re-run any certificate and get the same
@@ -407,10 +407,15 @@ discriminate rather than only rubber-stamp.
 
 ## Status
 
-v0.5.0. Runs on eleven CoW chains — Ethereum, Gnosis, Arbitrum, Base, Polygon,
-Avalanche, BNB, Ink, Linea, Plasma, Sepolia — self-audited on 80 of our own
-settlements, with a hermetic adversarial suite on both engines, plus the
-CIP-87 penalty-cap replay (CLI only) with its own staging corpus. Scope is
+v0.5.2. Sixteen checks (C0–C15) on ten production CoW chains — Ethereum, Gnosis,
+Arbitrum, Base, Polygon, Avalanche, BNB, Ink, Linea, Plasma — plus Sepolia,
+self-audited on 80 of our own settlements, with a hermetic adversarial suite on
+both engines, plus the CIP-87 penalty-cap replay (CLI only) with its own staging
+corpus: 171 / 171 published caps reproduced. Since 0.5.1 every penalty-cap
+report keeps the inputs behind the absolute bound (`absolute_bound_inputs`) and
+the corpus ships as one vector file, `penalty_cap_vectors.json`; since 0.5.2
+each vector states its `usd_reference_price` and its source, or the proven
+`min_usd_reference_price` where the price is not public (vectors schema 2). Scope is
 settlement *verification only* (and, for CIP-87, accounting *replay*);
 best-execution / EBBO is intentionally out of scope. Roadmap: services#2667 criterion 4 (settled interactions ⊆ matched-order
 hooks, from public `fullAppData`), a finality model (so a late landing can be
